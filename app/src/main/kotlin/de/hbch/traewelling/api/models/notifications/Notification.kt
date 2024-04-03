@@ -328,6 +328,49 @@ enum class NotificationType {
             val targetType = object: TypeToken<MastodonNotSentData>() {}.type
             return gson.fromJson<Any>(gson.toJson(data), targetType) as? MastodonNotSentData
         }
+    },
+    UserMentioned {
+        override val icon = R.drawable.ic_user_mention
+        override val channel = NotificationChannelType.UserMentioned
+        override fun getHeadline(context: Context, notification: Notification): String  {
+            val data = getData(notification)
+            var headline = ""
+            if (data != null) {
+                headline = context.getString(R.string.user_mentioned_you, data.creator.username)
+            }
+            return headline
+        }
+        override fun getOnClick(notification: Notification): (NavHostController) -> Unit {
+            val data = getData(notification)
+            var onClick: (NavHostController) -> Unit = { }
+            if (data != null) {
+                onClick = {
+                    it.navigate("status-details/${data.status.id}")
+                }
+            }
+            return onClick
+        }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("status")
+                        .appendPath(data.status.id.toString())
+                        .build()
+                )
+            }
+            return intent
+        }
+
+        private fun getData(notification: Notification): UserMentionedData? {
+            val gson = Gson()
+            val data = notification.data
+            val targetType = object: TypeToken<UserMentionedData>() {}.type
+            return gson.fromJson<Any>(gson.toJson(data), targetType) as? UserMentionedData
+        }
     };
 
     abstract val icon: Int

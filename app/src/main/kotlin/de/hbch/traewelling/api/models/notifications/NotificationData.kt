@@ -63,3 +63,8 @@ data class MastodonNotSentData(
     val status: NotificationStatus,
     val httpResponseCode: Int
 )
+
+data class UserMentionedData(
+    val status: NotificationStatus,
+    val creator: NotificationUser
+)

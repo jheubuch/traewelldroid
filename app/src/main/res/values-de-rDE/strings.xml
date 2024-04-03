@@ -163,6 +163,7 @@
     <string name="follow_request_issued">\@%1$s möchte dir folgen!</string>
     <string name="mastodon_share_error">Fehler beim Posten auf Mastodon!</string>
     <string name="status_not_shared_on_mastodon">Dein Check-In wurde aufgrund von Fehler %1$d nicht auf Mastodon geteilt.</string>
+    <string name="user_mentioned_you">\@%1$s hat dich in einem Status erwähnt.</string>
     <string name="map_view">Kartenansicht</string>
     <string name="configure_map">Hier kannst du die Kartenansicht konfigurieren.</string>
     <string name="standard_layer">Standard</string>
@@ -215,6 +216,8 @@
     <string name="channel_description_event_suggestions">Bearbeitete Eventvorschläge</string>
     <string name="channel_likes">Gefällt mir-Angaben</string>
     <string name="channel_description_likes">Nutzer:innen, denen deine Check-Ins gefallen</string>
+    <string name="channel_mentions">Erwähnungen</string>
+    <string name="channel_description_mentions">Nutzer:innen, die dich in deren Check-Ins erwähnen</string>
     <string name="select_up_distributor">Unified Push-Distributor wählen</string>
     <string name="no_up_distributor_found">Es wurde kein Unified Push Distributor gefunden. Bitte installiere einen deiner Wahl und starte die App neu.</string>
     <string name="selected_up_distributor">Gewählter UnifiedPush Distributor: %1$s</string>
