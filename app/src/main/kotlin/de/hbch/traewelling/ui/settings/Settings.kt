@@ -263,7 +263,9 @@ private fun TravelynxProviderSettings(
                     )
                 },
                 placeholder = {
-                    Text("1079-")
+                    Text(
+                        text = stringResource(id = R.string.travelynx_token)
+                    )
                 }
             )
             FilledIconButton(
@@ -395,7 +397,7 @@ private fun MapViewSettings(
                     modifier = Modifier.padding(bottom = 8.dp),
                     text = stringResource(id = R.string.openrailwaymap)
                 )
-                OpenRailwayMapLayer.values().forEach { layer ->
+                OpenRailwayMapLayer.entries.forEach { layer ->
                     val layerSelected : () -> Unit = {
                         selectedOrmLayer = layer
                         secureStorage?.storeObject(SharedValues.SS_ORM_LAYER, selectedOrmLayer)
