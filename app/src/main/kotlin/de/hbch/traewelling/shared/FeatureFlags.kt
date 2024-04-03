@@ -1,6 +1,5 @@
 package de.hbch.traewelling.shared
 
-import androidx.lifecycle.MutableLiveData
 import io.getunleash.UnleashClient
 
 class FeatureFlags private constructor() {
@@ -20,12 +19,8 @@ class FeatureFlags private constructor() {
 
     fun flagsUpdated() {
         unleashClient?.let {
-            userTest.postValue(
-                it.isEnabled("UserTest", false)
-            )
         }
     }
 
     // Add feature flags as LiveData so they can be state-subscribed in Compose
-    val userTest = MutableLiveData(false)
 }

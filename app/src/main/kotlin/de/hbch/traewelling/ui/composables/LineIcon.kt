@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +17,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.api.models.lineIcons.LineIconShape
-import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LineIconStyle
@@ -32,16 +29,11 @@ fun LineIcon(
     lineId: String? = null,
     defaultTextStyle: TextStyle = AppTypography.bodyMedium
 ) {
-    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
     val opCode = operatorCode?.replace("nahreisezug", "") ?: ""
 
-    var lineIcon = LineIcons.getInstance().icons.firstOrNull {
+    val lineIcon = LineIcons.getInstance().icons.firstOrNull {
         it.lineId == lineId
                 && it.operatorCode == opCode
-    }
-
-    if (userTest && "\\w*RE\\s?1\$".toRegex().matches(lineName)) {
-        lineIcon = LineIcons.getInstance().icons.first { it.operatorName == "eurex" }
     }
 
     val shape: Shape = when (lineIcon?.shape) {

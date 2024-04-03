@@ -47,7 +47,6 @@ import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
-import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
@@ -84,7 +83,6 @@ fun SearchConnection(
     var loading by remember { mutableStateOf(false) }
     var searchConnections by remember { mutableStateOf(true) }
     var selectedFilter by remember { mutableStateOf<FilterType?>(null) }
-    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
 
     LaunchedEffect(searchConnections, selectedFilter) {
         if (searchConnections) {
@@ -97,7 +95,7 @@ fun SearchConnection(
                     loading = false
                     searchConnections = false
                     trips.clear()
-                    trips.addAll(if (userTest) it.data.shuffled() else it.data)
+                    trips.addAll(it.data)
                     stationName = it.meta.station.name
                 },
                 { }
@@ -403,7 +401,6 @@ fun ConnectionListItem(
     modifier: Modifier = Modifier
 ) {
     val journeyNumber = hafasLine?.journeyNumber
-    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -473,7 +470,7 @@ fun ConnectionListItem(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = if (userTest && "\\w*RE\\s?1\$".toRegex().matches(hafasLine?.name ?: "")) "London St Pancras Intl" else destination,
+                    text = destination,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
