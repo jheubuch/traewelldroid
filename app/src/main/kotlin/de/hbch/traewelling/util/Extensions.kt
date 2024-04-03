@@ -37,7 +37,6 @@ import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.lineIcons.LineIcon
-import de.hbch.traewelling.api.models.lineIcons.LineIconShape
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.FeatureFlags
@@ -189,7 +188,7 @@ fun Context.shareStatus(
         .appendPath(status.id.toString())
         .build()
 
-    shareText = shareText.plus("\n\n$shareUri")
+    shareText = shareText.plus(" #NowTräwelling\n\n$shareUri")
 
     val sendIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
@@ -219,7 +218,7 @@ suspend fun Context.readOrDownloadLineIcons(
                     StandardCopyOption.REPLACE_EXISTING
                 )
             }
-            return@withContext listOf(readCsv(file.inputStream()), listOf(LineIcon("eurex", "EUREx", "eurex", "eurex", "#db0000", "#ffffff", "", LineIconShape.rectangle))).flatten()
+            return@withContext readCsv(file.inputStream())
         }
     } catch (ex: Exception) {
         Logger.captureException(ex)
