@@ -90,7 +90,7 @@ interface StatisticsService {
         @Query("until") until: LocalDate
     ): Call<Data<PersonalStatistics>>
 
-    @GET("statistics/daily/{date}?withPolylines")
+    @GET("statistics/daily/{date}?withPolylines=true")
     fun getDailyStatistics(
         @Path("date") date: String
     ) : Call<Data<DailyStatistics>>
