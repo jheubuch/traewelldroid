@@ -2,15 +2,18 @@ package de.hbch.traewelling.ui.checkIn
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,11 +41,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
@@ -53,6 +59,7 @@ import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DateTimeSelection
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.FromToTextRow
 import de.hbch.traewelling.util.checkAnyUsernames
@@ -67,7 +74,6 @@ fun CheckIn(
     modifier: Modifier = Modifier,
     checkInViewModel: CheckInViewModel,
     eventViewModel: EventViewModel,
-    bottomSearchViewModel: BottomSearchViewModel,
     checkInAction: (Boolean, Boolean) -> Unit = { _, _ -> },
     initText: String = "",
     isEditMode: Boolean = false,
@@ -75,6 +81,7 @@ fun CheckIn(
 ) {
     val secureStorage = SecureStorage(LocalContext.current)
     val coroutineScope = rememberCoroutineScope()
+    val bottomSearchViewModel: BottomSearchViewModel = viewModel()
 
     var enableTrwlCheckIn by rememberSaveable { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRWL_AUTO_LOGIN, Boolean::class.java) ?: true) }
     val travelynxConfigured = secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java)?.isNotBlank() ?: false
@@ -89,20 +96,22 @@ fun CheckIn(
         val matches = statusText.text.checkAnyUsernames()
         matches.firstOrNull { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }?.value?.replace("@", "")
     } }
+    val userResults = remember { mutableStateListOf<User>() }
+    var usersQuerying by remember { mutableStateOf(false) }
+    var displayUserResults by remember { mutableStateOf(false) }
     userSearchQuery.useDebounce(
         onChange = { query ->
             if (query == null) {
-                bottomSearchViewModel.reset()
+                usersQuerying = false
+                displayUserResults = false
             } else {
-                bottomSearchViewModel.registerClickHandler { selection ->
-                    val firstMatch = statusText.text.checkAnyUsernames().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
-                    statusText = statusText.copy(
-                        text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, selection),
-                        selection = TextRange(firstMatch.range.first + selection.length)
-                    )
-                }
+                usersQuerying = true
+                displayUserResults = true
                 coroutineScope.launch {
-                    bottomSearchViewModel.searchUsers(query)
+                    val users = bottomSearchViewModel.searchUsers(query)
+                    usersQuerying = false
+                    userResults.clear()
+                    userResults.addAll(users)
                 }
             }
         },
@@ -216,6 +225,50 @@ fun CheckIn(
                         text = "${statusText.text.count()}/280",
                         style = AppTypography.labelSmall
                     )
+                    AnimatedVisibility(displayUserResults) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (usersQuerying) {
+                                Text(
+                                    text = stringResource(id = R.string.data_loading)
+                                )
+                            } else {
+                                if (userResults.isEmpty()) {
+                                    Text(
+                                        text = stringResource(id = R.string.no_results_found)
+                                    )
+                                } else {
+                                    userResults.forEach {
+                                        val username = "@${it.username}"
+                                        AssistChip(
+                                            onClick = {
+                                                val firstMatch = statusText.text.checkAnyUsernames().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
+                                                statusText = statusText.copy(
+                                                    text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, "@${it.username} "),
+                                                    selection = TextRange(firstMatch.range.first + it.username.length + 2)
+                                                )
+                                            },
+                                            label = {
+                                                Text(
+                                                    text = username
+                                                )
+                                            },
+                                            leadingIcon = {
+                                                ProfilePicture(
+                                                    user = it,
+                                                    modifier = Modifier.size(24.dp)
+                                                )
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (travelynxConfigured && !isEditMode) {

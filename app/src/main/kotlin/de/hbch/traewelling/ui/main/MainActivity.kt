@@ -4,33 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -55,7 +43,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -83,7 +70,6 @@ import de.hbch.traewelling.navigation.Notifications
 import de.hbch.traewelling.navigation.PersonalProfile
 import de.hbch.traewelling.navigation.SCREENS
 import de.hbch.traewelling.navigation.TraewelldroidNavHost
-import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.FeatureFlags
@@ -91,7 +77,6 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
-import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.publishStationShortcuts
@@ -109,7 +94,6 @@ class MainActivity : ComponentActivity()
     private val loggedInUserViewModel: LoggedInUserViewModel by viewModels()
     private val eventViewModel: EventViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by viewModels()
-    private val bottomSearchViewModel: BottomSearchViewModel by viewModels()
 
     private var newIntentReceived: ((Intent?) -> Unit)? = null
     private lateinit var secureStorage: SecureStorage
@@ -133,13 +117,13 @@ class MainActivity : ComponentActivity()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         secureStorage = SecureStorage(this)
         emojiPackItemAdapter = EmojiPackItemAdapter.get(this)
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
         SharedValues.TRAVELYNX_TOKEN = secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java) ?: ""
         eventViewModel.activeEvents()
 
+        enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
@@ -153,10 +137,10 @@ class MainActivity : ComponentActivity()
                 navController = navController,
                 loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
-                checkInViewModel = checkInViewModel,
-                bottomSearchViewModel = bottomSearchViewModel
+                checkInViewModel = checkInViewModel
             )
         }
+        super.onCreate(savedInstanceState)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -189,8 +173,7 @@ fun TraewelldroidApp(
     navController: NavHostController,
     loggedInUserViewModel: LoggedInUserViewModel,
     eventViewModel: EventViewModel,
-    checkInViewModel: CheckInViewModel,
-    bottomSearchViewModel: BottomSearchViewModel
+    checkInViewModel: CheckInViewModel
 ) {
     MainTheme {
         val context = LocalContext.current
@@ -319,111 +302,60 @@ fun TraewelldroidApp(
                 )
             },
             bottomBar = {
-                val displayBottomSearchBar by bottomSearchViewModel.displayResults.observeAsState(false)
-                Column {
-                    AnimatedVisibility(
-                        visible = displayBottomSearchBar && WindowInsets.isImeVisible,
-                        enter = slideInVertically(initialOffsetY = { it }),
-                        exit = slideOutVertically(targetOffsetY = { it })
-                    ) {
-                        val userResultState by bottomSearchViewModel.userResults.observeAsState(null)
-                        val userResults = userResultState
-                        BottomAppBar(
-                            modifier = Modifier.padding(bottom = if (WindowInsets.isImeVisible) WindowInsets.ime.exclude(WindowInsets.systemBars).asPaddingValues().calculateBottomPadding() else 0.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .horizontalScroll(rememberScrollState())
-                                    .padding(horizontal = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                if (userResults == null) {
-                                    Text(
-                                        text = stringResource(id = R.string.data_loading)
-                                    )
-                                } else {
-                                    if (userResults.isEmpty()) {
-                                        Text(
-                                            text = stringResource(id = R.string.no_results_found)
-                                        )
-                                    }
-                                    userResults.forEach {
-                                        val username = "@${it.username}"
-                                        AssistChip(
-                                            onClick = { bottomSearchViewModel.onClick(username) },
-                                            label = {
-                                                Text(
-                                                    text = username
-                                                )
-                                            },
-                                            leadingIcon = {
-                                                ProfilePicture(
-                                                    user = it,
-                                                    modifier = Modifier.size(24.dp)
-                                                )
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    AnimatedVisibility(
-                        visible = navController.previousBackStackEntry == null,
-                        enter = slideInVertically(initialOffsetY = { it }),
-                        exit = slideOutVertically(targetOffsetY = { it })
-                    ) {
-                        NavigationBar {
-                            BOTTOM_NAVIGATION.forEach { destination ->
-                                NavigationBarItem(
-                                    icon = {
-                                        BadgedBox(
-                                            badge = {
-                                                if (destination == Notifications && unreadNotificationCount > 0) {
-                                                    Badge {
-                                                        Text(
-                                                            text = unreadNotificationCount.toString()
-                                                        )
-                                                    }
+                AnimatedVisibility(
+                    visible = navController.previousBackStackEntry == null,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it })
+                ) {
+                    NavigationBar {
+                        BOTTOM_NAVIGATION.forEach { destination ->
+                            NavigationBarItem(
+                                icon = {
+                                    BadgedBox(
+                                        badge = {
+                                            if (destination == Notifications && unreadNotificationCount > 0) {
+                                                Badge {
+                                                    Text(
+                                                        text = unreadNotificationCount.toString()
+                                                    )
                                                 }
                                             }
-                                        ) {
-                                            val user = loggedInUser
-                                            if (
-                                                destination == PersonalProfile &&
-                                                user != null
-                                            ) {
-                                                AsyncImage(
-                                                    model = user.avatarUrl,
-                                                    contentDescription = user.name,
-                                                    modifier = Modifier
-                                                        .size(24.dp)
-                                                        .clip(CircleShape),
-                                                    placeholder = painterResource(id = destination.icon)
-                                                )
-                                            } else {
-                                                Icon(
-                                                    painter = painterResource(id = destination.icon),
-                                                    contentDescription = null
-                                                )
-                                            }
                                         }
-                                    },
-                                    label = {
-                                        Text(
-                                            text = stringResource(id = destination.label),
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                    },
-                                    selected = currentScreen == destination,
-                                    onClick = {
-                                        navController.popBackStackAndNavigate(destination.route)
-                                        appBarState.contentOffset = 0f
+                                    ) {
+                                        val user = loggedInUser
+                                        if (
+                                            destination == PersonalProfile &&
+                                            user != null
+                                        ) {
+                                            AsyncImage(
+                                                model = user.avatarUrl,
+                                                contentDescription = user.name,
+                                                modifier = Modifier
+                                                    .size(24.dp)
+                                                    .clip(CircleShape),
+                                                placeholder = painterResource(id = destination.icon)
+                                            )
+                                        } else {
+                                            Icon(
+                                                painter = painterResource(id = destination.icon),
+                                                contentDescription = null
+                                            )
+                                        }
                                     }
-                                )
-                            }
+                                },
+                                label = {
+                                    Text(
+                                        text = stringResource(id = destination.label),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
+                                selected = currentScreen == destination,
+                                onClick = {
+                                    navController.popBackStackAndNavigate(destination.route)
+                                    appBarState.contentOffset = 0f
+                                }
+                            )
                         }
                     }
                 }
@@ -456,7 +388,6 @@ fun TraewelldroidApp(
                 eventViewModel = eventViewModel,
                 checkInViewModel = checkInViewModel,
                 notificationsViewModel = notificationsViewModel,
-                bottomSearchViewModel = bottomSearchViewModel,
                 snackbarHostState = snackbarHostState,
                 modifier = Modifier
                     .fillMaxWidth()

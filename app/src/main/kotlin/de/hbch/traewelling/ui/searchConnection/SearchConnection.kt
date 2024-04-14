@@ -45,7 +45,6 @@ import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasLine
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
-import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -68,7 +67,6 @@ import java.time.ZoneId
 fun SearchConnection(
     loggedInUserViewModel: LoggedInUserViewModel,
     checkInViewModel: CheckInViewModel,
-    bottomSearchViewModel: BottomSearchViewModel,
     station: String,
     currentSearchDate: ZonedDateTime,
     onTripSelected: () -> Unit = { },
@@ -116,8 +114,7 @@ fun SearchConnection(
             },
             homelandStationData = loggedInUserViewModel.home,
             recentStationsData = loggedInUserViewModel.lastVisitedStations,
-            queryUsers = false,
-            bottomSearchViewModel = bottomSearchViewModel
+            queryUsers = false
         )
         ElevatedCard {
             Column {

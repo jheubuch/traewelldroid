@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.models.status.Status
-import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.composables.NotificationsAvailableHint
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
@@ -33,7 +32,6 @@ import java.time.ZonedDateTime
 @Composable
 fun Dashboard(
     loggedInUserViewModel: LoggedInUserViewModel,
-    bottomSearchViewModel: BottomSearchViewModel,
     searchConnectionsAction: (String, ZonedDateTime?) -> Unit = { _, _ -> },
     userSelectedAction: (String) -> Unit = { },
     statusSelectedAction: (Int) -> Unit = { },
@@ -86,8 +84,7 @@ fun Dashboard(
                     recentStationsData = loggedInUserViewModel.lastVisitedStations,
                     onUserSelected = {
                         userSelectedAction(it.username)
-                    },
-                    bottomSearchViewModel = bottomSearchViewModel
+                    }
                 )
             }
             if (!knowsAboutNotifications) {
