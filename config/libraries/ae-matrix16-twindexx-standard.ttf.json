@@ -1,0 +1,14 @@
+{
+  "uniqueId": "ae:matrix16.twindexx",
+  "developers": [
+    {
+      "organisationUrl": "",
+      "name": "AEBahn"
+    }
+  ],
+  "artifactVersion": "001.0000",
+  "name": "AE_Matrix16_Twindexx",
+  "licenses": [
+    "SIL Open Font License"
+  ]
+}

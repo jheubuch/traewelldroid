@@ -114,6 +114,10 @@ android {
     }
 }
 
+aboutLibraries {
+    configPath = "config"
+}
+
 dependencies {
     // Jetpack Compose
     def composeVersion = "1.5.0"
@@ -164,7 +168,7 @@ dependencies {
     implementation "de.c1710:filemojicompat-autoinit:3.2.5"
 
     // OSS licenses
-    implementation "com.mikepenz:aboutlibraries-compose:10.8.3"
+    implementation "com.mikepenz:aboutlibraries-compose:11.1.3"
 
     // Feature flags
     implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"

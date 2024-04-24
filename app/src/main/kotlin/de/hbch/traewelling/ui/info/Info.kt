@@ -51,7 +51,7 @@ fun InfoScreen(
                     IconButton(onClick = backPressed) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.jwt_expiration)
+                            contentDescription = null
                         )
                     }
                 }
