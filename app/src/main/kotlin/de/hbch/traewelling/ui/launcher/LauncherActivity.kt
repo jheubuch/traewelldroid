@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.api.models.notifications.NotificationChannelType
 import de.hbch.traewelling.shared.LineIcons
+import de.hbch.traewelling.shared.MastodonEmojis
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.main.MainActivity
@@ -24,6 +25,7 @@ class LauncherActivity : AppCompatActivity() {
             readOrDownloadLineIcons()
         }
         LineIcons.getInstance().icons.addAll(icons)
+        MastodonEmojis.getInstance(this)
 
         createNotificationChannels()
 

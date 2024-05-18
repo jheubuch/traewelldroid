@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.util.extractUsernames
+import extractCustomEmojis
 import java.time.ZonedDateTime
 
 data class Status(
@@ -41,6 +42,7 @@ data class Status(
         val statusBody = getStatusText()
 
         val usernames = statusBody.extractUsernames()
+        val emojis = statusBody.extractCustomEmojis()
         val builder = AnnotatedString.Builder(statusBody)
 
         val usernameStyle = SpanStyle(fontWeight = FontWeight.ExtraBold, color = mentionColor)
@@ -55,6 +57,12 @@ data class Status(
                     match.range.last + 1
                 )
             }
+        }
+
+        if (user)
+        emojis.forEach { match ->
+            val emoji = match.groupValues.getOrElse(1) { "" }
+
         }
 
         return builder.toAnnotatedString()

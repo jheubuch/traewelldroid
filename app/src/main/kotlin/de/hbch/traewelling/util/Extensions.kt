@@ -273,11 +273,11 @@ fun Context.openLink(url: String) {
 
 @Composable
 fun <T> T.useDebounce(
-    delayMillis: Long = 300L,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    onChange: (T) -> Unit
-): T{
-    val state by rememberUpdatedState(this)
+        delayMillis: Long = 300L,
+        coroutineScope: CoroutineScope = rememberCoroutineScope(),
+        onChange: (T) -> Unit
+    ): T{
+        val state by rememberUpdatedState(this)
 
     DisposableEffect(state){
         val job = coroutineScope.launch {

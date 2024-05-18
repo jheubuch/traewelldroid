@@ -6,6 +6,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.mastodon.CustomEmoji
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import java.lang.Exception

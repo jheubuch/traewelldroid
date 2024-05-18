@@ -74,6 +74,7 @@ import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.MastodonEmojis
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
@@ -86,6 +87,8 @@ import io.getunleash.polling.PollingModes
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import readOrDownloadCustomEmoji
+import java.net.URL
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -186,6 +189,14 @@ fun TraewelldroidApp(
 
         LaunchedEffect(lastVisitedStations, homelandStation) {
             context.publishStationShortcuts(homelandStation, lastVisitedStations)
+        }
+
+        LaunchedEffect(loggedInUser) {
+            val user = loggedInUser
+            if (user?.mastodonUrl != null) {
+                val host = URL(user.mastodonUrl).host
+                MastodonEmojis.getInstance(context).emojis[host] = context.readOrDownloadCustomEmoji(host)
+            }
         }
 
         val appBarState = rememberTopAppBarState()
