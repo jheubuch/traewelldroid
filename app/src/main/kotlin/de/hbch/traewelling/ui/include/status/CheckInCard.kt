@@ -48,8 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
+import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -73,7 +75,7 @@ fun CheckInCard(
     status: Status?,
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     displayLongDate: Boolean = false,
-    stationSelected: (String, ZonedDateTime?) -> Unit = { _, _ -> },
+    stationSelected: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
     userSelected: (String) -> Unit = { },
     statusSelected: (Int) -> Unit = { },
     handleEditClicked: (Status) -> Unit = { },
@@ -150,7 +152,7 @@ fun CheckInCard(
                             top.linkTo(parent.top)
                             width = Dimension.fillToConstraints
                         },
-                        stationName = status.journey.origin.name,
+                        station = status.journey.origin,
                         timePlanned = status.journey.origin.departurePlanned,
                         timeReal = status.journey.departureManual ?: status.journey.origin.departureReal,
                         stationSelected = stationSelected
@@ -165,7 +167,7 @@ fun CheckInCard(
                                 bottom.linkTo(parent.bottom)
                                 width = Dimension.fillToConstraints
                             },
-                        stationName = status.journey.destination.name,
+                        station = status.journey.destination,
                         timePlanned = status.journey.destination.arrivalPlanned,
                         timeReal = status.journey.arrivalManual ?: status.journey.destination.arrivalReal,
                         verticalAlignment = Alignment.Bottom,
@@ -256,11 +258,11 @@ private fun calculateProgress(
 @Composable
 private fun StationRow(
     modifier: Modifier = Modifier,
-    stationName: String,
+    station: HafasTrainTripStation,
     timePlanned: ZonedDateTime,
     timeReal: ZonedDateTime?,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
-    stationSelected: (String, ZonedDateTime?) -> Unit = { _, _ -> }
+    stationSelected: (Int, ZonedDateTime?) -> Unit = { _, _ -> }
 ) {
     val primaryColor = LocalColorScheme.current.primary
 
@@ -274,8 +276,8 @@ private fun StationRow(
         ) {
             Text(
                 modifier = Modifier
-                    .clickable { stationSelected(stationName, null) },
-                text = stationName,
+                    .clickable { stationSelected(station.id, null) },
+                text = station.name,
                 style = AppTypography.titleLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
@@ -292,7 +294,7 @@ private fun StationRow(
                 else
                     timePlanned
             Text(
-                modifier = Modifier.clickable { stationSelected(stationName, displayedDate) },
+                modifier = Modifier.clickable { stationSelected(station.id, displayedDate) },
                 text = getLocalTimeString(
                     date = displayedDate
                 ),

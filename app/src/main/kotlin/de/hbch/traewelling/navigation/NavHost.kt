@@ -66,7 +66,7 @@ fun TraewelldroidNavHost(
     val context = LocalContext.current
     val secureStorage = SecureStorage(context)
 
-    val navToSearchConnections: (String, ZonedDateTime?) -> Unit = { station, date ->
+    val navToSearchConnections: (Int, ZonedDateTime?) -> Unit = { station, date ->
         val formattedDate =
             if (date == null)
                 ""
@@ -366,7 +366,7 @@ fun TraewelldroidNavHost(
 
             SearchConnection(
                 loggedInUserViewModel = loggedInUserViewModel,
-                station = it.arguments?.getString("station") ?: "",
+                station = it.arguments?.getString("station")?.toIntOrNull() ?: 5167,
                 currentSearchDate = zonedDateTime,
                 checkInViewModel = checkInViewModel,
                 onTripSelected = {

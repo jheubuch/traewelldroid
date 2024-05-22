@@ -24,7 +24,7 @@ fun Station.toShortcut(context: Context, shortcutId: String, home: Boolean = fal
                 TraewelldroidUriBuilder()
                     .appendPath("trains")
                     .appendPath("stationboard")
-                    .appendQueryParameter("station", ibnr)
+                    .appendQueryParameter("station", id.toString())
                     .build()
             )
         )

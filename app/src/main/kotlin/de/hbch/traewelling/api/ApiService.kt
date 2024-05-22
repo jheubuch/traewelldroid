@@ -74,6 +74,11 @@ interface AuthService {
         @Path("stationName") stationName: String
     ): Call<Data<Station>>
 
+    @PUT("station/{id}/home")
+    suspend fun setUserHomelandStation(
+        @Path("id") stationId: Int
+    ): Data<Station>
+
     @GET("trains/station/history")
     fun getLastVisitedStations(): Call<Data<List<Station>>>
 
@@ -195,6 +200,13 @@ interface TravelService {
         @Query("when") time: ZonedDateTime,
         @Query("travelType") filter: String
     ): Call<HafasTripPage>
+
+    @GET("station/{id}/departures")
+    suspend fun getDeparturesAtStation(
+        @Path("id") stationId: Int,
+        @Query("when") time: ZonedDateTime,
+        @Query("travelType") filter: String
+    ): HafasTripPage
 
     @GET("trains/station/autocomplete/{station}")
     suspend fun autoCompleteStationSearch(

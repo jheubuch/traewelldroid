@@ -2,10 +2,6 @@ package de.hbch.traewelling.api.models.station
 
 import com.google.gson.annotations.SerializedName
 
-data class StationData(
-    @SerializedName("data") val data: Station
-)
-
 data class Station(
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,

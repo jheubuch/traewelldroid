@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.composables.NotificationsAvailableHint
@@ -32,7 +33,7 @@ import java.time.ZonedDateTime
 @Composable
 fun Dashboard(
     loggedInUserViewModel: LoggedInUserViewModel,
-    searchConnectionsAction: (String, ZonedDateTime?) -> Unit = { _, _ -> },
+    searchConnectionsAction: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
     userSelectedAction: (String) -> Unit = { },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },

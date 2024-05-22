@@ -19,6 +19,28 @@ class SearchConnectionViewModel: ViewModel() {
     private val _pageTimes = MutableLiveData<Times>()
     val pageTimes: LiveData<Times> get() = _pageTimes
 
+    suspend fun searchConnections(
+        stationId: Int,
+        departureTime: ZonedDateTime,
+        filterType: FilterType?
+    ): HafasTripPage? {
+        return try {
+            val tripPage = TraewellingApi
+                .travelService
+                .getDeparturesAtStation(
+                    stationId,
+                    departureTime,
+                    filterType?.filterQuery ?: ""
+                )
+
+            _pageTimes.postValue(tripPage.meta.times)
+
+            tripPage
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     fun searchConnections(
         stationName: String,
         departureTime: ZonedDateTime,
@@ -51,6 +73,16 @@ class SearchConnectionViewModel: ViewModel() {
                     Logger.captureException(t)
                 }
             })
+    }
+
+    suspend fun setUserHomelandStation(
+        stationId: Int
+    ): Station? {
+        return try {
+            TraewellingApi.authService.setUserHomelandStation(stationId).data
+        } catch (_: Exception) {
+            null
+        }
     }
 
     fun setUserHomelandStation(

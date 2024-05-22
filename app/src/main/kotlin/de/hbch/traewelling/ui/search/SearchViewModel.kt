@@ -23,7 +23,7 @@ class SearchViewModel : ViewModel() {
     ): List<Station>? {
         return try {
             val stations = TraewellingApi.travelService.autoCompleteStationSearch(query).data
-            stations.sortedWith(compareBy(nullsLast()) { it.ds100 }).take(5)
+            stations.sortedWith(compareBy(nullsLast()) { it.ds100 })
         } catch (_: Exception) {
             null
         }

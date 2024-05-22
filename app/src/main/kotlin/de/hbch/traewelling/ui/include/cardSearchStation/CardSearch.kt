@@ -24,7 +24,7 @@ fun CardSearch(
     modifier: Modifier = Modifier,
     homelandStationData: LiveData<Station?>,
     recentStationsData: LiveData<List<Station>?>,
-    onStationSelected: (String) -> Unit = { },
+    onStationSelected: (Int) -> Unit = { },
     onUserSelected: (User) -> Unit = { },
     queryStations: Boolean = true,
     queryUsers: Boolean = true
