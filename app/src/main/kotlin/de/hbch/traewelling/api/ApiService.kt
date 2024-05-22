@@ -69,11 +69,6 @@ interface AuthService {
     @GET("auth/user")
     fun getLoggedInUser(): Call<Data<User>>
 
-    @PUT("trains/station/{stationName}/home")
-    fun setUserHomelandStation(
-        @Path("stationName") stationName: String
-    ): Call<Data<Station>>
-
     @PUT("station/{id}/home")
     suspend fun setUserHomelandStation(
         @Path("id") stationId: Int
@@ -193,13 +188,6 @@ interface TravelService {
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double
     ): Data<Station>
-
-    @GET("trains/station/{station}/departures")
-    fun getDeparturesAtStation(
-        @Path("station", encoded = false) station: String,
-        @Query("when") time: ZonedDateTime,
-        @Query("travelType") filter: String
-    ): Call<HafasTripPage>
 
     @GET("station/{id}/departures")
     suspend fun getDeparturesAtStation(
