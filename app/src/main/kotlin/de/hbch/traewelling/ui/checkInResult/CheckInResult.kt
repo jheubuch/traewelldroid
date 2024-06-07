@@ -249,15 +249,15 @@ private fun CoTraveller(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ProfilePicture(
-                name = status.username,
-                url = status.profilePicture ?: "",
+                name = status.user.username,
+                url = status.user.avatarUrl,
                 modifier = Modifier
                     .width(32.dp)
                     .height(32.dp)
             )
             Column {
                 Text(
-                    text = "@${status.username}",
+                    text = "@${status.user.username}",
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(

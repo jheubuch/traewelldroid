@@ -7,6 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
+import de.hbch.traewelling.api.models.user.LightUser
 import de.hbch.traewelling.util.extractUsernames
 import java.time.ZonedDateTime
 
@@ -14,9 +15,6 @@ data class Status(
     val id: Int,
     val body: String?,
     val createdAt: ZonedDateTime,
-    val profilePicture: String?,
-    @SerializedName("user") val userId: Int,
-    val username: String,
     val visibility: StatusVisibility,
     val business: StatusBusiness,
     var likes: Int?,
@@ -25,12 +23,13 @@ data class Status(
     @SerializedName("train") val journey: Journey,
     val event: Event?,
     val client: ApiClient?,
-    @SerializedName("bodyMentions") val mentions: List<UserMention>
+    @SerializedName("bodyMentions") val mentions: List<UserMention>,
+    @SerializedName("userDetails") val user: LightUser
 ) {
     fun getStatusText(): String {
         var statusBody = body ?: ""
 
-        if (username == "ErikUden") {
+        if (user.username == "ErikUden") {
             statusBody += "\n🍑"
         }
 

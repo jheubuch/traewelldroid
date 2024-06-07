@@ -214,7 +214,7 @@ fun CheckInCard(
                     modifier = Modifier.fillMaxWidth(),
                     status = status,
                     isOwnStatus =
-                    (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
+                    (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.user.id,
                     displayLongDate = displayLongDate,
                     checkInCardViewModel = checkInCardViewModel,
                     userSelected = userSelected,
@@ -503,8 +503,8 @@ private fun CheckInCardFooter(
                     else
                         getLocalTimeString(date = status.createdAt)
                 ProfilePicture(
-                    name = status.username,
-                    url = status.profilePicture ?: "",
+                    name = status.user.username,
+                    url = status.user.avatarUrl,
                     modifier = Modifier
                         .height(24.dp)
                         .width(24.dp)
@@ -512,11 +512,11 @@ private fun CheckInCardFooter(
                 )
                 Text(
                     modifier = alignmentModifier
-                        .clickable { userSelected(status.username) }
+                        .clickable { userSelected(status.user.username) }
                         .padding(2.dp),
                     text = stringResource(
                         id = R.string.check_in_user_time,
-                        status.username,
+                        status.user.username,
                         dateString
                     ),
                     textAlign = TextAlign.End,

@@ -171,8 +171,11 @@ interface CheckInService {
         @Path("statusId") statusId: Int
     ): Call<Unit>
 
-    @GET("activeEvents")
-    fun getActiveEvents(): Call<Data<List<Event>>>
+    @GET("events")
+    suspend fun getEvents(
+        @Query("timestamp") timestamp: ZonedDateTime = ZonedDateTime.now(),
+        @Query("upcoming") upcoming: Boolean = false
+    ): Data<List<Event>>
 }
 
 interface TravelService {

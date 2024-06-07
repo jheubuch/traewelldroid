@@ -304,7 +304,7 @@ fun TraewelldroidNavHost(
                 statusLoaded = { status ->
                     val menuItems = mutableListOf<ComposeMenuItem>()
                     if (loggedInUserViewModel.loggedInUser.value != null) {
-                        if (status.userId == loggedInUserViewModel.loggedInUser.value?.id) {
+                        if (status.user.id == loggedInUserViewModel.loggedInUser.value?.id) {
                             menuItems.add(
                                 ComposeMenuItem(
                                     R.string.title_share,
