@@ -23,11 +23,15 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +48,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasLine
 import de.hbch.traewelling.api.models.trip.HafasTrip
+import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -59,6 +64,7 @@ import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
 import de.hbch.traewelling.util.getDelayColor
 import de.hbch.traewelling.util.getLastDestination
 import de.hbch.traewelling.util.getLocalTimeString
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.ZoneId
@@ -67,37 +73,32 @@ import java.time.ZoneId
 fun SearchConnection(
     loggedInUserViewModel: LoggedInUserViewModel,
     checkInViewModel: CheckInViewModel,
-    station: String,
+    station: Int,
     currentSearchDate: ZonedDateTime,
     onTripSelected: () -> Unit = { },
     onHomelandSelected: (Station) -> Unit = { }
 ) {
     val viewModel: SearchConnectionViewModel = viewModel()
-    var stationName by remember { mutableStateOf(station) }
+    val coroutineScope = rememberCoroutineScope()
+
+    var hafasTripPage by remember { mutableStateOf<HafasTripPage?>(null) }
+    var stationId by rememberSaveable { mutableIntStateOf(station) }
+    val stationName by remember { derivedStateOf { hafasTripPage?.meta?.station?.name ?: "" } }
+    val trips by remember { derivedStateOf { hafasTripPage?.data ?: listOf() } }
+    val times by remember { derivedStateOf { hafasTripPage?.meta?.times } }
+
     val scrollState = rememberScrollState()
-    val trips = remember { mutableStateListOf<HafasTrip>() }
-    val times by viewModel.pageTimes.observeAsState()
     var searchDate by remember { mutableStateOf(currentSearchDate) }
     var loading by remember { mutableStateOf(false) }
-    var searchConnections by remember { mutableStateOf(true) }
     var selectedFilter by remember { mutableStateOf<FilterType?>(null) }
 
-    LaunchedEffect(searchConnections, selectedFilter) {
-        if (searchConnections) {
-            loading = true
-            viewModel.searchConnections(
-                stationName,
-                searchDate,
-                selectedFilter,
-                {
-                    loading = false
-                    searchConnections = false
-                    trips.clear()
-                    trips.addAll(it.data)
-                    stationName = it.meta.station.name
-                },
-                { }
-            )
+    LaunchedEffect(stationId, searchDate, selectedFilter) {
+        loading = true
+
+        coroutineScope.launch {
+            val tripPage = viewModel.searchConnections(stationId, searchDate, selectedFilter)
+            loading = false
+            hafasTripPage = tripPage
         }
     }
 
@@ -109,8 +110,7 @@ fun SearchConnection(
     ) {
         CardSearch(
             onStationSelected = { station ->
-                stationName = station
-                searchConnections = true
+                stationId = station
             },
             homelandStationData = loggedInUserViewModel.home,
             recentStationsData = loggedInUserViewModel.lastVisitedStations,
@@ -138,14 +138,12 @@ fun SearchConnection(
                             val time = times?.previous
                             time?.let {
                                 searchDate = it
-                                searchConnections = true
                             }
                         },
                         onNextTime = {
                             val time = times?.next
                             time?.let {
                                 searchDate = it
-                                searchConnections = true
                             }
                         },
                         onTripSelection = { trip ->
@@ -163,22 +161,19 @@ fun SearchConnection(
                         },
                         onTimeSelection = {
                             searchDate = it
-                            searchConnections = true
                         },
                         onHomelandStationSelection = {
-                            viewModel.setUserHomelandStation(
-                                station,
-                                { s ->
+                            coroutineScope.launch {
+                                val s = viewModel.setUserHomelandStation(stationId)
+                                if (s != null) {
                                     loggedInUserViewModel.setHomelandStation(s)
                                     onHomelandSelected(s)
-                                },
-                                {}
-                            )
+                                }
+                            }
                         },
                         appliedFilter = selectedFilter,
                         onFilter = {
                             selectedFilter = it
-                            searchConnections = true
                         }
                     )
                 }

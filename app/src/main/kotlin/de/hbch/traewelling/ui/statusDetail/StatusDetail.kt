@@ -144,7 +144,7 @@ fun StatusDetail(
                 StatusTags(
                     statusId = statusId,
                     modifier = Modifier.fillMaxWidth(),
-                    isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status?.userId,
+                    isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status?.user?.id,
                     defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
                 )
                 status?.likes?.let {

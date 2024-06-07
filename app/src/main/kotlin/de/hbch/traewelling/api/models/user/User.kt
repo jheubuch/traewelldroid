@@ -9,8 +9,8 @@ data class User(
     @SerializedName("displayName") val name: String,
     @SerializedName("username") val username: String,
     @SerializedName("profilePicture") val avatarUrl: String,
-    @SerializedName("trainDistance") val distance: Int,
-    @SerializedName("trainDuration") val duration: Int,
+    @SerializedName("totalDistance") val distance: Int,
+    @SerializedName("totalDuration") val duration: Int,
     @SerializedName("points") val points: Int,
     @SerializedName("mastodonUrl") val mastodonUrl: String?,
     @SerializedName("privateProfile") val privateProfile: Boolean,
@@ -23,3 +23,11 @@ data class User(
 ) {
     val averageSpeed: Double get() = (distance / 1000.0) / (duration / 60.0)
 }
+
+data class LightUser(
+    @SerializedName("id") val id: Int,
+    @SerializedName("displayName") val name: String,
+    @SerializedName("username") val username: String,
+    @SerializedName("profilePicture") val avatarUrl: String,
+    @SerializedName("mastodonUrl") val mastodonUrl: String?
+)

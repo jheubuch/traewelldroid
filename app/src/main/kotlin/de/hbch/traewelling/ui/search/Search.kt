@@ -63,7 +63,7 @@ fun Search(
     queryUsers: Boolean = true,
     homelandStation: Station? = null,
     recentStations: List<Station>? = null,
-    onStationSelected: (String) -> Unit = { },
+    onStationSelected: (Int) -> Unit = { },
     onUserSelected: (User) -> Unit = { }
 ) {
     val searchInstruction =
@@ -99,7 +99,7 @@ fun Search(
 
     val stationSelected: (Station) -> Unit = {
         active = false
-        onStationSelected(it.name)
+        onStationSelected(it.id)
     }
     val userSelected: (User) -> Unit = {
         active = false
@@ -158,10 +158,7 @@ fun Search(
     DockedSearchBar(
         query = query,
         onQueryChange = { query = it },
-        onSearch = {
-            active = false
-            onStationSelected(it)
-        },
+        onSearch = { query = it },
         active = active,
         onActiveChange = { active = it },
         modifier = modifier,

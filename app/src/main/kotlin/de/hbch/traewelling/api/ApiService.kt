@@ -69,10 +69,10 @@ interface AuthService {
     @GET("auth/user")
     fun getLoggedInUser(): Call<Data<User>>
 
-    @PUT("trains/station/{stationName}/home")
-    fun setUserHomelandStation(
-        @Path("stationName") stationName: String
-    ): Call<Data<Station>>
+    @PUT("station/{id}/home")
+    suspend fun setUserHomelandStation(
+        @Path("id") stationId: Int
+    ): Data<Station>
 
     @GET("trains/station/history")
     fun getLastVisitedStations(): Call<Data<List<Station>>>
@@ -171,8 +171,11 @@ interface CheckInService {
         @Path("statusId") statusId: Int
     ): Call<Unit>
 
-    @GET("activeEvents")
-    fun getActiveEvents(): Call<Data<List<Event>>>
+    @GET("events")
+    suspend fun getEvents(
+        @Query("timestamp") timestamp: ZonedDateTime = ZonedDateTime.now(),
+        @Query("upcoming") upcoming: Boolean = false
+    ): Data<List<Event>>
 }
 
 interface TravelService {
@@ -189,12 +192,12 @@ interface TravelService {
         @Query("longitude") longitude: Double
     ): Data<Station>
 
-    @GET("trains/station/{station}/departures")
-    fun getDeparturesAtStation(
-        @Path("station", encoded = false) station: String,
+    @GET("station/{id}/departures")
+    suspend fun getDeparturesAtStation(
+        @Path("id") stationId: Int,
         @Query("when") time: ZonedDateTime,
         @Query("travelType") filter: String
-    ): Call<HafasTripPage>
+    ): HafasTripPage
 
     @GET("trains/station/autocomplete/{station}")
     suspend fun autoCompleteStationSearch(

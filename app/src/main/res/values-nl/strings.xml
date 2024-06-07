@@ -54,4 +54,6 @@
     <string name="abort">Afbreken</string>
     <string name="logout">Uitloggen</string>
     <string name="request_url_verification_text">Träwelldroid kan nu URL\'s van traewelling.de openen. Wilt u opzetten? Dit kan ook op elk moment worden gewijzigd in de systeeminstellingen.</string>
+    <string name="check_in_trwl">Check-in met Träwelling</string>
+    <string name="check_in_travelynx">Check-in met travelynx</string>
 </resources>

@@ -66,7 +66,7 @@ fun TraewelldroidNavHost(
     val context = LocalContext.current
     val secureStorage = SecureStorage(context)
 
-    val navToSearchConnections: (String, ZonedDateTime?) -> Unit = { station, date ->
+    val navToSearchConnections: (Int, ZonedDateTime?) -> Unit = { station, date ->
         val formattedDate =
             if (date == null)
                 ""
@@ -304,7 +304,7 @@ fun TraewelldroidNavHost(
                 statusLoaded = { status ->
                     val menuItems = mutableListOf<ComposeMenuItem>()
                     if (loggedInUserViewModel.loggedInUser.value != null) {
-                        if (status.userId == loggedInUserViewModel.loggedInUser.value?.id) {
+                        if (status.user.id == loggedInUserViewModel.loggedInUser.value?.id) {
                             menuItems.add(
                                 ComposeMenuItem(
                                     R.string.title_share,
@@ -366,7 +366,7 @@ fun TraewelldroidNavHost(
 
             SearchConnection(
                 loggedInUserViewModel = loggedInUserViewModel,
-                station = it.arguments?.getString("station") ?: "",
+                station = it.arguments?.getString("station")?.toIntOrNull() ?: 5167,
                 currentSearchDate = zonedDateTime,
                 checkInViewModel = checkInViewModel,
                 onTripSelected = {

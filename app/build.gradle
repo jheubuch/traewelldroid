@@ -22,8 +22,8 @@ aboutLibraries {
 
 android {
     def packageName = "de.hbch.traewelling"
-    def name = "2.7.4"
-    def code = 146
+    def name = "2.7.5"
+    def code = 147
 
     compileSdk 34
 

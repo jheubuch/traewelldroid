@@ -14,25 +14,16 @@ class EventViewModel : ViewModel() {
 
     val activeEvents: MutableLiveData<List<Event>> = MutableLiveData(listOf())
 
-    fun activeEvents() {
-        TraewellingApi
-            .checkInService
-            .getActiveEvents()
-            .enqueue(object : Callback<Data<List<Event>>> {
-                override fun onResponse(
-                    call: Call<Data<List<Event>>>,
-                    response: Response<Data<List<Event>>>
-                ) {
-                    if (response.isSuccessful) {
-                        val data = response.body()?.data ?: return
-                        activeEvents.postValue(data)
-                        return
-                    }
-                }
-
-                override fun onFailure(call: Call<Data<List<Event>>>, t: Throwable) {
-                    Logger.captureException(t)
-                }
-            })
+    suspend fun activeEvents() {
+        activeEvents.postValue(
+            try {
+                TraewellingApi
+                    .checkInService
+                    .getEvents()
+                    .data
+            } catch (_: Exception) {
+                listOf()
+            }
+        )
     }
 }
