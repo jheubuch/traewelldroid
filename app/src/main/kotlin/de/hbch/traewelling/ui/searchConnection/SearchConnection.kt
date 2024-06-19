@@ -27,7 +27,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
@@ -52,6 +53,7 @@ import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
@@ -198,6 +200,12 @@ fun SearchConnection(
     onHomelandStationSelection: () -> Unit = { },
     onTimeSelection: (ZonedDateTime) -> Unit = { }
 ) {
+    val context = LocalContext.current
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = context as ViewModelStoreOwner
+    )
+    val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
+
     var datePickerVisible by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = searchTime.toInstant().toEpochMilli()
@@ -351,7 +359,8 @@ fun SearchConnection(
                         trip.station?.name
                     else
                         null,
-                hafasLine = trip.line
+                hafasLine = trip.line,
+                displayJourneyNumber = displayJourneyNumber
             )
 
             HorizontalDivider(
@@ -390,6 +399,7 @@ fun ConnectionListItem(
     destination: String,
     departureStation: String?,
     hafasLine: HafasLine?,
+    displayJourneyNumber: Boolean,
     modifier: Modifier = Modifier
 ) {
     val journeyNumber = hafasLine?.journeyNumber
@@ -417,7 +427,7 @@ fun ConnectionListItem(
                     lineId = hafasLine?.id
                 )
 
-                if (journeyNumber != null && hafasLine.name?.contains(journeyNumber.toString()) == false) {
+                if (displayJourneyNumber && journeyNumber != null && hafasLine.name?.contains(journeyNumber.toString()) == false) {
                     Text(
                         text = "($journeyNumber)",
                         style = AppTypography.bodySmall
@@ -559,7 +569,8 @@ fun ConnectionListItemPreview() {
                 isCancelled = false,
                 destination = "Memmingen",
                 departureStation = null,
-                hafasLine = null
+                hafasLine = null,
+                displayJourneyNumber = true
             )
             ConnectionListItem(
                 productType = ProductType.TRAM,
@@ -568,7 +579,8 @@ fun ConnectionListItemPreview() {
                 isCancelled = true,
                 destination = "S-Vaihingen über Dachswald, Panoramabahn etc pp",
                 departureStation = "Hauptbahnhof, Arnulf-Klett-Platz, einmal über den Fernwanderweg, rechts abbiegen, Treppe runter, dritter Bahnsteig rechts",
-                hafasLine = null
+                hafasLine = null,
+                displayJourneyNumber = false
             )
         }
     }

@@ -24,7 +24,8 @@ data class Status(
     val event: Event?,
     val client: ApiClient?,
     @SerializedName("bodyMentions") val mentions: List<UserMention>,
-    @SerializedName("userDetails") val user: LightUser
+    @SerializedName("userDetails") val user: LightUser,
+    val tags: List<Tag>
 ) {
     fun getStatusText(): String {
         var statusBody = body ?: ""

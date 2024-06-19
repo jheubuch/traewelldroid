@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,12 +42,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.PolylineColor
@@ -79,6 +82,10 @@ fun StatusDetail(
     var status by remember { mutableStateOf<Status?>(null) }
     var operator by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
+    )
+    val displayTagsInCard by settingsViewModel.displayTagsInCard.observeAsState(true)
 
     LaunchedEffect(status) {
         if (status == null) {
@@ -141,12 +148,16 @@ fun StatusDetail(
                     displayLongDate = true,
                     userSelected = userSelected
                 )
-                StatusTags(
-                    statusId = statusId,
-                    modifier = Modifier.fillMaxWidth(),
-                    isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status?.user?.id,
-                    defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
-                )
+                if (!displayTagsInCard) {
+                    StatusTags(
+                        statusId = statusId,
+                        modifier = Modifier.fillMaxWidth(),
+                        isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id
+                            ?: -1) == status?.user?.id,
+                        defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility
+                            ?: StatusVisibility.PUBLIC
+                    )
+                }
                 status?.likes?.let {
                     if (it > 0) {
                         StatusLikes(
@@ -187,12 +198,14 @@ fun StatusDetail(
                         }
                     }
                 )
-                Text(
-                    text = operator ?: "",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End,
-                    style = AppTypography.labelMedium
-                )
+                if (operator != null) {
+                    Text(
+                        text = operator ?: "",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End,
+                        style = AppTypography.labelMedium
+                    )
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,

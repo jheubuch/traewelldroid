@@ -74,6 +74,7 @@ import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
@@ -86,7 +87,6 @@ import io.getunleash.polling.PollingModes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -98,6 +98,7 @@ class MainActivity : ComponentActivity()
     private val loggedInUserViewModel: LoggedInUserViewModel by viewModels()
     private val eventViewModel: EventViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     private var newIntentReceived: ((Intent?) -> Unit)? = null
     private lateinit var secureStorage: SecureStorage
@@ -130,6 +131,8 @@ class MainActivity : ComponentActivity()
         coroutineScope.launch {
             eventViewModel.activeEvents()
         }
+
+        settingsViewModel.loadSettings(this)
 
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)

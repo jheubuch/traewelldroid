@@ -254,4 +254,8 @@
     <string name="changes_saved">Changes have been saved</string>
     <string name="checked_in_with">Checked in with %1$s</string>
     <string name="no_results_found">No results found.</string>
+    <string name="settings_display">Display configuration</string>
+    <string name="settings_display_description">You can configure the display and behaviour of the application.</string>
+    <string name="settings_display_tags_in_card">Display tags in check-in card</string>
+    <string name="settings_display_journey_number">Display journey numbers in check-in cards and connection search</string>
 </resources>
