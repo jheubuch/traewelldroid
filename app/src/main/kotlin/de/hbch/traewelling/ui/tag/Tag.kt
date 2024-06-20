@@ -94,10 +94,13 @@ fun StatusTags(
     defaultVisibility: StatusVisibility = StatusVisibility.PUBLIC
 ) {
     val tagViewModel: TagViewModel = viewModel()
-    val currentTags = remember { mutableStateListOf<Tag>().also { it.addAll(tags) } }
-    var tagsRequested by remember { mutableStateOf(false) }
+    var tagsRequested by remember { mutableStateOf(true) }
     var tagFormVisible by remember { mutableStateOf(false) }
     var tagFormData by remember { mutableStateOf<Tag?>(null) }
+
+    val currentTags = remember { mutableStateListOf<Tag>().also {
+        it.addAll(tags)
+    } }
 
     LaunchedEffect(tagsRequested) {
         if (!tagsRequested) {
@@ -135,7 +138,7 @@ fun StatusTags(
         }
     }
 
-    if (currentTags.isNotEmpty()) {
+    if (currentTags.isNotEmpty() || isOwnStatus) {
         Row(
             modifier = modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
