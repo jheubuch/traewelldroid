@@ -127,7 +127,7 @@ fun StatusTags(
                     tagData = tagFormData,
                     tagViewModel = tagViewModel,
                     statusId = statusId,
-                    alreadyAddedTags = tags.map { it.safeKey },
+                    alreadyAddedTags = currentTags.map { it.safeKey },
                     onSaveSucceeded = {
                         tagsRequested = false
                         tagFormVisible = false
