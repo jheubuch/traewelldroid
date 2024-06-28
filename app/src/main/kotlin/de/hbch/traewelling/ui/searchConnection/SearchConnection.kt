@@ -445,7 +445,7 @@ fun ConnectionListItem(
                     if (isCancelled) Color.Red
                     else getDelayColor(planned = departurePlanned, real = departureReal)
                 )
-                if (isCancelled) {
+                if (isCancelled || (departureReal ?: departurePlanned) > departurePlanned) {
                     Text(
                         text = getLocalTimeString(
                             date = departurePlanned

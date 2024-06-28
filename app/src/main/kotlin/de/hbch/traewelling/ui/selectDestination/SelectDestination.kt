@@ -265,13 +265,6 @@ private fun TravelStopListItem(
                     color = Color.Red,
                     style = AppTypography.titleMedium
                 )
-                Text(
-                    text = getLocalTimeString(
-                        date = station.arrivalPlanned
-                    ),
-                    textDecoration = TextDecoration.LineThrough,
-                    style = AppTypography.labelMedium
-                )
             } else {
                 Text(
                     text = getLocalTimeString(
@@ -282,6 +275,15 @@ private fun TravelStopListItem(
                         planned = station.arrivalPlanned
                     ),
                     style = AppTypography.titleMedium
+                )
+            }
+            if (station.isCancelled || (station.arrivalReal ?: station.arrivalPlanned) > station.arrivalPlanned) {
+                Text(
+                    text = getLocalTimeString(
+                        date = station.arrivalPlanned
+                    ),
+                    textDecoration = TextDecoration.LineThrough,
+                    style = AppTypography.labelMedium
                 )
             }
         }
