@@ -177,7 +177,7 @@ private fun SuccessfulCheckInResult(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             StatusDetailsRow(
-                productType = journey.category,
+                productType = journey.safeProductType,
                 line = journey.line,
                 journeyNumber = journey.journeyNumber,
                 kilometers = journey.distance,

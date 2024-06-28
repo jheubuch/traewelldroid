@@ -190,7 +190,7 @@ fun CheckInCard(
                                 end.linkTo(stationRowTop.end)
                                 width = Dimension.fillToConstraints
                             },
-                        productType = status.journey.category,
+                        productType = status.journey.safeProductType,
                         line = status.journey.line,
                         kilometers = status.journey.distance,
                         duration = status.journey.duration,

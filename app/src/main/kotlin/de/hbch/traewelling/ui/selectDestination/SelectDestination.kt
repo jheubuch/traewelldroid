@@ -92,7 +92,7 @@ fun SelectDestination(
                     DataLoading()
                 } else {
                     FromToTextRow(
-                        category = trip!!.category,
+                        category = trip!!.safeProductType,
                         lineName = trip!!.lineName,
                         lineId = checkInViewModel.lineId,
                         operatorCode = checkInViewModel.operatorCode,

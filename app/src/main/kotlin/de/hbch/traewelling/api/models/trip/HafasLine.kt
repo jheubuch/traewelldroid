@@ -8,9 +8,11 @@ data class HafasLine(
     @SerializedName("id") val id: String,
     @SerializedName("fahrtNr") val journeyNumber: Int,
     @SerializedName("name") val name: String?,
-    @SerializedName("product") val product: ProductType,
+    @SerializedName("product") val product: ProductType?,
     @SerializedName("operator") val operator: HafasOperator?
-)
+) {
+    val safeProductType get() = product ?: ProductType.UNKNOWN
+}
 
 @Suppress("unused")
 enum class ProductType {
@@ -32,7 +34,6 @@ enum class ProductType {
     },
     @SerializedName("suburban")
     SUBURBAN {
-        override val isTrain = true
         override fun getIcon() = R.drawable.ic_suburban
         override fun getString() = R.string.product_type_suburban
     },
@@ -49,33 +50,35 @@ enum class ProductType {
     // RE, RB, RS
     @SerializedName("regional")
     REGIONAL {
-        override val isTrain = true
         override fun getString() = R.string.product_type_regional
     },
     // IRE, IR
     @SerializedName("regionalExp")
     REGIONAL_EXPRESS {
-        override val isTrain = true
         override fun getString() = R.string.product_type_regional_express
     },
     // ICE, ECE
     @SerializedName("nationalExpress")
     NATIONAL_EXPRESS {
-        override val isTrain = true
         override fun getString() = R.string.product_type_national_express
     },
     // IC, EC
     @SerializedName("national")
     NATIONAL {
-        override val isTrain = true
         override fun getString() = R.string.product_type_national
     },
+    @SerializedName("plane")
+    PLANE {
+        override fun getIcon() = R.drawable.ic_plane
+    },
     LONG_DISTANCE {
-        override val isTrain = true
         override fun getString() = R.string.product_type_national_express
+    },
+    UNKNOWN {
+        override fun getIcon() = R.drawable.ic_unknown
+        override fun getString() = R.string.unknown
     };
 
-    open val isTrain = false
     open fun getIcon() = R.drawable.ic_train
     open fun getString() = R.string.product_type_bus
 }
