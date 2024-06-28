@@ -154,7 +154,7 @@ class MainActivity : ComponentActivity()
         super.onCreate(savedInstanceState)
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         newIntentReceived?.invoke(intent)
     }
