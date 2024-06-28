@@ -193,7 +193,7 @@ private fun SuccessfulCheckInResult(
                 isOwnStatus = true,
                 defaultVisibility = loggedInUserViewModel.defaultStatusVisibility
             )
-            val pointReasonText = checkInResponse.data.points.calculation.reason.getExplanation()
+            val pointReasonText = checkInResponse.data.points.calculation.safeReason.getExplanation()
             if (pointReasonText != null) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),

@@ -127,7 +127,10 @@
         Punkte zu erhalten.
     </string>
     <string name="point_reason_forced">
-        Weil du diesen Check-In erzwungen hast, hast du nur 0 Punkte erhalten.
+        Weil du diesen Check-In erzwungen hast, hast du nicht alle Punkte erhalten.
+    </string>
+    <string name="point_reason_manual">
+        Weil du in eine manuell erstellte Fahrt eingecheckt hast, hast du keine Punkte erhalten.
     </string>
     <string name="title_share">Teilen</string>
     <string name="or">oder</string>
