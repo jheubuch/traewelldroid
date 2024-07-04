@@ -145,7 +145,7 @@ fun CheckIn(
                 }
             }
         },
-        delayMillis = 500L
+        delayMillis = 250L
     )
 
     val selectedVisibility by checkInViewModel.statusVisibility.observeAsState()
