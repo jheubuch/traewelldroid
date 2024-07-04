@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
@@ -58,6 +57,7 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.HeartRed
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.StarYellow
+import de.hbch.traewelling.ui.composables.CustomClickableText
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.user.getDurationString
@@ -82,7 +82,8 @@ fun CheckInCard(
     onDeleted: (Status) -> Unit = { }
 ) {
     val primaryColor = LocalColorScheme.current.primary
-    if(status != null) {
+
+    if (status != null) {
         val statusClickedAction: () -> Unit = {
             statusSelected(status.id)
         }
@@ -190,7 +191,7 @@ fun CheckInCard(
                         kilometers = status.journey.distance,
                         duration = status.journey.duration,
                         statusBusiness = status.business,
-                        message = status.getStatusBody(LocalColorScheme.current.primary),
+                        message = status.getStatusBody(),
                         journeyNumber = status.journey.journeyNumber,
                         operatorCode = status.journey.operator?.id,
                         lineId = status.journey.lineId,
@@ -323,7 +324,7 @@ private fun CheckInCardContent(
     kilometers: Int,
     duration: Int,
     statusBusiness: StatusBusiness,
-    message: AnnotatedString?,
+    message: Pair<AnnotatedString?, Map<String, InlineTextContent>>,
     operatorCode: String? = null,
     lineId: String? = null,
     userSelected: (String) -> Unit = { },
@@ -343,7 +344,7 @@ private fun CheckInCardContent(
             operatorCode = operatorCode,
             lineId = lineId
         )
-        if (!message.isNullOrEmpty()) {
+        if (!message.first.isNullOrEmpty()) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -351,18 +352,19 @@ private fun CheckInCardContent(
                     painter = painterResource(id = R.drawable.ic_quote),
                     contentDescription = null
                 )
-                ClickableText(
+                CustomClickableText(
                     modifier = Modifier.padding(horizontal = 8.dp),
-                    text = message,
+                    text = message.first!!,
                     onClick = {
-                        val annotations = message.getStringAnnotations(it - 1, it + 1)
+                        val annotations = message.first!!.getStringAnnotations(it - 1, it + 1)
                         if (annotations.isNotEmpty()) {
                             userSelected(annotations.first().item)
                         } else {
                             textClicked()
                         }
                     },
-                    style = LocalTextStyle.current.copy(color = LocalContentColor.current)
+                    style = LocalTextStyle.current.copy(color = LocalContentColor.current),
+                    inlineContent = message.second
                 )
             }
         }

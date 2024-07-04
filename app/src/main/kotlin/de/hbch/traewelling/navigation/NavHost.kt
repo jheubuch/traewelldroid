@@ -438,6 +438,7 @@ fun TraewelldroidNavHost(
 
             CheckIn(
                 checkInViewModel = checkInViewModel,
+                loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
                 initText = initText,
                 checkInAction = { trwl, travelynx ->

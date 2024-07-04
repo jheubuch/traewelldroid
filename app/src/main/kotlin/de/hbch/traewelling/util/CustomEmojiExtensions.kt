@@ -1,3 +1,5 @@
+package de.hbch.traewelling.util
+
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -56,3 +58,5 @@ fun getCustomEmojiFromJson(json: String): List<CustomEmoji> {
 }
 
 fun String.extractCustomEmojis() = ":(\\w+):".toRegex().findAll(this).toList()
+
+fun String.checkCustomEmojis() = ":(\\w+):?".toRegex().findAll(this).toList()

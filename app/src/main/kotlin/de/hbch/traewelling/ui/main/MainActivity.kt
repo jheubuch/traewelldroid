@@ -87,11 +87,10 @@ import io.getunleash.polling.PollingModes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import readOrDownloadCustomEmoji
+import de.hbch.traewelling.util.readOrDownloadCustomEmoji
 import java.net.URL
 import java.time.Duration
 import java.time.LocalDateTime

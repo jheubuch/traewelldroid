@@ -1,15 +1,33 @@
 package de.hbch.traewelling.api.models.status
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
+import de.hbch.traewelling.api.models.mastodon.CustomEmoji
 import de.hbch.traewelling.api.models.user.LightUser
+import de.hbch.traewelling.shared.MastodonEmojis
+import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.util.extractUsernames
-import extractCustomEmojis
+import de.hbch.traewelling.util.extractCustomEmojis
+import kotlinx.coroutines.launch
+import java.net.URL
 import java.time.ZonedDateTime
 
 data class Status(
@@ -37,34 +55,77 @@ data class Status(
         return statusBody
     }
 
-    fun getStatusBody(mentionColor: Color): AnnotatedString {
+    @Composable
+    fun getStatusBody(): Pair<AnnotatedString, Map<String, InlineTextContent>> {
+        val context = LocalContext.current
+        val mentionColor = LocalColorScheme.current.primary
         val statusBody = getStatusText()
+        val mastodonEmoji = remember { mutableStateListOf<CustomEmoji>() }
+        val coroutineScope = rememberCoroutineScope()
 
         val usernames = statusBody.extractUsernames()
-        val emojis = statusBody.extractCustomEmojis()
-        val builder = AnnotatedString.Builder(statusBody)
-
         val usernameStyle = SpanStyle(fontWeight = FontWeight.ExtraBold, color = mentionColor)
-        usernames.forEach { match ->
-            val username = match.groupValues.getOrElse(1) { "" }
-            if (mentions.any { it.user.username == username }) {
-                builder.addStyle(usernameStyle, match.range.first, match.range.last + 1)
-                builder.addStringAnnotation(
-                    "userMention",
-                    username,
-                    match.range.first,
-                    match.range.last + 1
-                )
+        val extractedEmojis = statusBody.extractCustomEmojis()
+        val matches = listOf(usernames, extractedEmojis).flatten().sortedBy { it.range.first }
+        val builder = AnnotatedString.Builder()
+
+        val inlineTextContent = mutableMapOf<String, InlineTextContent>()
+
+        var lastRangeEnd = 0
+        matches.forEach { match ->
+            builder.append(statusBody.substring(lastRangeEnd, match.range.first))
+
+            if (usernames.contains(match)) {
+                val username = match.groupValues.getOrElse(1) { "" }
+                if (mentions.any { it.user.username == username }) {
+                    builder.append(statusBody.substring(match.range))
+                    builder.addStyle(usernameStyle, match.range.first, match.range.last + 1)
+                    builder.addStringAnnotation(
+                        "userMention",
+                        username,
+                        match.range.first,
+                        match.range.last + 1
+                    )
+                }
+            } else if (extractedEmojis.contains(match)) {
+                if (user.mastodonUrl != null) {
+                    val mastodonEmojis = MastodonEmojis.getInstance(context)
+                    val instance = URL(user.mastodonUrl).host
+                    val instanceEmoji = mastodonEmojis.emojis[instance]
+
+                    if (instanceEmoji.isNullOrEmpty()) {
+                        coroutineScope.launch {
+                            mastodonEmoji.addAll(MastodonEmojis.getEmojis(instance, context))
+                        }
+                    } else {
+                        mastodonEmoji.addAll(instanceEmoji)
+                    }
+
+                    val emoji = match.groupValues.getOrElse(1) { "" }
+                    val customEmoji = mastodonEmoji.firstOrNull { it.shortcode == emoji }
+                    if (customEmoji != null) {
+                        builder.appendInlineContent(customEmoji.shortcode, customEmoji.shortcode)
+                        inlineTextContent[customEmoji.shortcode] = InlineTextContent(
+                            Placeholder(24.sp, 24.sp, PlaceholderVerticalAlign.TextCenter)
+                        ) {
+                            AsyncImage(
+                                model = customEmoji.url,
+                                contentDescription = customEmoji.shortcode,
+                                modifier = Modifier.fillMaxSize(),
+                                placeholder = painterResource(id = R.drawable.ic_hourglass)
+                            )
+                        }
+                    } else {
+                        builder.append(":$emoji:")
+                    }
+                }
             }
+
+            lastRangeEnd = match.range.last + 1
         }
 
-        if (user)
-        emojis.forEach { match ->
-            val emoji = match.groupValues.getOrElse(1) { "" }
-
-        }
-
-        return builder.toAnnotatedString()
+        builder.append(statusBody.substring(lastRangeEnd, statusBody.length))
+        return Pair(builder.toAnnotatedString(), inlineTextContent)
     }
 
     val isTraewelldroidCheckIn get() = client?.id == 43
