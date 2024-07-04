@@ -44,6 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jcloquell.androidsecurestorage.SecureStorage
@@ -51,6 +53,7 @@ import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.R
 import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
@@ -81,6 +84,9 @@ fun Settings(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        DisplayProviderSettings(
+            snackbarHostState = snackbarHostState
+        )
         CheckInProviderSettings(
             snackbarHostState = snackbarHostState,
             loggedInUserViewModel = loggedInUserViewModel
@@ -93,6 +99,61 @@ fun Settings(
         EmojiSettings(
             emojiPackItemAdapter = emojiPackItemAdapter
         )
+    }
+}
+
+@Composable
+private fun DisplayProviderSettings(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = context as ViewModelStoreOwner
+    )
+    val displayTagsInCheckInCard by settingsViewModel.displayTagsInCard.observeAsState(true)
+    val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
+
+    SettingsCard(
+        title = R.string.settings_display,
+        description = R.string.settings_display_description,
+        modifier = modifier,
+        expandable = true
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SwitchWithIconAndText(
+                checked = displayTagsInCheckInCard,
+                onCheckedChange = {
+                    settingsViewModel.updateDisplayTagsInCard(context, it)
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.changes_saved)
+                        )
+                    }
+                },
+                drawableId = R.drawable.ic_tag,
+                stringId = R.string.settings_display_tags_in_card,
+                modifier = Modifier.fillMaxWidth()
+            )
+            SwitchWithIconAndText(
+                checked = displayJourneyNumber,
+                onCheckedChange = {
+                    settingsViewModel.updateDisplayJourneyNumber(context, it)
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.changes_saved)
+                        )
+                    }
+                },
+                drawableId = R.drawable.ic_train,
+                stringId = R.string.settings_display_journey_number,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 

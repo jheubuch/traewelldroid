@@ -72,6 +72,7 @@
     <string name="product_type_regional_express">Regional express</string>
     <string name="product_type_national_express">National express</string>
     <string name="product_type_national">Regional express</string>
+    <string name="product_type_plane">Plane</string>
     <string name="data_loading" tools:ignore="TypographyEllipsis">Loading data…</string>
     <string name="status_details">Status details</string>
     <string name="title_statistics">Statistics</string>
@@ -129,6 +130,9 @@
     </string>
     <string name="point_reason_forced">
         Because you forced this check-in, you received 0 points.
+    </string>
+    <string name="point_reason_manual">
+        Because you checked into a manual trip, you received 0 points.
     </string>
     <string name="title_share">Share</string>
     <string name="version_with_code" translatable="false">v%1$s (%2$d)</string>
@@ -254,4 +258,8 @@
     <string name="changes_saved">Changes have been saved</string>
     <string name="checked_in_with">Checked in with %1$s</string>
     <string name="no_results_found">No results found.</string>
+    <string name="settings_display">Display configuration</string>
+    <string name="settings_display_description">You can configure the display and behaviour of the application.</string>
+    <string name="settings_display_tags_in_card">Display tags in check-in card</string>
+    <string name="settings_display_journey_number">Display journey numbers in check-in cards and connection search</string>
 </resources>

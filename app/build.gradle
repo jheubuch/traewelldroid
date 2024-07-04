@@ -22,8 +22,8 @@ aboutLibraries {
 
 android {
     def packageName = "de.hbch.traewelling"
-    def name = "2.7.5"
-    def code = 147
+    def name = "2.9.0"
+    def code = 151
 
     compileSdk 34
 
@@ -126,21 +126,21 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.5"
+    implementation "androidx.compose.runtime:runtime-livedata:1.6.8"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "com.google.accompanist:accompanist-themeadapter-material3:0.28.0"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.30.1"
     implementation "com.google.accompanist:accompanist-permissions:0.30.1"
     implementation "androidx.compose.material3:material3:1.2.1"
-    implementation "androidx.activity:activity-compose:1.8.2"
+    implementation "androidx.activity:activity-compose:1.9.0"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    implementation "androidx.core:core-ktx:1.12.0"
-    implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "com.google.android.material:material:1.11.0"
+    implementation "androidx.core:core-ktx:1.13.1"
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "com.google.android.material:material:1.12.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.browser:browser:1.8.0"
     implementation "androidx.core:core-splashscreen:1.0.1"

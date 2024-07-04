@@ -49,8 +49,6 @@ import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import kotlinx.coroutines.launch
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatusTags(
     statusId: Int,
@@ -61,8 +59,6 @@ fun StatusTags(
     val tags = remember { mutableStateListOf<Tag>() }
     val tagViewModel: TagViewModel = viewModel()
     var tagsRequested by remember { mutableStateOf(false) }
-    var tagFormVisible by remember { mutableStateOf(false) }
-    var tagFormData by remember { mutableStateOf<Tag?>(null) }
 
     LaunchedEffect(tagsRequested) {
         if (!tagsRequested) {
@@ -72,6 +68,48 @@ fun StatusTags(
                 statusId,
                 {
                     tags.addAll(it)
+                },
+                { }
+            )
+        }
+    }
+
+    StatusTags(
+        tags = tags,
+        statusId = statusId,
+        modifier = modifier,
+        isOwnStatus = isOwnStatus,
+        defaultVisibility = defaultVisibility
+    )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun StatusTags(
+    tags: List<Tag>,
+    statusId: Int,
+    modifier: Modifier = Modifier,
+    isOwnStatus: Boolean = false,
+    defaultVisibility: StatusVisibility = StatusVisibility.PUBLIC
+) {
+    val tagViewModel: TagViewModel = viewModel()
+    var tagsRequested by remember { mutableStateOf(true) }
+    var tagFormVisible by remember { mutableStateOf(false) }
+    var tagFormData by remember { mutableStateOf<Tag?>(null) }
+
+    val currentTags = remember { mutableStateListOf<Tag>().also {
+        it.addAll(tags)
+    } }
+
+    LaunchedEffect(tagsRequested) {
+        if (!tagsRequested) {
+            currentTags.clear()
+            tagsRequested = true
+            tagViewModel.getTagsForStatus(
+                statusId,
+                {
+                    currentTags.addAll(it)
                 },
                 { }
             )
@@ -89,7 +127,7 @@ fun StatusTags(
                     tagData = tagFormData,
                     tagViewModel = tagViewModel,
                     statusId = statusId,
-                    alreadyAddedTags = tags.map { it.safeKey },
+                    alreadyAddedTags = currentTags.map { it.safeKey },
                     onSaveSucceeded = {
                         tagsRequested = false
                         tagFormVisible = false
@@ -100,45 +138,47 @@ fun StatusTags(
         }
     }
 
-    Row(
-        modifier = modifier.horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (isOwnStatus) {
-            val addTagIcon = R.drawable.ic_add_tag
-            val addTagTitle = R.string.add_tag
-            val onAddTagClick: () -> Unit = {
-                tagFormData = null
-                tagFormVisible = true
+    if (currentTags.isNotEmpty() || isOwnStatus) {
+        Row(
+            modifier = modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (isOwnStatus) {
+                val addTagIcon = R.drawable.ic_add_tag
+                val addTagTitle = R.string.add_tag
+                val onAddTagClick: () -> Unit = {
+                    tagFormData = null
+                    tagFormVisible = true
+                }
+                if (currentTags.isEmpty()) {
+                    OutlinedButtonWithIconAndText(
+                        stringId = addTagTitle,
+                        drawableId = addTagIcon,
+                        onClick = onAddTagClick
+                    )
+                } else {
+                    OutlinedIconButton(
+                        onClick = onAddTagClick,
+                        content = {
+                            Icon(
+                                painter = painterResource(id = addTagIcon),
+                                contentDescription = stringResource(id = addTagTitle)
+                            )
+                        }
+                    )
+                }
             }
-            if (tags.isEmpty()) {
-                OutlinedButtonWithIconAndText(
-                    stringId = addTagTitle,
-                    drawableId = addTagIcon,
-                    onClick = onAddTagClick
-                )
-            } else {
-                OutlinedIconButton(
-                    onClick = onAddTagClick,
-                    content = {
-                        Icon(
-                            painter = painterResource(id = addTagIcon),
-                            contentDescription = stringResource(id = addTagTitle)
-                        )
+            currentTags.forEach {
+                StatusTag(
+                    tag = it,
+                    isOwnTag = isOwnStatus,
+                    onClick = {
+                        tagFormData = it
+                        tagFormVisible = true
                     }
                 )
             }
-        }
-        tags.forEach {
-            StatusTag(
-                tag = it,
-                isOwnTag = isOwnStatus,
-                onClick = {
-                    tagFormData = it
-                    tagFormVisible = true
-                }
-            )
         }
     }
 }
@@ -201,7 +241,7 @@ fun TagForm(
 ) {
     val isCreationMode = tagData == null
     val availableTagsToAdd = TagType
-        .values()
+        .entries
         .filter { !alreadyAddedTags.contains(it) }
         .filter { it.selectable }
     var tagTypeSelectionVisible by remember { mutableStateOf(false) }
@@ -316,7 +356,7 @@ fun TagForm(
                                     expanded = tagVisibilitySelectionVisible,
                                     onDismissRequest = { tagVisibilitySelectionVisible = false }
                                 ) {
-                                    StatusVisibility.values().forEach {
+                                    StatusVisibility.entries.forEach {
                                         DropdownMenuItem(
                                             text = {
                                                 Text(

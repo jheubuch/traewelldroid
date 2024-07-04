@@ -22,11 +22,12 @@ abstract class AbstractStatistics(
 }
 
 data class CategoryStatistics(
-    @SerializedName("name") val productType: ProductType,
+    @SerializedName("name") val productType: ProductType?,
     @SerializedName("count") override val checkInCount: Int,
     @SerializedName("duration") override val duration: Int
 ) : AbstractStatistics() {
-    override fun getLabel(context: Context) = context.getString(productType.getString())
+    private val safeProductType get() = productType ?: ProductType.UNKNOWN
+    override fun getLabel(context: Context) = context.getString(safeProductType.getString())
 }
 
 data class OperatorStatistics(

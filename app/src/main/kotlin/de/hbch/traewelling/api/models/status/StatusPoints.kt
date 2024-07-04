@@ -12,8 +12,10 @@ data class StatusPointCalculation(
     @SerializedName("base") val base: Float,
     @SerializedName("distance") val distance: Float,
     @SerializedName("factor") val factor: Float,
-    @SerializedName("reason") val reason: PointReason
-)
+    @SerializedName("reason") val reason: PointReason?
+) {
+    val safeReason get() = reason ?: PointReason.UNKNOWN
+}
 
 @Suppress("unused")
 enum class PointReason {
@@ -32,6 +34,13 @@ enum class PointReason {
     @SerializedName("3")
     FORCED {
         override fun getExplanation() = R.string.point_reason_forced
+    },
+    @SerializedName("4")
+    MANUAL {
+        override fun getExplanation() = R.string.point_reason_manual
+    },
+    UNKNOWN {
+        override fun getExplanation() = null
     };
 
     abstract fun getExplanation(): Int?

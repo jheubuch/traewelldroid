@@ -9,7 +9,7 @@ import java.time.ZonedDateTime
 data class Journey(
     @SerializedName("trip") val tripId: Int,
     @SerializedName("hafasId") val hafasTripId: String,
-    val category: ProductType,
+    val category: ProductType?,
     @SerializedName("lineName") val line: String,
     val journeyNumber: Int?,
     val distance: Int,
@@ -21,4 +21,6 @@ data class Journey(
     @SerializedName("manualArrival") val arrivalManual: ZonedDateTime?,
     val operator: HafasOperator?,
     @SerializedName("number") val lineId: String
-)
+) {
+    val safeProductType get() = category ?: ProductType.UNKNOWN
+}

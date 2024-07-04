@@ -5,10 +5,12 @@ import de.hbch.traewelling.api.models.station.Station
 
 data class HafasTrainTrip(
     @SerializedName("id") val id: Int,
-    @SerializedName("category") val category: ProductType,
+    @SerializedName("category") val category: ProductType?,
     @SerializedName("lineName") val lineName: String,
     @SerializedName("origin") val origin: Station,
     @SerializedName("destination") val destination: Station,
     @SerializedName("stopovers") var stopovers: List<HafasTrainTripStation>,
     @SerializedName("number") val lineId: String
-)
+) {
+    val safeProductType get() = category ?: ProductType.UNKNOWN
+}

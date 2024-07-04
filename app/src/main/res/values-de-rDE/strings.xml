@@ -70,6 +70,7 @@
     <string name="product_type_regional_express">Interregio</string>
     <string name="product_type_national_express">Fernverkehr (ICE/ECE)</string>
     <string name="product_type_national">Fernverkehr (IC/EC)</string>
+    <string name="product_type_plane">Flugzeug</string>
     <string name="data_loading" tools:ignore="TypographyEllipsis">Daten werden geladen…</string>
     <string name="status_details">Statusdetails</string>
     <string name="title_statistics">Statistik</string>
@@ -126,7 +127,10 @@
         Punkte zu erhalten.
     </string>
     <string name="point_reason_forced">
-        Weil du diesen Check-In erzwungen hast, hast du nur 0 Punkte erhalten.
+        Weil du diesen Check-In erzwungen hast, hast du nicht alle Punkte erhalten.
+    </string>
+    <string name="point_reason_manual">
+        Weil du in eine manuell erstellte Fahrt eingecheckt hast, hast du keine Punkte erhalten.
     </string>
     <string name="title_share">Teilen</string>
     <string name="or">oder</string>
@@ -249,4 +253,8 @@
     <string name="changes_saved">Änderungen wurden gespeichert</string>
     <string name="checked_in_with">Eingecheckt mit %1$s</string>
     <string name="no_results_found">Keine Ergebnisse gefunden.</string>
+    <string name="settings_display">Anzeigekonfiguration</string>
+    <string name="settings_display_description">Du kannst die Anzeige und das Verhalten der App konfigurieren.</string>
+    <string name="settings_display_tags_in_card">Tags in der Check-In-Karte anzeigen</string>
+    <string name="settings_display_journey_number">Fahrtnummern in der Check-In-Karte und der Verbindungssuche anzeigen</string>
 </resources>

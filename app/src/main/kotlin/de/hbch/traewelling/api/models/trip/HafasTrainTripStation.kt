@@ -22,5 +22,5 @@ data class HafasTrainTripStation(
 ) {
     val isCancelled: Boolean
         // DB Rest also shows last stop as cancelled
-        get() = cancelled && arrivalPlatformPlanned == null
+        get() = cancelled && arrivalPlatformReal == null
 }

@@ -28,6 +28,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,12 +48,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
+import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.HeartRed
 import de.hbch.traewelling.theme.LocalColorScheme
@@ -60,6 +65,7 @@ import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.CustomClickableText
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.ProfilePicture
+import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
@@ -163,7 +169,7 @@ fun CheckInCard(
                     StationRow(
                         modifier = Modifier
                             .constrainAs(stationRowBottom) {
-                                start.linkTo(perlschnurBottom.end, 12.dp)
+                                start.linkTo(perlschnurBottom.end, 8.dp)
                                 end.linkTo(parent.end)
                                 bottom.linkTo(parent.bottom)
                                 width = Dimension.fillToConstraints
@@ -186,7 +192,7 @@ fun CheckInCard(
                                 end.linkTo(stationRowTop.end)
                                 width = Dimension.fillToConstraints
                             },
-                        productType = status.journey.category,
+                        productType = status.journey.safeProductType,
                         line = status.journey.line,
                         kilometers = status.journey.distance,
                         duration = status.journey.duration,
@@ -226,7 +232,8 @@ fun CheckInCard(
                         checkInCardViewModel.deleteStatus(status.id, {
                             onDeleted(status)
                         }, { })
-                    }
+                    },
+                    defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
                 )
             }
         }
@@ -384,6 +391,12 @@ fun StatusDetailsRow(
     operatorCode: String? = null,
     lineId: String? = null
 ) {
+    val context = LocalContext.current
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = context as ViewModelStoreOwner
+    )
+    val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
+
     FlowRow(
         modifier = modifier
     ) {
@@ -399,7 +412,7 @@ fun StatusDetailsRow(
             operatorCode = operatorCode,
             lineId = lineId
         )
-        if (journeyNumber != null && !line.contains(journeyNumber.toString())) {
+        if (displayJourneyNumber && journeyNumber != null && !line.contains(journeyNumber.toString())) {
             Text(
                 modifier = alignmentModifier.padding(start = 4.dp),
                 text = "($journeyNumber)",
@@ -432,12 +445,28 @@ private fun CheckInCardFooter(
     checkInCardViewModel: CheckInCardViewModel,
     isOwnStatus: Boolean = false,
     displayLongDate: Boolean = false,
+    defaultVisibility: StatusVisibility = StatusVisibility.PUBLIC,
     userSelected: (String) -> Unit = { },
     handleEditClicked: () -> Unit = { },
     handleDeleteClicked: () -> Unit = { }
 ) {
     var likedState by remember { mutableStateOf(status.liked ?: false) }
     var likeCountState by remember { mutableIntStateOf(status.likes ?: 0) }
+
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
+    )
+    val displayTagsState by settingsViewModel.displayTagsInCard.observeAsState(true)
+
+    if (displayTagsState) {
+        StatusTags(
+            tags = status.tags,
+            statusId = status.id,
+            modifier = Modifier.fillMaxWidth(),
+            isOwnStatus = isOwnStatus,
+            defaultVisibility = defaultVisibility
+        )
+    }
 
     Row(
         modifier = modifier,

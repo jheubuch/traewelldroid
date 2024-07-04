@@ -104,7 +104,7 @@ fun TraewelldroidNavHost(
         checkInViewModel.startStationId = it.journey.origin.id
         checkInViewModel.tripId = it.journey.hafasTripId
         checkInViewModel.editStatusId = it.id
-        checkInViewModel.category = it.journey.category
+        checkInViewModel.category = it.journey.safeProductType
 
         navController.navigate(
             "check-in/?editMode=true"
@@ -327,7 +327,7 @@ fun TraewelldroidNavHost(
                                     checkInViewModel.departureTime = status.journey.origin.departurePlanned
                                     checkInViewModel.destinationStationId = status.journey.destination.id
                                     checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
-                                    checkInViewModel.category = status.journey.category
+                                    checkInViewModel.category = status.journey.safeProductType
                                     checkInViewModel.destination = status.journey.destination.name
 
                                     navController.navigate(

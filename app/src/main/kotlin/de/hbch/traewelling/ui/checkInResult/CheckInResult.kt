@@ -177,7 +177,7 @@ private fun SuccessfulCheckInResult(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             StatusDetailsRow(
-                productType = journey.category,
+                productType = journey.safeProductType,
                 line = journey.line,
                 journeyNumber = journey.journeyNumber,
                 kilometers = journey.distance,
@@ -193,7 +193,7 @@ private fun SuccessfulCheckInResult(
                 isOwnStatus = true,
                 defaultVisibility = loggedInUserViewModel.defaultStatusVisibility
             )
-            val pointReasonText = checkInResponse.data.points.calculation.reason.getExplanation()
+            val pointReasonText = checkInResponse.data.points.calculation.safeReason.getExplanation()
             if (pointReasonText != null) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
