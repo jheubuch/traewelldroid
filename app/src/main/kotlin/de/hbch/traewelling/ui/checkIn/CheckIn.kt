@@ -273,12 +273,12 @@ fun CheckIn(
                                         ) {
                                             Column {
                                                 Text(
-                                                    text = "Mastodon Emoji",
+                                                    text = stringResource(id = R.string.mastodon_emoji),
                                                     style = AppTypography.titleLarge,
                                                     color = LocalColorScheme.current.onPrimary
                                                 )
                                                 Text(
-                                                    text = "Since you have connected your Träwelling account to Mastodon, you can now use and display your Mastodon's instance emoji for your check-ins!",
+                                                    text = stringResource(id = R.string.mastodon_emoji_description),
                                                     color = LocalColorScheme.current.onPrimary
                                                 )
                                             }
