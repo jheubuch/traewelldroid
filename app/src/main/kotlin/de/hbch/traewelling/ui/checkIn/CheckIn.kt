@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.canopas.lib.showcase.IntroShowcase
+import com.canopas.lib.showcase.component.ShowcaseStyle
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
@@ -86,10 +88,15 @@ fun CheckIn(
     isEditMode: Boolean = false,
     changeDestinationAction: () -> Unit = { }
 ) {
-    val secureStorage = SecureStorage(LocalContext.current)
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val secureStorage = remember { SecureStorage(context) }
     val loggedInUser by loggedInUserViewModel.loggedInUser.observeAsState()
+    var introduceEmoji by remember { mutableStateOf(
+        !(secureStorage.getObject(SharedValues.SS_EMOJI_SHOWCASE, Boolean::class.java) ?: false) &&
+        loggedInUser?.mastodonUrl != null
+    ) }
+
     val mastodonEmojis = remember { MastodonEmojis.getInstance(context) }
     val instanceEmojis by remember { derivedStateOf { mastodonEmojis.emojis[URL(loggedInUser?.mastodonUrl).host] ?: listOf() } }
     val bottomSearchViewModel: BottomSearchViewModel = viewModel()
@@ -227,107 +234,137 @@ fun CheckIn(
                 )
 
                 // Text field
-                Column(
-                    horizontalAlignment = Alignment.End
+                IntroShowcase(
+                    showIntroShowCase = introduceEmoji,
+                    onShowCaseCompleted = {
+                        introduceEmoji = false
+                        secureStorage.storeObject(SharedValues.SS_EMOJI_SHOWCASE, true)
+                    },
+                    dismissOnClickOutside = true
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .widthIn(
-                                min = 72.dp,
-                                max = Dp.Unspecified
-                            ),
-                        value = statusText,
-                        onValueChange = {
-                            if (it.text.count() > 280)
-                                return@OutlinedTextField
-                            statusText = it
-                            checkInViewModel.message.postValue(it.text)
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.status_message)
-                            )
-                        }
-                    )
-                    Text(
-                        modifier = Modifier.padding(4.dp),
-                        text = "${statusText.text.count()}/280",
-                        style = AppTypography.labelSmall
-                    )
-                    AnimatedVisibility(displayUserResults) {
-                        Row(
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        OutlinedTextField(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            if (usersQuerying) {
+                                .widthIn(
+                                    min = 72.dp,
+                                    max = Dp.Unspecified
+                                ),
+                            value = statusText,
+                            onValueChange = {
+                                if (it.text.count() > 280)
+                                    return@OutlinedTextField
+                                statusText = it
+                                checkInViewModel.message.postValue(it.text)
+                            },
+                            label = {
                                 Text(
-                                    text = stringResource(id = R.string.data_loading)
-                                )
-                            } else {
-                                if (userResults.isEmpty()) {
-                                    Text(
-                                        text = stringResource(id = R.string.no_results_found)
-                                    )
-                                } else {
-                                    userResults.forEach {
-                                        val username = "@${it.username}"
-                                        AssistChip(
-                                            onClick = {
-                                                val firstMatch = statusText.text.checkAnyUsernames().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
-                                                statusText = statusText.copy(
-                                                    text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, "@${it.username} "),
-                                                    selection = TextRange(firstMatch.range.first + it.username.length + 2)
-                                                )
-                                            },
-                                            label = {
+                                    text = stringResource(id = R.string.status_message),
+                                    modifier = Modifier
+                                        .introShowCaseTarget(
+                                            index = 0,
+                                            style = ShowcaseStyle.Default.copy(
+                                                backgroundColor = LocalColorScheme.current.primary,
+                                                backgroundAlpha = 0.95f,
+                                                targetCircleColor = LocalColorScheme.current.onPrimary
+                                            )
+                                        ) {
+                                            Column {
                                                 Text(
-                                                    text = username
+                                                    text = "Mastodon Emoji",
+                                                    style = AppTypography.titleLarge,
+                                                    color = LocalColorScheme.current.onPrimary
                                                 )
-                                            },
-                                            leadingIcon = {
-                                                ProfilePicture(
-                                                    user = it,
-                                                    modifier = Modifier.size(24.dp)
+                                                Text(
+                                                    text = "Since you have connected your Träwelling account to Mastodon, you can now use and display your Mastodon's instance emoji for your check-ins!",
+                                                    color = LocalColorScheme.current.onPrimary
                                                 )
                                             }
+                                        }
+                                )
+                            }
+                        )
+                        Text(
+                            modifier = Modifier.padding(4.dp),
+                            text = "${statusText.text.count()}/280",
+                            style = AppTypography.labelSmall
+                        )
+                        AnimatedVisibility(displayUserResults) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                if (usersQuerying) {
+                                    Text(
+                                        text = stringResource(id = R.string.data_loading)
+                                    )
+                                } else {
+                                    if (userResults.isEmpty()) {
+                                        Text(
+                                            text = stringResource(id = R.string.no_results_found)
                                         )
+                                    } else {
+                                        userResults.forEach {
+                                            val username = "@${it.username}"
+                                            AssistChip(
+                                                onClick = {
+                                                    val firstMatch = statusText.text.checkAnyUsernames().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
+                                                    statusText = statusText.copy(
+                                                        text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, "@${it.username} "),
+                                                        selection = TextRange(firstMatch.range.first + it.username.length + 2)
+                                                    )
+                                                },
+                                                label = {
+                                                    Text(
+                                                        text = username
+                                                    )
+                                                },
+                                                leadingIcon = {
+                                                    ProfilePicture(
+                                                        user = it,
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    AnimatedVisibility(customEmojiResults.isNotEmpty()) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            customEmojiResults.forEach { emoji ->
-                                AssistChip(
-                                    onClick = {
-                                        val firstMatch = statusText.text.checkCustomEmojis().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
-                                        statusText = statusText.copy(
-                                            text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, ":${emoji.shortcode}: "),
-                                            selection = TextRange(firstMatch.range.first + emoji.shortcode.length + 3)
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = emoji.shortcode
-                                        )
-                                    },
-                                    leadingIcon = {
-                                        AsyncImage(
-                                            model = emoji.url,
-                                            contentDescription = emoji.shortcode,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                    }
-                                )
+                        AnimatedVisibility(customEmojiResults.isNotEmpty()) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                customEmojiResults.forEach { emoji ->
+                                    AssistChip(
+                                        onClick = {
+                                            val firstMatch = statusText.text.checkCustomEmojis().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
+                                            statusText = statusText.copy(
+                                                text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, ":${emoji.shortcode}: "),
+                                                selection = TextRange(firstMatch.range.first + emoji.shortcode.length + 3)
+                                            )
+                                        },
+                                        label = {
+                                            Text(
+                                                text = emoji.shortcode
+                                            )
+                                        },
+                                        leadingIcon = {
+                                            AsyncImage(
+                                                model = emoji.url,
+                                                contentDescription = emoji.shortcode,
+                                                modifier = Modifier.size(24.dp)
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }

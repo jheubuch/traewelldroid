@@ -18,6 +18,8 @@ object SharedValues {
     const val SS_CHECK_IN_COUNT = "CHECK_IN_COUNT"
     const val SS_DISPLAY_TAGS_IN_CARD = "DISPLAY_TAGS_IN_CARD"
     const val SS_DISPLAY_JOURNEY_NUMBER = "DISPLAY_JOURNEY_NUMBER"
+    const val SS_EMOJI_SHOWCASE = "DISPLAY_EMOJI_SHOWCASE"
+
     var TRAVELYNX_TOKEN = ""
 
     val AUTH_SCOPES = listOf(
