@@ -98,7 +98,13 @@ fun CheckIn(
     ) }
 
     val mastodonEmojis = remember { MastodonEmojis.getInstance(context) }
-    val instanceEmojis by remember { derivedStateOf { mastodonEmojis.emojis[URL(loggedInUser?.mastodonUrl).host] ?: listOf() } }
+    val instanceEmojis by remember { derivedStateOf {
+        if (loggedInUser?.mastodonUrl?.isNotBlank() == true) {
+            mastodonEmojis.emojis[URL(loggedInUser?.mastodonUrl).host] ?: listOf()
+        } else {
+            listOf()
+        }
+    } }
     val bottomSearchViewModel: BottomSearchViewModel = viewModel()
 
     var enableTrwlCheckIn by rememberSaveable { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRWL_AUTO_LOGIN, Boolean::class.java) ?: true) }
