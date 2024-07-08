@@ -99,8 +99,8 @@ class CheckInViewModel : ViewModel() {
         if (checkInTrwl) {
             val trwlCheckInRequest = TrwlCheckInRequest(
                 message.value ?: "",
-                statusBusiness.value ?: StatusBusiness.PRIVATE,
-                statusVisibility.value ?: StatusVisibility.PUBLIC,
+                (statusBusiness.value ?: StatusBusiness.PRIVATE).ordinal,
+                (statusVisibility.value ?: StatusVisibility.PUBLIC).ordinal,
                 event.value?.id,
                 toot.value ?: false,
                 chainToot.value ?: false,
@@ -135,8 +135,8 @@ class CheckInViewModel : ViewModel() {
             editStatusId,
             TrwlCheckInUpdateRequest(
                 message.value,
-                statusBusiness.value ?: error("Invalid data"),
-                statusVisibility.value ?: error("Invalid data"),
+                statusBusiness.value?.ordinal ?: error("Invalid data"),
+                statusVisibility.value?.ordinal ?: error("Invalid data"),
                 destinationStationId,
                 arrivalTime,
                 manualDepartureTime,

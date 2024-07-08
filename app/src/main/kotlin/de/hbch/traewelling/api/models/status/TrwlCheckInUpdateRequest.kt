@@ -5,8 +5,8 @@ import java.time.ZonedDateTime
 
 data class TrwlCheckInUpdateRequest(
     val body: String?,
-    val business: StatusBusiness,
-    val visibility: StatusVisibility,
+    val business: Int,
+    val visibility: Int,
     val destinationId: Int? = null,
     val destinationArrivalPlanned: ZonedDateTime? = null,
     val manualDeparture: ZonedDateTime? = null,
