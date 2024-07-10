@@ -182,7 +182,9 @@ private fun SuccessfulCheckInResult(
                 journeyNumber = journey.journeyNumber,
                 kilometers = journey.distance,
                 duration = journey.duration,
-                statusBusiness = checkInResponse.data.status.business
+                statusBusiness = checkInResponse.data.status.business,
+                operatorCode = journey.operator?.id,
+                lineId = journey.lineId
             )
             Text(
                 text = stringResource(id = R.string.display_points, checkInResponse.data.points.points),
