@@ -3,7 +3,7 @@
     <string name="ok">Oké</string>
     <string name="input_username">Gebruikersnaam</string>
     <string name="input_password">Wachtwoord</string>
-    <string name="login">aanmelden</string>
+    <string name="login">Aanmelden</string>
     <string name="title_dashboard">Start</string>
     <string name="title_active_checkins">Onderweg</string>
     <string name="title_user">Profiel</string>
@@ -57,4 +57,15 @@
     <string name="check_in_trwl">Check-in met Träwelling</string>
     <string name="check_in_travelynx">Check-in met travelynx</string>
     <string name="cancelled">Geannuleerd</string>
+    <string name="change_destination">Bestemming wijzigen</string>
+    <string name="product_type_ferry">Veerboot</string>
+    <string name="open_with_bahnexpert">Met <b>bahn.expert</b> openen</string>
+    <string name="title_edit">Bewerken</string>
+    <string name="tag_locomotive_class_title">Materieel</string>
+    <string name="tag_vehicle_number_title">Treinstel</string>
+    <string name="tag_staff_role_example">Machinist, conducteur, …</string>
+    <string name="travel_time">reisduur</string>
+    <string name="or">of</string>
+    <string name="stops">Tussenstops</string>
+    <string name="tag_locomotive_class_example">bijv. VIRM, SNG, …</string>
 </resources>
