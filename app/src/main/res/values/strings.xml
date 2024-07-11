@@ -262,6 +262,7 @@
     <string name="settings_display_description">You can configure the display and behaviour of the application.</string>
     <string name="settings_display_tags_in_card">Display tags in check-in card</string>
     <string name="settings_display_journey_number">Display journey numbers in check-in cards and connection search</string>
+    <string name="settings_display_divergent_stop">Display divergent stops in connection search when the journey starts on a nearby station</string>
     <string name="mastodon_emoji" translatable="false">Mastodon Emoji</string>
     <string name="mastodon_emoji_description">Since you connected your Mastodon account to Träwelling, you can now use and display your Mastodon instance\'s custom emoji for your check-ins. Just give it a try 😄</string>
 </resources>

@@ -68,7 +68,8 @@ fun LineIcon(
         Text(
             text = displayedName,
             modifier = modifier,
-            style = defaultTextStyle
+            style = defaultTextStyle,
+            fontWeight = FontWeight.ExtraBold
         )
     }
 }

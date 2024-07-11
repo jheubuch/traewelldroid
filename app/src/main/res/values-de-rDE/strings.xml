@@ -236,5 +236,6 @@
     <string name="settings_display_description">Du kannst die Anzeige und das Verhalten der App konfigurieren.</string>
     <string name="settings_display_tags_in_card">Tags in der Check-In-Karte anzeigen</string>
     <string name="settings_display_journey_number">Fahrtnummern in der Check-In-Karte und der Verbindungssuche anzeigen</string>
+    <string name="settings_display_divergent_stop">Abweichende Abfahrtshaltestellen in der Verbindungssuche anzeigen, wenn die Verbindung an einer Haltestelle in der Nähe abfährt</string>
     <string name="mastodon_emoji_description">Da du deinen Mastodon-Account mit Träwelling verbunden hast, kannst du nun auch die Emoji deiner Mastodon-Instanz anzeigen und in deinen Check-Ins verwenden. Probiers doch mal aus! 😄</string>
 </resources>

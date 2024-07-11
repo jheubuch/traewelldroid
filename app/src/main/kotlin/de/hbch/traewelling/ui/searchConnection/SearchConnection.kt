@@ -134,6 +134,7 @@ fun SearchConnection(
                     DataLoading()
                 } else {
                     SearchConnection(
+                        stationId = stationId,
                         searchTime = searchDate,
                         trips = trips,
                         onPreviousTime = {
@@ -205,6 +206,7 @@ fun SearchConnection(
         viewModelStoreOwner = context as ViewModelStoreOwner
     )
     val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
+    val displayDivergentStop by settingsViewModel.displayDivergentStop.observeAsState(true)
 
     var datePickerVisible by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
@@ -355,7 +357,7 @@ fun SearchConnection(
                 isCancelled = trip.isCancelled,
                 destination = getLastDestination(trip),
                 departureStation =
-                    if (!trip.station?.name.isNullOrBlank() && stationId != null && trip.station?.id != stationId)
+                    if (!trip.station?.name.isNullOrBlank() && stationId != null && trip.station?.id != stationId && displayDivergentStop)
                         trip.station?.name
                     else
                         null,

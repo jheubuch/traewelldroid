@@ -114,6 +114,7 @@ private fun DisplayProviderSettings(
     )
     val displayTagsInCheckInCard by settingsViewModel.displayTagsInCard.observeAsState(true)
     val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
+    val displayDivergentStop by settingsViewModel.displayDivergentStop.observeAsState(true)
 
     SettingsCard(
         title = R.string.settings_display,
@@ -151,6 +152,20 @@ private fun DisplayProviderSettings(
                 },
                 drawableId = R.drawable.ic_train,
                 stringId = R.string.settings_display_journey_number,
+                modifier = Modifier.fillMaxWidth()
+            )
+            SwitchWithIconAndText(
+                checked = displayDivergentStop,
+                onCheckedChange = {
+                    settingsViewModel.updateDisplayDivergentStop(context, it)
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.changes_saved)
+                        )
+                    }
+                },
+                drawableId = R.drawable.ic_navigation,
+                stringId = R.string.settings_display_divergent_stop,
                 modifier = Modifier.fillMaxWidth()
             )
         }
