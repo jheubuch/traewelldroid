@@ -457,7 +457,7 @@ fun CheckIn(
                         }
 
                         // Share options
-                        if (!isEditMode) {
+                        if (!isEditMode && !loggedInUser?.mastodonUrl.isNullOrEmpty()) {
                             ShareOptions(
                                 modifier = Modifier.fillMaxWidth(),
                                 checkInViewModel = checkInViewModel
