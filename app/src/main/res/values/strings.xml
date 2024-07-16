@@ -265,4 +265,11 @@
     <string name="settings_display_divergent_stop">Display divergent stops in connection search when the journey starts on a nearby station</string>
     <string name="mastodon_emoji" translatable="false">Mastodon Emoji</string>
     <string name="mastodon_emoji_description">Since you connected your Mastodon account to Träwelling, you can now use and display your Mastodon instance\'s custom emoji for your check-ins. Just give it a try 😄</string>
+    <string name="title_report">Report</string>
+    <string name="create_report">Create report</string>
+    <string name="report_reason_inappropriate">Inappropriate data</string>
+    <string name="report_reason_implausible">Implausible data</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_illegal">Illegal data</string>
+    <string name="report_reason_other">Other… (please specify)</string>
 </resources>

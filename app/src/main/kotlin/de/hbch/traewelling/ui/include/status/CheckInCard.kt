@@ -559,24 +559,24 @@ private fun CheckInCardFooter(
                     contentDescription = null
                 )
             }
-            if (isOwnStatus) {
-                var menuExpanded by remember { mutableStateOf(false) }
-                val context = LocalContext.current
-                Box {
-                    Icon(
-                        modifier = Modifier
-                            .clickable {
-                                menuExpanded = true
-                            }
-                            .padding(2.dp),
-                        painter = painterResource(id = R.drawable.ic_more),
-                        contentDescription = null,
-                        tint = LocalColorScheme.current.primary
-                    )
-                    DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false }
-                    ) {
+            var menuExpanded by remember { mutableStateOf(false) }
+            val context = LocalContext.current
+            Box {
+                Icon(
+                    modifier = Modifier
+                        .clickable {
+                            menuExpanded = true
+                        }
+                        .padding(2.dp),
+                    painter = painterResource(id = R.drawable.ic_more),
+                    contentDescription = null,
+                    tint = LocalColorScheme.current.primary
+                )
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    if (isOwnStatus) {
                         DropdownMenuItem(
                             text = {
                                 Text(
@@ -624,6 +624,21 @@ private fun CheckInCardFooter(
                                 menuExpanded = false
                                 handleDeleteClicked()
                             }
+                        )
+                    } else {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_report)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_report),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = handleEditClicked
                         )
                     }
                 }
