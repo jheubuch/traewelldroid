@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
@@ -56,6 +57,7 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -63,8 +65,10 @@ import de.hbch.traewelling.theme.HeartRed
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.CustomClickableText
+import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.ProfilePicture
+import de.hbch.traewelling.ui.report.Report
 import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
@@ -437,7 +441,7 @@ fun StatusDetailsRow(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CheckInCardFooter(
     modifier: Modifier = Modifier,
@@ -450,8 +454,24 @@ private fun CheckInCardFooter(
     handleEditClicked: () -> Unit = { },
     handleDeleteClicked: () -> Unit = { }
 ) {
+    val featureFlags = remember { FeatureFlags.getInstance() }
     var likedState by remember { mutableStateOf(status.liked ?: false) }
     var likeCountState by remember { mutableIntStateOf(status.likes ?: 0) }
+    var reportFormVisible by remember { mutableStateOf(false) }
+    val statusReportsActive by featureFlags.statusReports.observeAsState(false)
+
+    if (reportFormVisible) {
+        Dialog(
+            onDismissRequest = {
+                reportFormVisible = false
+            }
+        ) {
+            Report(
+                statusId = status.id,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
 
     val settingsViewModel: SettingsViewModel = viewModel(
         viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner
@@ -562,84 +582,89 @@ private fun CheckInCardFooter(
             var menuExpanded by remember { mutableStateOf(false) }
             val context = LocalContext.current
             Box {
-                Icon(
-                    modifier = Modifier
-                        .clickable {
-                            menuExpanded = true
+                // Remove if when feature flag is enabled
+                if (isOwnStatus || statusReportsActive) {
+                    Icon(
+                        modifier = Modifier
+                            .clickable {
+                                menuExpanded = true
+                            }
+                            .padding(2.dp),
+                        painter = painterResource(id = R.drawable.ic_more),
+                        contentDescription = null,
+                        tint = LocalColorScheme.current.primary
+                    )
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false }
+                    ) {
+                        if (isOwnStatus) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.title_share)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_share),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    menuExpanded = false
+                                    context.shareStatus(status)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.title_edit)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_edit),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = handleEditClicked
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.delete)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_delete),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    menuExpanded = false
+                                    handleDeleteClicked()
+                                }
+                            )
+                        } else {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.title_report)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_report),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    reportFormVisible = true
+                                }
+                            )
                         }
-                        .padding(2.dp),
-                    painter = painterResource(id = R.drawable.ic_more),
-                    contentDescription = null,
-                    tint = LocalColorScheme.current.primary
-                )
-                DropdownMenu(
-                    expanded = menuExpanded,
-                    onDismissRequest = { menuExpanded = false }
-                ) {
-                    if (isOwnStatus) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.title_share)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_share),
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = {
-                                menuExpanded = false
-                                context.shareStatus(status)
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.title_edit)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_edit),
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = handleEditClicked
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.delete)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_delete),
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = {
-                                menuExpanded = false
-                                handleDeleteClicked()
-                            }
-                        )
-                    } else {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.title_report)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_report),
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = handleEditClicked
-                        )
                     }
                 }
             }

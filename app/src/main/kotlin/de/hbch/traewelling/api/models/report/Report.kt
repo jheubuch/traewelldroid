@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 
 data class Report(
-    @SerializedName("subject_type") val subjectType: ReportSubjectType,
-    @SerializedName("subject_id") val subjectId: Int,
+    val subjectType: ReportSubjectType,
+    val subjectId: Int,
     val reason: ReportReason,
     val description: String?
 )

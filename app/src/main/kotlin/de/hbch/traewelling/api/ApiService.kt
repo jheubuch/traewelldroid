@@ -13,6 +13,7 @@ import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.api.models.notifications.NotificationPage
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
+import de.hbch.traewelling.api.models.report.Report
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
@@ -24,6 +25,7 @@ import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import okhttp3.OkHttpClient
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -273,6 +275,13 @@ interface WebhookRelayService {
     ): Call<Unit>
 }
 
+interface ReportService {
+    @POST("report")
+    suspend fun createReport(
+        @Body report: Report
+    ): Response<Unit>
+}
+
 object TraewellingApi {
     var jwt: String = ""
 
@@ -293,6 +302,9 @@ object TraewellingApi {
     }
     val notificationService: NotificationService by lazy {
         trwlRetrofit.create(NotificationService::class.java)
+    }
+    val reportService: ReportService by lazy {
+        trwlRetrofit.create(ReportService::class.java)
     }
 }
 

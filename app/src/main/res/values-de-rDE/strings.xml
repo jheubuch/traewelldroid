@@ -240,9 +240,13 @@
     <string name="mastodon_emoji_description">Da du deinen Mastodon-Account mit Träwelling verbunden hast, kannst du nun auch die Emoji deiner Mastodon-Instanz anzeigen und in deinen Check-Ins verwenden. Probiers doch mal aus! 😄</string>
     <string name="title_report">Melden</string>
     <string name="create_report">Meldung erstellen</string>
+    <string name="report_reason_description">Warum erstellst du diese Meldung?</string>
     <string name="report_reason_inappropriate">Unangebrachte Angaben</string>
     <string name="report_reason_implausible">Unplausible Angaben</string>
     <string name="report_reason_spam">Spam</string>
     <string name="report_reason_illegal">Illegale Inhalte</string>
     <string name="report_reason_other">Anderes… (bitte erläutern)</string>
+    <string name="additional_information">Zusätzliche Informationen…</string>
+    <string name="report_success">Danke für deine Meldung! Das Träwelling-Team wird diese so schnell wie möglich bearbeiten.</string>
+    <string name="report_error">Die Meldung konnte nicht erstellt werden. Wenn dein Anliegen dringend ist, kontaktiere den Träwelling-Support bitte über die Webseite.</string>
 </resources>
