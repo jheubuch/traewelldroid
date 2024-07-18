@@ -83,6 +83,7 @@ fun CheckInCard(
     modifier: Modifier = Modifier,
     checkInCardViewModel: CheckInCardViewModel,
     status: Status?,
+    joinConnection: (Status) -> Unit,
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     displayLongDate: Boolean = false,
     stationSelected: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
@@ -224,6 +225,7 @@ fun CheckInCard(
                 CheckInCardFooter(
                     modifier = Modifier.fillMaxWidth(),
                     status = status,
+                    joinConnection = joinConnection,
                     isOwnStatus =
                     (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.user.id,
                     displayLongDate = displayLongDate,
@@ -447,6 +449,7 @@ private fun CheckInCardFooter(
     modifier: Modifier = Modifier,
     status: Status,
     checkInCardViewModel: CheckInCardViewModel,
+    joinConnection: (Status) -> Unit,
     isOwnStatus: Boolean = false,
     displayLongDate: Boolean = false,
     defaultVisibility: StatusVisibility = StatusVisibility.PUBLIC,
@@ -651,6 +654,23 @@ private fun CheckInCardFooter(
                             DropdownMenuItem(
                                 text = {
                                     Text(
+                                        text = stringResource(id = R.string.title_also_check_in)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_also_check_in),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    menuExpanded = false
+                                    joinConnection(status)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
                                         text = stringResource(id = R.string.title_report)
                                     )
                                 },
@@ -661,6 +681,7 @@ private fun CheckInCardFooter(
                                     )
                                 },
                                 onClick = {
+                                    menuExpanded = false
                                     reportFormVisible = true
                                 }
                             )

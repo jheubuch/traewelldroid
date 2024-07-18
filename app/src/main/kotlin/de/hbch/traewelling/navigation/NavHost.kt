@@ -111,6 +111,23 @@ fun TraewelldroidNavHost(
         )
     }
 
+    val navToJoinConnection: (Status) -> Unit = { status ->
+        checkInViewModel.lineName = status.journey.line
+        checkInViewModel.operatorCode = status.journey.operator?.id
+        checkInViewModel.lineId = status.journey.lineId
+        checkInViewModel.tripId = status.journey.hafasTripId
+        checkInViewModel.startStationId = status.journey.origin.id
+        checkInViewModel.departureTime = status.journey.origin.departurePlanned
+        checkInViewModel.destinationStationId = status.journey.destination.id
+        checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
+        checkInViewModel.category = status.journey.safeProductType
+        checkInViewModel.destination = status.journey.destination.name
+
+        navController.navigate(
+            CheckIn.route
+        )
+    }
+
     val initKnowsAboutNotifications = secureStorage.getObject(
         SharedValues.SS_NOTIFICATIONS_ENABLED,
         Boolean::class.java
@@ -140,7 +157,8 @@ fun TraewelldroidNavHost(
                 userSelectedAction = navToUserProfile,
                 statusEditAction = navToEditCheckIn,
                 knowsAboutNotifications = knowsAboutNotifications,
-                notificationHintClosed = closeNotificationHint
+                notificationHintClosed = closeNotificationHint,
+                joinConnection = navToJoinConnection
             )
             onResetFloatingActionButton()
         }
@@ -154,7 +172,8 @@ fun TraewelldroidNavHost(
                 loggedInUserViewModel = loggedInUserViewModel,
                 statusSelectedAction = navToStatusDetails,
                 userSelectedAction = navToUserProfile,
-                statusEditAction = navToEditCheckIn
+                statusEditAction = navToEditCheckIn,
+                joinConnection = navToJoinConnection
             )
         }
         composable(Notifications.route) {
@@ -243,7 +262,8 @@ fun TraewelldroidNavHost(
                     val formatted = DateTimeFormatter.ISO_DATE.format(date)
                     navController.navigate("daily-statistics/$formatted")
                 },
-                userSelectedAction = navToUserProfile
+                userSelectedAction = navToUserProfile,
+                joinConnection = navToJoinConnection
             )
 
             onResetFloatingActionButton()
@@ -300,6 +320,7 @@ fun TraewelldroidNavHost(
 
             StatusDetail(
                 statusId = statusId,
+                joinConnection = navToJoinConnection,
                 loggedInUserViewModel = loggedInUserViewModel,
                 statusLoaded = { status ->
                     val menuItems = mutableListOf<ComposeMenuItem>()
@@ -319,20 +340,7 @@ fun TraewelldroidNavHost(
                                     R.string.title_also_check_in,
                                     R.drawable.ic_also_check_in
                                 ) {
-                                    checkInViewModel.lineName = status.journey.line
-                                    checkInViewModel.operatorCode = status.journey.operator?.id
-                                    checkInViewModel.lineId = status.journey.lineId
-                                    checkInViewModel.tripId = status.journey.hafasTripId
-                                    checkInViewModel.startStationId = status.journey.origin.id
-                                    checkInViewModel.departureTime = status.journey.origin.departurePlanned
-                                    checkInViewModel.destinationStationId = status.journey.destination.id
-                                    checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
-                                    checkInViewModel.category = status.journey.safeProductType
-                                    checkInViewModel.destination = status.journey.destination.name
-
-                                    navController.navigate(
-                                        CheckIn.route
-                                    )
+                                    navToJoinConnection(status)
                                 }
                             )
                         }

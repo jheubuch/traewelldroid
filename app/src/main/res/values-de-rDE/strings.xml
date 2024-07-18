@@ -248,5 +248,5 @@
     <string name="report_reason_other">Anderes… (bitte erläutern)</string>
     <string name="additional_information">Zusätzliche Informationen…</string>
     <string name="report_success">Danke für deine Meldung! Das Träwelling-Team wird diese so schnell wie möglich bearbeiten.</string>
-    <string name="report_error">Die Meldung konnte nicht erstellt werden. Wenn dein Anliegen dringend ist, kontaktiere den Träwelling-Support bitte über die Webseite.</string>
+    <string name="report_error">Die Meldung konnte nicht erstellt werden. Wenn dein Anliegen dringend ist, kontaktiere bitte den Träwelling-Support über die Webseite.</string>
 </resources>

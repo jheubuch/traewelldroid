@@ -25,6 +25,7 @@ import de.hbch.traewelling.util.checkInList
 @Composable
 fun EnRoute(
     loggedInUserViewModel: LoggedInUserViewModel,
+    joinConnection: (Status) -> Unit,
     userSelectedAction: (String) -> Unit = { },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
@@ -56,6 +57,7 @@ fun EnRoute(
                 viewModel.checkIns,
                 checkInCardViewModel,
                 loggedInUserViewModel,
+                joinConnection = joinConnection,
                 statusSelectedAction = statusSelectedAction,
                 statusEditAction = statusEditAction,
                 statusDeletedAction = statusDeletedAction,

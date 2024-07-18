@@ -69,6 +69,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun StatusDetail(
     statusId: Int,
+    joinConnection: (Status) -> Unit,
     modifier: Modifier = Modifier,
     statusLoaded: (Status) -> Unit = { },
     statusDeleted: (Status) -> Unit = { },
@@ -142,6 +143,7 @@ fun StatusDetail(
                 CheckInCard(
                     checkInCardViewModel = checkInCardViewModel,
                     status = status,
+                    joinConnection = joinConnection,
                     loggedInUserViewModel = loggedInUserViewModel,
                     onDeleted = statusDeleted,
                     handleEditClicked = statusEdit,
@@ -417,6 +419,7 @@ private fun StatusDetailPreview() {
         StatusDetail(
             modifier = Modifier.fillMaxWidth(),
             statusId = 1117900,
+            joinConnection = { }
         )
     }
 }

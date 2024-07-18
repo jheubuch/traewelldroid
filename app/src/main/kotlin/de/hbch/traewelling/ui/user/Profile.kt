@@ -34,6 +34,7 @@ import java.time.ZonedDateTime
 fun Profile(
     username: String?,
     loggedInUserViewModel: LoggedInUserViewModel,
+    joinConnection: (Status) -> Unit,
     stationSelectedAction: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
@@ -94,6 +95,7 @@ fun Profile(
                 userStatusViewModel.checkIns,
                 checkInCardViewModel,
                 loggedInUserViewModel,
+                joinConnection,
                 stationSelectedAction,
                 statusSelectedAction,
                 statusEditAction,

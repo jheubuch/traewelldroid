@@ -261,6 +261,7 @@ private fun DailyStatisticsView(
                 CheckInCard(
                     checkInCardViewModel = checkInCardViewModel,
                     status = checkIn,
+                    joinConnection = { },
                     loggedInUserViewModel = loggedInUserViewModel,
                     statusSelected = statusSelectedAction,
                     handleEditClicked = statusEditAction

@@ -37,7 +37,6 @@ import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.lineIcons.LineIcon
-import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.FeatureFlags
@@ -81,6 +80,7 @@ fun LazyListScope.checkInList(
     checkIns: SnapshotStateList<Status>,
     checkInCardViewModel: CheckInCardViewModel,
     loggedInUserViewModel: LoggedInUserViewModel,
+    joinConnection: (Status) -> Unit,
     stationSelectedAction: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusEditAction: (Status) -> Unit = { },
@@ -135,6 +135,7 @@ fun LazyListScope.checkInList(
         CheckInCard(
             checkInCardViewModel = checkInCardViewModel,
             status = status,
+            joinConnection = joinConnection,
             loggedInUserViewModel = loggedInUserViewModel,
             stationSelected = stationSelectedAction,
             statusSelected = statusSelectedAction,
