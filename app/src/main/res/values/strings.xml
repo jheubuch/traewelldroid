@@ -227,6 +227,7 @@
     <string name="channel_description_likes">Users liking your check-ins</string>
     <string name="channel_mentions">Mentions</string>
     <string name="channel_description_mentions">Users mentioning you in their check-ins</string>
+    <string name="channel_description_unknown">Unsupported notification</string>
     <string name="select_up_distributor">Select UnifiedPush distributor</string>
     <string name="no_up_distributor_found">No UnifiedPush distributor was found. Please install one of your choice and restart the app.</string>
     <string name="selected_up_distributor">Selected UnifiedPush distributor: %1$s</string>
@@ -276,4 +277,5 @@
     <string name="additional_information">Additional information…</string>
     <string name="report_success">Thank you for your report! The Träwelling team will evaluate it as soon as possible.</string>
     <string name="report_error">The report could not be created. If your issue is urgent, please contact the Träwelling support on the website.</string>
+    <string name="unsupported_notification_hint">Please use the Träwelling website to view this notification.</string>
 </resources>

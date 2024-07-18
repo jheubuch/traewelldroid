@@ -201,6 +201,7 @@
     <string name="channel_description_likes">Nutzer:innen, denen deine Check-Ins gefallen</string>
     <string name="channel_mentions">Erwähnungen</string>
     <string name="channel_description_mentions">Nutzer:innen, die dich in deren Check-Ins erwähnen</string>
+    <string name="channel_description_unknown">Nicht unterstützte Benachrichtigung</string>
     <string name="select_up_distributor">Unified Push-Distributor wählen</string>
     <string name="no_up_distributor_found">Es wurde kein Unified Push Distributor gefunden. Bitte installiere einen deiner Wahl und starte die App neu.</string>
     <string name="selected_up_distributor">Gewählter UnifiedPush Distributor: %1$s</string>
@@ -249,4 +250,5 @@
     <string name="additional_information">Zusätzliche Informationen…</string>
     <string name="report_success">Danke für deine Meldung! Das Träwelling-Team wird diese so schnell wie möglich bearbeiten.</string>
     <string name="report_error">Die Meldung konnte nicht erstellt werden. Wenn dein Anliegen dringend ist, kontaktiere bitte den Träwelling-Support über die Webseite.</string>
+    <string name="unsupported_notification_hint">Bitte nutze die Träwelling-Webseite, um diese Benachrichtigung zu sehen.</string>
 </resources>

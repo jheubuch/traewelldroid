@@ -31,6 +31,10 @@ enum class NotificationChannelType {
         override val importance = NotificationManager.IMPORTANCE_HIGH
         override val title = R.string.channel_mentions
         override val description = R.string.channel_description_mentions
+    },
+    Unknown {
+        override val title = R.string.unknown
+        override val description = R.string.channel_description_unknown
     };
     abstract val title: Int
     abstract val description: Int

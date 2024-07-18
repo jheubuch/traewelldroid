@@ -103,7 +103,7 @@ fun Notifications(
                     notificationsViewModel = notificationsViewModel,
                     unreadNotificationsChanged = unreadNotificationsChanged,
                     onClick = {
-                        it.type.getOnClick(it).invoke(navHostController)
+                        it.safeType.getOnClick(it).invoke(navHostController)
                     }
                 )
             }
@@ -220,8 +220,8 @@ private fun NotificationBody(
     onRead: () -> Unit = { }
 ) {
     val context = LocalContext.current
-    val headline = notification.type.getHeadline(context, notification)
-    val body = notification.type.getBody(context, notification)
+    val headline = notification.safeType.getHeadline(context, notification)
+    val body = notification.safeType.getBody(context, notification)
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -235,7 +235,7 @@ private fun NotificationBody(
         ) {
             Icon(
                 modifier = Modifier.size(32.dp),
-                painter = painterResource(id = notification.type.icon),
+                painter = painterResource(id = notification.safeType.icon),
                 contentDescription = null
             )
             Text(
@@ -270,7 +270,7 @@ private fun NotificationBody(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
-            text = getLocalDateTimeString(date = notification.createdAt),
+            text = getLocalDateTimeString(date = notification.safeCreatedAt),
             style = AppTypography.labelMedium
         )
     }

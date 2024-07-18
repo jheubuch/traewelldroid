@@ -58,23 +58,23 @@ class PushNotificationReceiver : MessagingReceiver() {
             = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
 
         if (notificationManager != null) {
-            val title = notification.type.getHeadline(context, notification)
-            val body = notification.type.getBody(context, notification)
-            val icon = notification.type.icon
+            val title = notification.safeType.getHeadline(context, notification)
+            val body = notification.safeType.getBody(context, notification)
+            val icon = notification.safeType.icon
             val color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 context.getColor(R.color.material_dynamic_primary60)
             } else {
                 PolylineColor.toArgb()
             }
 
-            val intent = notification.type.getIntent(context, notification)
+            val intent = notification.safeType.getIntent(context, notification)
 
-            var pushNotification = android.app.Notification.Builder(context, notification.type.channel.name)
+            var pushNotification = android.app.Notification.Builder(context, notification.safeType.channel.name)
                 .setSmallIcon(R.drawable.ic_notification_logo)
                 .setLargeIcon(Icon.createWithResource(context, icon).setTint(color))
                 .setContentTitle(title)
                 .setContentText(body)
-                .setWhen(notification.createdAt.toInstant().toEpochMilli())
+                .setWhen(notification.safeCreatedAt.toInstant().toEpochMilli())
                 .setShowWhen(true)
                 .setCategory(android.app.Notification.CATEGORY_SOCIAL)
                 .setAutoCancel(true)
@@ -89,7 +89,7 @@ class PushNotificationReceiver : MessagingReceiver() {
             }
 
             notificationManager.notify(
-                notification.createdAt.toEpochSecond().toInt(),
+                notification.safeCreatedAt.toEpochSecond().toInt(),
                 pushNotification.build()
             )
         }

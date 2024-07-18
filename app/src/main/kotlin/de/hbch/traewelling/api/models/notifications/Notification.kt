@@ -371,6 +371,13 @@ enum class NotificationType {
             val targetType = object: TypeToken<UserMentionedData>() {}.type
             return gson.fromJson<Any>(gson.toJson(data), targetType) as? UserMentionedData
         }
+    },
+    Unknown {
+        override val icon = R.drawable.ic_unknown
+        override val channel = NotificationChannelType.Unknown
+        override fun getHeadline(context: Context, notification: Notification): String {
+            return context.getString(R.string.channel_description_unknown)
+        }
     };
 
     abstract val icon: Int

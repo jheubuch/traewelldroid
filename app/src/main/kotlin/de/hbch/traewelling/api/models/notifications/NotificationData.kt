@@ -11,11 +11,14 @@ data class NotificationPage(
 
 data class Notification(
     val id: String,
-    val type: NotificationType,
+    val type: NotificationType?,
     var readAt: ZonedDateTime?,
-    val createdAt: ZonedDateTime,
+    val createdAt: ZonedDateTime?,
     val data: Any
-)
+) {
+    val safeType get() = type ?: NotificationType.Unknown
+    val safeCreatedAt: ZonedDateTime get() = createdAt ?: ZonedDateTime.now()
+}
 
 data class NotificationStation(
     val name: String
