@@ -73,6 +73,7 @@ import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
+import de.hbch.traewelling.util.getSwitzerlandLineName
 import de.hbch.traewelling.util.shareStatus
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -416,7 +417,10 @@ fun StatusDetailsRow(
             operatorCode = operatorCode,
             lineId = lineId
         )
-        if (displayJourneyNumber && journeyNumber != null && !line.contains(journeyNumber.toString())) {
+        if (
+            (displayJourneyNumber && journeyNumber != null && !line.contains(journeyNumber.toString())) ||
+            (getSwitzerlandLineName(line.split(" ").getOrElse(0) { "" }, lineId ?: "")?.contains(journeyNumber.toString()) != true)
+            ) {
             Text(
                 modifier = alignmentModifier.padding(start = 4.dp),
                 text = "($journeyNumber)",

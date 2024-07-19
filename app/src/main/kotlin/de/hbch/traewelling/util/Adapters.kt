@@ -6,7 +6,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.models.mastodon.CustomEmoji
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import java.lang.Exception
@@ -83,6 +82,16 @@ fun getLastDestination(trip: HafasTrip): String {
     return lastDestination.ifBlank {
         trip.direction ?: (trip.destination?.name ?: "")
     }
+}
+
+fun getSwitzerlandLineName(productName: String, lineId: String): String? {
+    // Switzerland lines start with 85 in the second block of line id
+    val splitLineId = lineId.split("-")
+    if (splitLineId.getOrNull(1)?.startsWith("85") == true) {
+        val lineNumber = lineId.split("-").getOrNull(2) ?: return null
+        return "$productName $lineNumber"
+    }
+    return null
 }
 
 private fun clarifyRingbahnBerlin(trip: HafasTrip): String {

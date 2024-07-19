@@ -9,7 +9,8 @@ data class HafasLine(
     @SerializedName("fahrtNr") val journeyNumber: Int,
     @SerializedName("name") val name: String?,
     @SerializedName("product") val product: ProductType?,
-    @SerializedName("operator") val operator: HafasOperator?
+    @SerializedName("operator") val operator: HafasOperator?,
+    val productName: String
 ) {
     val safeProductType get() = product ?: ProductType.UNKNOWN
 }

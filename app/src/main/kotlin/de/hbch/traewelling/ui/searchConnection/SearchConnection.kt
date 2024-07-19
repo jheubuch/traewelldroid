@@ -66,6 +66,7 @@ import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
 import de.hbch.traewelling.util.getDelayColor
 import de.hbch.traewelling.util.getLastDestination
 import de.hbch.traewelling.util.getLocalTimeString
+import de.hbch.traewelling.util.getSwitzerlandLineName
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -429,7 +430,10 @@ fun ConnectionListItem(
                     lineId = hafasLine?.id
                 )
 
-                if (displayJourneyNumber && journeyNumber != null && hafasLine.name?.contains(journeyNumber.toString()) == false) {
+                if (
+                    (displayJourneyNumber && journeyNumber != null && hafasLine.name?.contains(journeyNumber.toString()) == false) ||
+                    !(getSwitzerlandLineName((hafasLine?.name ?: "").split(" ").getOrElse(0) { "" }, hafasLine?.id ?: "") ?: hafasLine?.name ?: "").contains(journeyNumber.toString())
+                ) {
                     Text(
                         text = "($journeyNumber)",
                         style = AppTypography.bodySmall

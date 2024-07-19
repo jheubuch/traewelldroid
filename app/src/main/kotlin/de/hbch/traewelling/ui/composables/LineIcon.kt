@@ -20,6 +20,7 @@ import de.hbch.traewelling.api.models.lineIcons.LineIconShape
 import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LineIconStyle
+import de.hbch.traewelling.util.getSwitzerlandLineName
 
 @Composable
 fun LineIcon(
@@ -66,7 +67,10 @@ fun LineIcon(
         }
     } else {
         Text(
-            text = displayedName,
+            text = getSwitzerlandLineName(
+                lineId = lineId ?: "",
+                productName = lineName.split(" ").getOrElse(0) { "" }
+            ) ?: displayedName,
             modifier = modifier,
             style = defaultTextStyle,
             fontWeight = FontWeight.ExtraBold
