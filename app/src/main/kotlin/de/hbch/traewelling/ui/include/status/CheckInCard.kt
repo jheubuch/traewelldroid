@@ -57,7 +57,6 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
-import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -461,11 +460,9 @@ private fun CheckInCardFooter(
     handleEditClicked: () -> Unit = { },
     handleDeleteClicked: () -> Unit = { }
 ) {
-    val featureFlags = remember { FeatureFlags.getInstance() }
     var likedState by remember { mutableStateOf(status.liked ?: false) }
     var likeCountState by remember { mutableIntStateOf(status.likes ?: 0) }
     var reportFormVisible by remember { mutableStateOf(false) }
-    val statusReportsActive by featureFlags.statusReports.observeAsState(false)
 
     if (reportFormVisible) {
         Dialog(
@@ -589,107 +586,104 @@ private fun CheckInCardFooter(
             var menuExpanded by remember { mutableStateOf(false) }
             val context = LocalContext.current
             Box {
-                // Remove if when feature flag is enabled
-                if (isOwnStatus || statusReportsActive) {
-                    Icon(
-                        modifier = Modifier
-                            .clickable {
-                                menuExpanded = true
-                            }
-                            .padding(2.dp),
-                        painter = painterResource(id = R.drawable.ic_more),
-                        contentDescription = null,
-                        tint = LocalColorScheme.current.primary
-                    )
-                    DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false }
-                    ) {
-                        if (isOwnStatus) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(id = R.string.title_share)
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_share),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    menuExpanded = false
-                                    context.shareStatus(status)
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(id = R.string.title_edit)
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_edit),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = handleEditClicked
-                            )
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(id = R.string.delete)
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_delete),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    menuExpanded = false
-                                    handleDeleteClicked()
-                                }
-                            )
-                        } else {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(id = R.string.title_also_check_in)
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_also_check_in),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    menuExpanded = false
-                                    joinConnection(status)
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(id = R.string.title_report)
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_report),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    menuExpanded = false
-                                    reportFormVisible = true
-                                }
-                            )
+                Icon(
+                    modifier = Modifier
+                        .clickable {
+                            menuExpanded = true
                         }
+                        .padding(2.dp),
+                    painter = painterResource(id = R.drawable.ic_more),
+                    contentDescription = null,
+                    tint = LocalColorScheme.current.primary
+                )
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    if (isOwnStatus) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_share)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_share),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                menuExpanded = false
+                                context.shareStatus(status)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_edit)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_edit),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = handleEditClicked
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.delete)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_delete),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                menuExpanded = false
+                                handleDeleteClicked()
+                            }
+                        )
+                    } else {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_also_check_in)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_also_check_in),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                menuExpanded = false
+                                joinConnection(status)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_report)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_report),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                menuExpanded = false
+                                reportFormVisible = true
+                            }
+                        )
                     }
                 }
             }

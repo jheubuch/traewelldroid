@@ -89,7 +89,7 @@ fun getSwitzerlandLineName(productName: String, lineId: String): String? {
     val splitLineId = lineId.split("-")
     if (splitLineId.getOrNull(1)?.startsWith("85") == true) {
         val lineNumber = lineId.split("-").getOrNull(2) ?: return null
-        return "$productName $lineNumber"
+        return "$productName ${lineNumber.uppercase()}"
     }
     return null
 }
