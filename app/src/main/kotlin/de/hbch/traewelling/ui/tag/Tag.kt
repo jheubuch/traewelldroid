@@ -49,41 +49,6 @@ import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import kotlinx.coroutines.launch
 
-@Composable
-fun StatusTags(
-    statusId: Int,
-    modifier: Modifier = Modifier,
-    isOwnStatus: Boolean = false,
-    defaultVisibility: StatusVisibility = StatusVisibility.PUBLIC
-) {
-    val tags = remember { mutableStateListOf<Tag>() }
-    val tagViewModel: TagViewModel = viewModel()
-    var tagsRequested by remember { mutableStateOf(false) }
-
-    LaunchedEffect(tagsRequested) {
-        if (!tagsRequested) {
-            tags.clear()
-            tagsRequested = true
-            tagViewModel.getTagsForStatus(
-                statusId,
-                {
-                    tags.addAll(it)
-                },
-                { }
-            )
-        }
-    }
-
-    StatusTags(
-        tags = tags,
-        statusId = statusId,
-        modifier = modifier,
-        isOwnStatus = isOwnStatus,
-        defaultVisibility = defaultVisibility
-    )
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatusTags(

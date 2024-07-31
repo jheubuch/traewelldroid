@@ -150,14 +150,15 @@ fun StatusDetail(
                     displayLongDate = true,
                     userSelected = userSelected
                 )
-                if (!displayTagsInCard) {
+                if (!displayTagsInCard && status != null) {
                     StatusTags(
                         statusId = statusId,
                         modifier = Modifier.fillMaxWidth(),
                         isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id
                             ?: -1) == status?.user?.id,
                         defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility
-                            ?: StatusVisibility.PUBLIC
+                            ?: StatusVisibility.PUBLIC,
+                        tags = status?.tags ?: listOf()
                     )
                 }
                 status?.likes?.let {

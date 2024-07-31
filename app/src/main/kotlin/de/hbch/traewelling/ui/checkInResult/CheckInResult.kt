@@ -193,7 +193,8 @@ private fun SuccessfulCheckInResult(
             StatusTags(
                 statusId = checkInResponse.data.status.id,
                 isOwnStatus = true,
-                defaultVisibility = loggedInUserViewModel.defaultStatusVisibility
+                defaultVisibility = loggedInUserViewModel.defaultStatusVisibility,
+                tags = checkInResponse.data.status.tags
             )
             val pointReasonText = checkInResponse.data.points.calculation.safeReason.getExplanation()
             if (pointReasonText != null) {
