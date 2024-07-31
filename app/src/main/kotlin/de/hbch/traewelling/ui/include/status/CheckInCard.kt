@@ -72,7 +72,6 @@ import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
-import de.hbch.traewelling.util.getSwitzerlandLineName
 import de.hbch.traewelling.util.shareStatus
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -397,12 +396,6 @@ fun StatusDetailsRow(
     operatorCode: String? = null,
     lineId: String? = null
 ) {
-    val context = LocalContext.current
-    val settingsViewModel: SettingsViewModel = viewModel(
-        viewModelStoreOwner = context as ViewModelStoreOwner
-    )
-    val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
-
     FlowRow(
         modifier = modifier
     ) {
@@ -416,18 +409,9 @@ fun StatusDetailsRow(
             lineName = line,
             modifier = alignmentModifier.padding(start = 4.dp),
             operatorCode = operatorCode,
-            lineId = lineId
+            lineId = lineId,
+            journeyNumber = journeyNumber
         )
-        if (
-            (displayJourneyNumber && journeyNumber != null && !line.contains(journeyNumber.toString())) ||
-            (getSwitzerlandLineName(line.split(" ").getOrElse(0) { "" }, lineId ?: "")?.contains(journeyNumber.toString()) != true)
-            ) {
-            Text(
-                modifier = alignmentModifier.padding(start = 4.dp),
-                text = "($journeyNumber)",
-                style = AppTypography.bodySmall
-            )
-        }
         Text(
             modifier = alignmentModifier.padding(start = 12.dp),
             text = getFormattedDistance(kilometers),

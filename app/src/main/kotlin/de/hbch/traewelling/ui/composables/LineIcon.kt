@@ -2,22 +2,30 @@ package de.hbch.traewelling.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.models.lineIcons.LineIconShape
 import de.hbch.traewelling.shared.LineIcons
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LineIconStyle
 import de.hbch.traewelling.util.getSwitzerlandLineName
@@ -25,11 +33,19 @@ import de.hbch.traewelling.util.getSwitzerlandLineName
 @Composable
 fun LineIcon(
     lineName: String,
+    journeyNumber: Int?,
     modifier: Modifier = Modifier,
     operatorCode: String? = null,
     lineId: String? = null,
-    defaultTextStyle: TextStyle = AppTypography.bodyMedium
+    defaultTextStyle: TextStyle = AppTypography.bodyMedium,
+    displayJourneyNumber: Boolean = true
 ) {
+    val context = LocalContext.current
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = context as ViewModelStoreOwner
+    )
+    val displayJourneyNumberSetting by settingsViewModel.displayJourneyNumber.observeAsState(true)
+
     val opCode = operatorCode?.replace("nahreisezug", "") ?: ""
 
     val lineIcon = LineIcons.getInstance().icons.firstOrNull {
@@ -44,36 +60,54 @@ fun LineIcon(
     }
     val borderColor: Color = lineIcon?.getBorderColor() ?: Color.Transparent
 
-    val displayedName = lineIcon?.displayedName ?: lineName
+    val displayedName =
+        lineIcon?.displayedName
+        ?: getSwitzerlandLineName(
+            lineId = lineId ?: "",
+            productName = lineName.split(" ").getOrElse(0) { "" }
+        )
+        ?: lineName
 
-    if (lineIcon != null) {
-        Box(
-            modifier = modifier
-                .widthIn(48.dp, 144.dp)
-                .background(
-                    color = lineIcon.getBackgroundColor(),
-                    shape = shape
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (lineIcon != null) {
+            Box(
+                modifier = Modifier
+                    .widthIn(48.dp, 144.dp)
+                    .background(
+                        color = lineIcon.getBackgroundColor(),
+                        shape = shape
+                    )
+                    .border(2.dp, borderColor, shape)
+                    .padding(2.dp)
+            ) {
+                Text(
+                    text = displayedName,
+                    modifier = Modifier.align(Alignment.Center),
+                    color = lineIcon.getTextColor(),
+                    style = LineIconStyle,
+                    fontWeight = FontWeight.Bold
                 )
-                .border(2.dp, borderColor, shape)
-                .padding(2.dp)
-        ) {
+            }
+        } else {
             Text(
                 text = displayedName,
-                modifier = Modifier.align(Alignment.Center),
-                color = lineIcon.getTextColor(),
-                style = LineIconStyle,
-                fontWeight = FontWeight.Bold
+                modifier = modifier,
+                style = defaultTextStyle,
+                fontWeight = FontWeight.ExtraBold
             )
         }
-    } else {
-        Text(
-            text = getSwitzerlandLineName(
-                lineId = lineId ?: "",
-                productName = lineName.split(" ").getOrElse(0) { "" }
-            ) ?: displayedName,
-            modifier = modifier,
-            style = defaultTextStyle,
-            fontWeight = FontWeight.ExtraBold
-        )
+        if (displayJourneyNumber
+            && displayJourneyNumberSetting
+            && !displayedName.contains(journeyNumber.toString())
+            && journeyNumber != null && journeyNumber != 0) {
+            Text(
+                text = "($journeyNumber)",
+                style = AppTypography.bodySmall
+            )
+        }
     }
 }

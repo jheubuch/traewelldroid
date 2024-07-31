@@ -66,7 +66,6 @@ import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
 import de.hbch.traewelling.util.getDelayColor
 import de.hbch.traewelling.util.getLastDestination
 import de.hbch.traewelling.util.getLocalTimeString
-import de.hbch.traewelling.util.getSwitzerlandLineName
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -206,7 +205,6 @@ fun SearchConnection(
     val settingsViewModel: SettingsViewModel = viewModel(
         viewModelStoreOwner = context as ViewModelStoreOwner
     )
-    val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
     val displayDivergentStop by settingsViewModel.displayDivergentStop.observeAsState(true)
 
     var datePickerVisible by remember { mutableStateOf(false) }
@@ -362,8 +360,7 @@ fun SearchConnection(
                         trip.station?.name
                     else
                         null,
-                hafasLine = trip.line,
-                displayJourneyNumber = displayJourneyNumber
+                hafasLine = trip.line
             )
 
             HorizontalDivider(
@@ -402,7 +399,6 @@ fun ConnectionListItem(
     destination: String,
     departureStation: String?,
     hafasLine: HafasLine?,
-    displayJourneyNumber: Boolean,
     modifier: Modifier = Modifier
 ) {
     val journeyNumber = hafasLine?.journeyNumber
@@ -427,18 +423,9 @@ fun ConnectionListItem(
                 LineIcon(
                     lineName = hafasLine?.name ?: "",
                     operatorCode = hafasLine?.operator?.id,
-                    lineId = hafasLine?.id
+                    lineId = hafasLine?.id,
+                    journeyNumber = journeyNumber
                 )
-
-                if (
-                    (displayJourneyNumber && journeyNumber != null && hafasLine.name?.contains(journeyNumber.toString()) == false) ||
-                    !(getSwitzerlandLineName((hafasLine?.name ?: "").split(" ").getOrElse(0) { "" }, hafasLine?.id ?: "") ?: hafasLine?.name ?: "").contains(journeyNumber.toString())
-                ) {
-                    Text(
-                        text = "($journeyNumber)",
-                        style = AppTypography.bodySmall
-                    )
-                }
             }
             Column(
                 horizontalAlignment = Alignment.End
@@ -575,8 +562,7 @@ fun ConnectionListItemPreview() {
                 isCancelled = false,
                 destination = "Memmingen",
                 departureStation = null,
-                hafasLine = null,
-                displayJourneyNumber = true
+                hafasLine = null
             )
             ConnectionListItem(
                 productType = ProductType.TRAM,
@@ -585,8 +571,7 @@ fun ConnectionListItemPreview() {
                 isCancelled = true,
                 destination = "S-Vaihingen über Dachswald, Panoramabahn etc pp",
                 departureStation = "Hauptbahnhof, Arnulf-Klett-Platz, einmal über den Fernwanderweg, rechts abbiegen, Treppe runter, dritter Bahnsteig rechts",
-                hafasLine = null,
-                displayJourneyNumber = false
+                hafasLine = null
             )
         }
     }

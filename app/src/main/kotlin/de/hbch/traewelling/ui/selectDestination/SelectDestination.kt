@@ -148,7 +148,8 @@ fun FromToTextRow(
             lineId = lineId,
             operatorCode = operatorCode,
             modifier = Modifier.padding(start = 8.dp),
-            defaultTextStyle = AppTypography.titleLarge
+            defaultTextStyle = AppTypography.titleLarge,
+            journeyNumber = null
         )
         Icon(
             painter = painterResource(id = R.drawable.ic_arrow_right),
