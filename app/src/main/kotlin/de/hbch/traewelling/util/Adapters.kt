@@ -103,6 +103,7 @@ fun getSwitzerlandLineName(productName: String, lineId: String): Pair<AnnotatedS
 
         val icon = when(productName) {
             "IR" -> R.drawable.ic_ch_ir
+            "IC" -> R.drawable.ic_ch_ic
             else -> null
         }
 
