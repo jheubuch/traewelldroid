@@ -92,7 +92,7 @@ fun LineIcon(
                     fontWeight = FontWeight.Bold
                 )
             }
-        }  else if (switzerlandString.first != null) {
+        }  else if (switzerlandString?.first != null) {
             Box(
                 modifier = Modifier
                     .widthIn(48.dp, 144.dp)

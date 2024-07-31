@@ -13,6 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
 import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
@@ -94,7 +96,7 @@ fun getLastDestination(trip: HafasTrip): String {
     }
 }
 
-fun getSwitzerlandLineName(productName: String, lineId: String): Pair<AnnotatedString?, Map<String, InlineTextContent>> {
+fun getSwitzerlandLineName(productName: String, lineId: String): Pair<AnnotatedString?, Map<String, InlineTextContent>>? {
     // Switzerland lines start with 85 in the second block of line id
     val match = "\\w+-85\\w*-(\\w+)\$".toRegex().find(lineId)
     if (match != null) {
@@ -104,15 +106,18 @@ fun getSwitzerlandLineName(productName: String, lineId: String): Pair<AnnotatedS
         val icon = when(productName) {
             "IR" -> R.drawable.ic_ch_ir
             "IC" -> R.drawable.ic_ch_ic
+            "EC" -> R.drawable.ic_ch_ec
             else -> null
         }
+        val italicProduct = if (productName == "PE") "PE" else null
 
-        if (icon == null) {
-            builder.append(productName)
-        } else {
+        if (icon == null && italicProduct == null)
+            return null
+
+        if (icon != null) {
             builder.appendInlineContent("product", productName)
             inlineTextContent["product"] = InlineTextContent(
-                Placeholder(28.sp, 12.sp, PlaceholderVerticalAlign.Center)
+                Placeholder(28.sp, 12.sp, PlaceholderVerticalAlign.TextCenter)
             ) {
                 Icon(
                     painter = painterResource(id = icon),
@@ -120,8 +125,12 @@ fun getSwitzerlandLineName(productName: String, lineId: String): Pair<AnnotatedS
                     tint = Color.White,
                     modifier = Modifier.fillMaxSize()
                 )
-                //Box(modifier = Modifier.fillMaxSize().background(color = Color.Green))
             }
+        }
+        if (italicProduct != null) {
+            builder.pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
+            builder.append(italicProduct)
+            builder.pop()
         }
         builder.append(" ")
         builder.append(match.groupValues.getOrNull(1)?.uppercase() ?: "")
