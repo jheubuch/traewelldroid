@@ -147,7 +147,7 @@ fun FromToTextRow(
             lineName = lineName,
             lineId = lineId,
             operatorCode = operatorCode,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = 4.dp),
             defaultTextStyle = AppTypography.titleLarge,
             journeyNumber = null
         )
