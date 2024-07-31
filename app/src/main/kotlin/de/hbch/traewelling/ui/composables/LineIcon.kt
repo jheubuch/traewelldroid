@@ -60,13 +60,13 @@ fun LineIcon(
     }
     val borderColor: Color = lineIcon?.getBorderColor() ?: Color.Transparent
 
+    val switzerlandString = getSwitzerlandLineName(
+        lineId = lineId ?: "",
+        productName = lineName.split(" ").getOrElse(0) { "" }
+    )
+
     val displayedName =
-        lineIcon?.displayedName
-        ?: getSwitzerlandLineName(
-            lineId = lineId ?: "",
-            productName = lineName.split(" ").getOrElse(0) { "" }
-        )
-        ?: lineName
+        lineIcon?.displayedName ?: lineName
 
     Row(
         modifier = modifier,
@@ -90,6 +90,24 @@ fun LineIcon(
                     color = lineIcon.getTextColor(),
                     style = LineIconStyle,
                     fontWeight = FontWeight.Bold
+                )
+            }
+        }  else if (switzerlandString.first != null) {
+            Box(
+                modifier = Modifier
+                    .widthIn(48.dp, 144.dp)
+                    .background(
+                        color = Color.Red
+                    )
+                    .padding(2.dp)
+            ) {
+                Text(
+                    text = switzerlandString.first!!,
+                    color = Color.White,
+                    style = LineIconStyle,
+                    fontWeight = FontWeight.Bold,
+                    inlineContent = switzerlandString.second,
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         } else {

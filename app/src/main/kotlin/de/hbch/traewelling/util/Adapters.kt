@@ -1,9 +1,19 @@
 package de.hbch.traewelling.util
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.unit.sp
 import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
@@ -84,14 +94,39 @@ fun getLastDestination(trip: HafasTrip): String {
     }
 }
 
-fun getSwitzerlandLineName(productName: String, lineId: String): String? {
+fun getSwitzerlandLineName(productName: String, lineId: String): Pair<AnnotatedString?, Map<String, InlineTextContent>> {
     // Switzerland lines start with 85 in the second block of line id
-    val splitLineId = lineId.split("-")
-    if (splitLineId.getOrNull(1)?.startsWith("85") == true) {
-        val lineNumber = lineId.split("-").getOrNull(2) ?: return null
-        return "$productName ${lineNumber.uppercase()}"
+    val match = "\\w+-85\\w*-(\\w+)\$".toRegex().find(lineId)
+    if (match != null) {
+        val inlineTextContent = mutableMapOf<String, InlineTextContent>()
+        val builder = AnnotatedString.Builder()
+
+        val icon = when(productName) {
+            "IR" -> R.drawable.ic_ch_ir
+            else -> null
+        }
+
+        if (icon == null) {
+            builder.append(productName)
+        } else {
+            builder.appendInlineContent("product", productName)
+            inlineTextContent["product"] = InlineTextContent(
+                Placeholder(28.sp, 12.sp, PlaceholderVerticalAlign.Center)
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.fillMaxSize()
+                )
+                //Box(modifier = Modifier.fillMaxSize().background(color = Color.Green))
+            }
+        }
+        builder.append(" ")
+        builder.append(match.groupValues.getOrNull(1)?.uppercase() ?: "")
+        return Pair(builder.toAnnotatedString(), inlineTextContent)
     }
-    return null
+    return Pair(null, mapOf())
 }
 
 private fun clarifyRingbahnBerlin(trip: HafasTrip): String {
