@@ -66,7 +66,7 @@ fun LineIcon(
     )
 
     val displayedName =
-        lineIcon?.displayedName ?: lineName
+        lineIcon?.displayedName ?: switzerlandString?.first?.text ?: lineName
 
     Row(
         modifier = modifier,
