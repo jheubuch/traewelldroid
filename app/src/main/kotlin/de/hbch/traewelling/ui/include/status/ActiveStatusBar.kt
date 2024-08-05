@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
@@ -93,7 +94,7 @@ fun ActiveStatusBar(
                 ) {
                     if (duration > 0) {
                         Text(
-                            text = "noch ${getDurationString(duration)}"
+                            text = stringResource(id = R.string.time_left, getDurationString(duration))
                         )
                     }
                     Box(
@@ -102,7 +103,9 @@ fun ActiveStatusBar(
                             .padding(4.dp)
                     ) {
                         Text(
-                            text = "Gl. ${status.journey.destination.arrivalPlatformReal}",
+                            text = stringResource(id = R.string.platform,
+                                status.journey.destination.arrivalPlatformReal
+                                    ?: status.journey.destination.arrivalPlatformPlanned ?: ""),
                             color = Color.White
                         )
                     }

@@ -251,4 +251,6 @@
     <string name="report_success">Danke für deine Meldung! Das Träwelling-Team wird diese so schnell wie möglich bearbeiten.</string>
     <string name="report_error">Die Meldung konnte nicht erstellt werden. Wenn dein Anliegen dringend ist, kontaktiere bitte den Träwelling-Support über die Webseite.</string>
     <string name="unsupported_notification_hint">Bitte nutze die Träwelling-Webseite, um diese Benachrichtigung zu sehen.</string>
+    <string name="time_left">noch %1$s</string>
+    <string name="platform">Gl. %1$s</string>
 </resources>

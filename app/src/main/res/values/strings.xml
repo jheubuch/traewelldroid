@@ -278,4 +278,6 @@
     <string name="report_success">Thank you for your report! The Träwelling team will evaluate it as soon as possible.</string>
     <string name="report_error">The report could not be created. If your issue is urgent, please contact the Träwelling support on the website.</string>
     <string name="unsupported_notification_hint">Please use the Träwelling website to view this notification.</string>
+    <string name="time_left">%1$s left</string>
+    <string name="platform">pl. %1$s</string>
 </resources>
