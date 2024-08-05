@@ -1,5 +1,8 @@
 package de.hbch.traewelling.ui.include.status
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +14,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,8 +29,10 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.user.getDurationString
+import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.ZonedDateTime
+import kotlin.math.absoluteValue
 
 @Composable
 fun ActiveStatusBar(
@@ -29,16 +40,27 @@ fun ActiveStatusBar(
     modifier: Modifier = Modifier
 ) {
     if (status != null) {
-        val progress = calculateProgress(
-            from = status.journey.departureManual ?: status.journey.origin.departureReal
-            ?: status.journey.origin.departurePlanned,
-            to = status.journey.arrivalManual ?: status.journey.destination.arrivalReal
-            ?: status.journey.destination.arrivalPlanned
+        var progress by remember { mutableFloatStateOf(0f) }
+        val progressAnimation by animateFloatAsState(
+            targetValue = progress,
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            label = "AnimateActiveStatusBarProgress",
         )
-        val duration = Duration.between(
-            status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned,
-            ZonedDateTime.now()
-        ).toMinutes() * -1
+        var duration by remember { mutableIntStateOf(0) }
+        
+        LaunchedEffect(true) {
+            while (true) {
+                progress = calculateProgress(
+                    from = status.journey.departureManual ?: status.journey.origin.departureReal ?: status.journey.origin.departurePlanned,
+                    to = status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned
+                )
+                duration = Duration.between(
+                    status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned,
+                    ZonedDateTime.now()
+                ).toMinutes().absoluteValue.toInt()
+                delay(5000)
+            }
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -66,25 +88,28 @@ fun ActiveStatusBar(
                     )
                 }
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Text(
-                        text = "noch ${getDurationString(duration.toInt())}"
-                    )
+                    if (duration > 0) {
+                        Text(
+                            text = "noch ${getDurationString(duration)}"
+                        )
+                    }
                     Box(
-                        modifier = Modifier.background(Color.Blue)
+                        modifier = Modifier
+                            .background(Color.Blue)
+                            .padding(4.dp)
                     ) {
                         Text(
                             text = "Gl. ${status.journey.destination.arrivalPlatformReal}",
-                            modifier = Modifier.padding(2.dp),
                             color = Color.White
                         )
                     }
                 }
             }
             LinearProgressIndicator(
-                progress = { progress },
+                progress = { progressAnimation },
                 modifier = Modifier.fillMaxWidth()
             )
         }

@@ -9,9 +9,11 @@ import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,7 +35,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -136,7 +138,6 @@ class MainActivity : ComponentActivity()
         val coroutineScope = CoroutineScope(Dispatchers.IO)
         coroutineScope.launch {
             eventViewModel.activeEvents()
-            loggedInUserViewModel.updateCurrentStatus()
         }
 
         settingsViewModel.loadSettings(this)
@@ -336,12 +337,18 @@ fun TraewelldroidApp(
                 ) {
                     Column {
                         AnimatedVisibility(visible = currentStatus != null) {
-                            Surface(
-                                color = LocalColorScheme.current.surfaceContainerHighest
+                            BottomAppBar(
+                                windowInsets = WindowInsets(bottom = 0.dp, left = 0.dp, right = 0.dp)
                             ) {
                                 ActiveStatusBar(
                                     status = currentStatus,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                        navController.navigate(
+                                            "status-details/${currentStatus?.id}"
+                                        )
+                                    }
                                 )
                             }
                         }

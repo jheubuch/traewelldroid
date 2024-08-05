@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.util.OnBottomReached
 import de.hbch.traewelling.util.checkInList
+import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -45,6 +47,7 @@ fun Dashboard(
     val checkInCardViewModel : CheckInCardViewModel = viewModel()
     val refreshing by dashboardViewModel.isRefreshing.observeAsState(false)
     val checkIns = remember { dashboardViewModel.checkIns }
+    val coroutineScope = rememberCoroutineScope()
     var currentPage by remember { mutableIntStateOf(1) }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshing,
@@ -61,6 +64,9 @@ fun Dashboard(
         } else {
             loggedInUserViewModel.getLoggedInUser()
             loggedInUserViewModel.getLastVisitedStations {  }
+            coroutineScope.launch {
+                loggedInUserViewModel.updateCurrentStatus()
+            }
         }
     }
 

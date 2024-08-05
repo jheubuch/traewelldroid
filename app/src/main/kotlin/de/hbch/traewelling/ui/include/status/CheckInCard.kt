@@ -4,6 +4,9 @@ import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +31,10 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,6 +78,7 @@ import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
 import de.hbch.traewelling.util.shareStatus
+import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -97,6 +103,25 @@ fun CheckInCard(
         val statusClickedAction: () -> Unit = {
             statusSelected(status.id)
         }
+
+        var progress by remember { mutableFloatStateOf(0f) }
+        val progressAnimation by animateFloatAsState(
+            targetValue = progress,
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            label = "AnimateCheckInCardProgress",
+        )
+        LaunchedEffect(true) {
+            while (true) {
+                progress = calculateProgress(
+                    from = status.journey.departureManual ?: status.journey.origin.departureReal
+                    ?: status.journey.origin.departurePlanned,
+                    to = status.journey.arrivalManual ?: status.journey.destination.arrivalReal
+                    ?: status.journey.destination.arrivalPlanned
+                )
+                delay(5000)
+            }
+        }
+
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
             onClick = statusClickedAction
@@ -209,13 +234,9 @@ fun CheckInCard(
                         textClicked = statusClickedAction
                     )
                 }
-                val progress = calculateProgress(
-                    from = status.journey.departureManual ?: status.journey.origin.departureReal ?: status.journey.origin.departurePlanned,
-                    to = status.journey.arrivalManual ?: status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned
-                )
                 LinearProgressIndicator(
                     progress = {
-                        if (progress.isNaN()) 1f else progress
+                        if (progressAnimation.isNaN()) 1f else progressAnimation
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -245,7 +266,6 @@ fun CheckInCard(
     }
 }
 
-@Composable
 fun calculateProgress(
     from: ZonedDateTime,
     to: ZonedDateTime

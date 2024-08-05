@@ -182,6 +182,8 @@ class LoggedInUserViewModel : ViewModel() {
         val response = TraewellingApi.checkInService.getOwnActiveStatus()
         if (response.code() != 404) {
             currentStatus.postValue(response.body()?.data)
+        } else {
+            currentStatus.postValue(null)
         }
     }
 }

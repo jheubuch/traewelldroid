@@ -43,7 +43,7 @@ fun CardSearch(
                 style = AppTypography.headlineLarge,
                 modifier = Modifier.padding(8.dp),
                 fontFamily = Twindexx,
-                color = LocalColorScheme.current.onPrimaryContainer
+                color = LocalColorScheme.current.primary
             )
             Search(
                 homelandStation = homelandStation,
