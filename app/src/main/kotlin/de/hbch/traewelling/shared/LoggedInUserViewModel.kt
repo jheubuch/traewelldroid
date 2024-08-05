@@ -13,6 +13,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.WebhookRelayApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
+import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.ui.login.LoginActivity
@@ -40,6 +41,8 @@ class LoggedInUserViewModel : ViewModel() {
 
     val defaultStatusVisibility: StatusVisibility
         get() = _user.value?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
+
+    val currentStatus = MutableLiveData<Status?>(null)
 
     fun setHomelandStation(station: Station) {
         _user.value?.home = station
@@ -173,5 +176,12 @@ class LoggedInUserViewModel : ViewModel() {
                     Logger.captureException(t)
                 }
             })
+    }
+
+    suspend fun updateCurrentStatus() {
+        val response = TraewellingApi.checkInService.getOwnActiveStatus()
+        if (response.code() != 404) {
+            currentStatus.postValue(response.body()?.data)
+        }
     }
 }

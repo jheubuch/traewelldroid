@@ -246,7 +246,7 @@ fun CheckInCard(
 }
 
 @Composable
-private fun calculateProgress(
+fun calculateProgress(
     from: ZonedDateTime,
     to: ZonedDateTime
 ): Float {

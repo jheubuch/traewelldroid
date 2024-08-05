@@ -99,6 +99,9 @@ interface StatisticsService {
 }
 
 interface CheckInService {
+    @GET("user/statuses/active")
+    suspend fun getOwnActiveStatus(): Response<Data<Status>>
+
     @GET("dashboard")
     fun getPersonalDashboard(
         @Query("page") page: Int

@@ -10,6 +10,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -79,6 +81,7 @@ import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.ui.include.status.ActiveStatusBar
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.publishStationShortcuts
@@ -133,6 +136,7 @@ class MainActivity : ComponentActivity()
         val coroutineScope = CoroutineScope(Dispatchers.IO)
         coroutineScope.launch {
             eventViewModel.activeEvents()
+            loggedInUserViewModel.updateCurrentStatus()
         }
 
         settingsViewModel.loadSettings(this)
@@ -197,6 +201,7 @@ fun TraewelldroidApp(
         val loggedInUser by loggedInUserViewModel.loggedInUser.observeAsState()
         val lastVisitedStations by loggedInUserViewModel.lastVisitedStations.observeAsState()
         val homelandStation by loggedInUserViewModel.home.observeAsState()
+        val currentStatus by loggedInUserViewModel.currentStatus.observeAsState()
 
         LaunchedEffect(lastVisitedStations, homelandStation) {
             context.publishStationShortcuts(homelandStation, lastVisitedStations)
@@ -329,55 +334,67 @@ fun TraewelldroidApp(
                     enter = slideInVertically(initialOffsetY = { it }),
                     exit = slideOutVertically(targetOffsetY = { it })
                 ) {
-                    NavigationBar {
-                        BOTTOM_NAVIGATION.forEach { destination ->
-                            NavigationBarItem(
-                                icon = {
-                                    BadgedBox(
-                                        badge = {
-                                            if (destination == Notifications && unreadNotificationCount > 0) {
-                                                Badge {
-                                                    Text(
-                                                        text = unreadNotificationCount.toString()
-                                                    )
+                    Column {
+                        AnimatedVisibility(visible = currentStatus != null) {
+                            Surface(
+                                color = LocalColorScheme.current.surfaceContainerHighest
+                            ) {
+                                ActiveStatusBar(
+                                    status = currentStatus,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        NavigationBar {
+                            BOTTOM_NAVIGATION.forEach { destination ->
+                                NavigationBarItem(
+                                    icon = {
+                                        BadgedBox(
+                                            badge = {
+                                                if (destination == Notifications && unreadNotificationCount > 0) {
+                                                    Badge {
+                                                        Text(
+                                                            text = unreadNotificationCount.toString()
+                                                        )
+                                                    }
                                                 }
                                             }
-                                        }
-                                    ) {
-                                        val user = loggedInUser
-                                        if (
-                                            destination == PersonalProfile &&
-                                            user != null
                                         ) {
-                                            AsyncImage(
-                                                model = user.avatarUrl,
-                                                contentDescription = user.name,
-                                                modifier = Modifier
-                                                    .size(24.dp)
-                                                    .clip(CircleShape),
-                                                placeholder = painterResource(id = destination.icon)
-                                            )
-                                        } else {
-                                            Icon(
-                                                painter = painterResource(id = destination.icon),
-                                                contentDescription = null
-                                            )
+                                            val user = loggedInUser
+                                            if (
+                                                destination == PersonalProfile &&
+                                                user != null
+                                            ) {
+                                                AsyncImage(
+                                                    model = user.avatarUrl,
+                                                    contentDescription = user.name,
+                                                    modifier = Modifier
+                                                        .size(24.dp)
+                                                        .clip(CircleShape),
+                                                    placeholder = painterResource(id = destination.icon)
+                                                )
+                                            } else {
+                                                Icon(
+                                                    painter = painterResource(id = destination.icon),
+                                                    contentDescription = null
+                                                )
+                                            }
                                         }
+                                    },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = destination.label),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    },
+                                    selected = currentScreen == destination,
+                                    onClick = {
+                                        navController.popBackStackAndNavigate(destination.route)
+                                        appBarState.contentOffset = 0f
                                     }
-                                },
-                                label = {
-                                    Text(
-                                        text = stringResource(id = destination.label),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                },
-                                selected = currentScreen == destination,
-                                onClick = {
-                                    navController.popBackStackAndNavigate(destination.route)
-                                    appBarState.contentOffset = 0f
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
