@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
@@ -58,7 +60,7 @@ fun ActiveStatusBar(
                 duration = Duration.between(
                     status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned,
                     ZonedDateTime.now()
-                ).toMinutes().absoluteValue.toInt()
+                ).toMinutes().toInt()
                 delay(5000)
             }
         }
@@ -66,11 +68,12 @@ fun ActiveStatusBar(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
-                modifier = modifier.padding(horizontal = 8.dp),
+                modifier = modifier.height(58.dp).padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
+                    modifier = Modifier.weight(0.4f).padding(end = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -85,29 +88,36 @@ fun ActiveStatusBar(
                         contentDescription = null
                     )
                     Text(
-                        text = status.journey.destination.name
+                        text = status.journey.destination.name,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
                 Column(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    if (duration > 0) {
+                    if (duration < 0) {
                         Text(
-                            text = stringResource(id = R.string.time_left, getDurationString(duration))
+                            text = stringResource(id = R.string.time_left, getDurationString(duration.absoluteValue))
                         )
                     }
-                    Box(
-                        modifier = Modifier
-                            .background(Color.Blue)
-                            .padding(4.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.platform,
-                                status.journey.destination.arrivalPlatformReal
-                                    ?: status.journey.destination.arrivalPlatformPlanned ?: ""),
-                            color = Color.White
-                        )
+                    val platform = status.journey.destination.arrivalPlatformReal
+                        ?: status.journey.destination.arrivalPlatformPlanned
+                    if (platform != null) {
+                        Box(
+                            modifier = Modifier
+                                .background(Color.Blue)
+                                .padding(4.dp)
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.platform,
+                                    platform
+                                ),
+                                color = Color.White
+                            )
+                        }
                     }
                 }
             }

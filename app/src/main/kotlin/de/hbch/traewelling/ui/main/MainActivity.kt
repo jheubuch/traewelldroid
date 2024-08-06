@@ -47,6 +47,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -338,17 +339,18 @@ fun TraewelldroidApp(
                     Column {
                         AnimatedVisibility(visible = currentStatus != null) {
                             BottomAppBar(
-                                windowInsets = WindowInsets(bottom = 0.dp, left = 0.dp, right = 0.dp)
+                                windowInsets = WindowInsets(bottom = 0.dp, left = 0.dp, right = 0.dp, top = 0.dp)
                             ) {
                                 ActiveStatusBar(
                                     status = currentStatus,
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .align(Alignment.CenterVertically)
                                         .clickable {
-                                        navController.navigate(
-                                            "status-details/${currentStatus?.id}"
-                                        )
-                                    }
+                                            navController.navigate(
+                                                "status-details/${currentStatus?.id}"
+                                            )
+                                        }
                                 )
                             }
                         }
