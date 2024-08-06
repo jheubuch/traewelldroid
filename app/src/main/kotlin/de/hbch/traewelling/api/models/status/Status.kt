@@ -78,8 +78,8 @@ data class Status(
 
             if (usernames.contains(match)) {
                 val username = match.groupValues.getOrElse(1) { "" }
+                builder.append(statusBody.substring(match.range))
                 if (mentions.any { it.user.username == username }) {
-                    builder.append(statusBody.substring(match.range))
                     builder.addStyle(usernameStyle, match.range.first, match.range.last + 1)
                     builder.addStringAnnotation(
                         "userMention",
