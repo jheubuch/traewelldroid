@@ -1,6 +1,7 @@
 package de.hbch.traewelling.ui.searchConnection
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ElevatedCard
@@ -360,7 +362,9 @@ fun SearchConnection(
                         trip.station?.name
                     else
                         null,
-                hafasLine = trip.line
+                hafasLine = trip.line,
+                platformPlanned = trip.plannedPlatform,
+                platformReal = trip.platform
             )
 
             HorizontalDivider(
@@ -399,6 +403,8 @@ fun ConnectionListItem(
     destination: String,
     departureStation: String?,
     hafasLine: HafasLine?,
+    platformPlanned: String?,
+    platformReal: String?,
     modifier: Modifier = Modifier
 ) {
     val journeyNumber = hafasLine?.journeyNumber
@@ -427,6 +433,7 @@ fun ConnectionListItem(
                     journeyNumber = journeyNumber
                 )
             }
+
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -452,32 +459,69 @@ fun ConnectionListItem(
 
         // Direction and departure from different station
         Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.Top
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                modifier = Modifier.size(20.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_right),
-                contentDescription = null
-            )
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = destination,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    painter = painterResource(id = R.drawable.ic_arrow_right),
+                    contentDescription = null
                 )
-                if (departureStation != null) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
                     Text(
-                        text = stringResource(id = R.string.from_station, departureStation),
-                        style = AppTypography.labelSmall,
-                        maxLines = 2,
+                        text = destination,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    if (departureStation != null) {
+                        Text(
+                            text = stringResource(id = R.string.from_station, departureStation),
+                            style = AppTypography.labelSmall,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
+
+            // Platform
+            if (!isCancelled) {
+                Platform(planned = platformPlanned, real = platformReal)
+            }
+        }
+    }
+}
+
+@Composable
+fun Platform(
+    planned: String?,
+    real: String?
+) {
+    if (planned != null || real != null) {
+        val color = if (real != null && planned != null && real != planned) Color.Red else Color.Blue
+        Box(
+            modifier = Modifier
+                .background(
+                    color = color,
+                    shape = RoundedCornerShape(percent = 30)
+                )
+                .padding(vertical = 2.dp, horizontal = 4.dp)
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.platform,
+                    real ?: planned ?: ""
+                ),
+                color = Color.White,
+                style = AppTypography.labelSmall
+            )
         }
     }
 }
@@ -562,7 +606,9 @@ fun ConnectionListItemPreview() {
                 isCancelled = false,
                 destination = "Memmingen",
                 departureStation = null,
-                hafasLine = null
+                hafasLine = null,
+                platformPlanned = "2",
+                platformReal = "3 Süd"
             )
             ConnectionListItem(
                 productType = ProductType.TRAM,
@@ -571,7 +617,9 @@ fun ConnectionListItemPreview() {
                 isCancelled = true,
                 destination = "S-Vaihingen über Dachswald, Panoramabahn etc pp",
                 departureStation = "Hauptbahnhof, Arnulf-Klett-Platz, einmal über den Fernwanderweg, rechts abbiegen, Treppe runter, dritter Bahnsteig rechts",
-                hafasLine = null
+                hafasLine = null,
+                platformPlanned = "2",
+                platformReal = "2"
             )
         }
     }
