@@ -275,7 +275,9 @@ fun TraewelldroidNavHost(
             onResetFloatingActionButton()
         }
         composable(ProfileEdit.route) {
-            EditProfile()
+            EditProfile(
+                snackbarHostState = snackbarHostState
+            )
         }
         composable(
             DailyStatistics.route,

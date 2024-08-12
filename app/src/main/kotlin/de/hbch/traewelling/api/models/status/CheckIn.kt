@@ -28,14 +28,17 @@ data class TrwlCheckInResponse(
 )
 
 enum class AllowedPersonsToCheckIn {
+    @SerializedName("forbidden")
     FORBIDDEN {
         override val icon = R.drawable.ic_cancel
         override val title = R.string.nobody
     },
+    @SerializedName("friends")
     FRIENDS {
         override val icon = R.drawable.ic_group
         override val title = R.string.friends
     },
+    @SerializedName("list")
     TRUSTED_USERS {
         override val icon = R.drawable.ic_authorized
         override val title = R.string.trusted

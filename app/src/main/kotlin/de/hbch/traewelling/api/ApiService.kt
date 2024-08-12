@@ -21,7 +21,9 @@ import de.hbch.traewelling.api.models.status.*
 import de.hbch.traewelling.api.models.status.Tag
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
+import de.hbch.traewelling.api.models.user.SaveUserSettings
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.api.models.user.UserSettings
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -264,6 +266,14 @@ interface UserService {
     fun unmuteUser(
         @Path("id") userId: Int
     ): Call<Data<Unit>>
+
+    @GET("settings/profile")
+    suspend fun getUserSettings(): Response<Data<UserSettings>>
+
+    @PUT("settings/profile")
+    suspend fun saveUserSettings(
+        @Body settings: SaveUserSettings
+    ): Response<Data<UserSettings>>
 }
 
 interface WebhookRelayService {

@@ -9,39 +9,62 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.AllowedPersonsToCheckIn
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.user.SaveUserSettings
+import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfile(
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val settingsViewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = context as ViewModelStoreOwner
+    )
+    val userSettings by settingsViewModel.userSettings.observeAsState()
+
     var username by rememberSaveable { mutableStateOf("") }
     var displayName by rememberSaveable { mutableStateOf("") }
     var privateProfile by rememberSaveable { mutableStateOf(false) }
+    var collectPoints by rememberSaveable { mutableStateOf(false) }
+    var allowLikes by rememberSaveable { mutableStateOf(false) }
     var showHideCheckInsAfter by rememberSaveable { mutableStateOf(false) }
     var hideCheckInsAfter by rememberSaveable { mutableStateOf("") }
     var defaultStatusVisibility by rememberSaveable { mutableStateOf(StatusVisibility.PUBLIC) }
@@ -50,11 +73,29 @@ fun EditProfile(
     var defaultMastodonVisibilitySelectionVisible by remember { mutableStateOf(false) }
     var allowedPersonsToCheckIn by rememberSaveable { mutableStateOf(AllowedPersonsToCheckIn.FORBIDDEN) }
     var allowedPersonsToCheckInSelectionVisible by remember { mutableStateOf(false) }
+    var isSaving by remember { mutableStateOf(false) }
+
+    LaunchedEffect(userSettings) {
+        if (userSettings != null) {
+            username = userSettings!!.username
+            displayName = userSettings!!.displayName
+            privateProfile = userSettings!!.privateProfile
+            collectPoints = userSettings!!.pointsEnabled
+            allowLikes = userSettings!!.likesEnabled
+            showHideCheckInsAfter = userSettings!!.privacyHideDays > 0
+            hideCheckInsAfter = userSettings!!.privacyHideDays.toString()
+            defaultStatusVisibility = userSettings!!.defaultStatusVisibility
+            defaultMastodonVisibility = userSettings!!.mastodonVisibility ?: StatusVisibility.PUBLIC
+            allowedPersonsToCheckIn = userSettings!!.allowedPersonsToCheckIn
+        }
+    }
 
     val formModifier = Modifier.fillMaxWidth()
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OutlinedTextField(
             value = username,
@@ -102,13 +143,26 @@ fun EditProfile(
                 )
             }
         )
-        HorizontalDivider()
         SwitchWithIconAndText(
             modifier = formModifier,
             checked = privateProfile,
             onCheckedChange = { privateProfile = it },
             drawableId = R.drawable.ic_lock,
             stringId = R.string.private_profile
+        )
+        SwitchWithIconAndText(
+            modifier = formModifier,
+            checked = collectPoints,
+            onCheckedChange = { collectPoints = it },
+            drawableId = R.drawable.ic_score,
+            stringId = R.string.allow_points
+        )
+        SwitchWithIconAndText(
+            modifier = formModifier,
+            checked = allowLikes,
+            onCheckedChange = { allowLikes = it },
+            drawableId = R.drawable.ic_heart_filled,
+            stringId = R.string.allow_likes
         )
         SwitchWithIconAndText(
             modifier = formModifier,
@@ -212,62 +266,67 @@ fun EditProfile(
                 }
             }
         }
-        Box {
-            val mastodonVisibilityInteractionSource = remember { MutableInteractionSource() }
-            val mastodonFieldPressed by mastodonVisibilityInteractionSource.collectIsPressedAsState()
-            if (mastodonFieldPressed) {
-                defaultMastodonVisibilitySelectionVisible = true
-            }
-
-            OutlinedTextField(
-                value = stringResource(defaultMastodonVisibility.title),
-                onValueChange = { },
-                modifier = formModifier.clickable(mastodonVisibilityInteractionSource, null) { },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_mastodon),
-                        contentDescription = null
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = defaultMastodonVisibility.icon),
-                        contentDescription = null
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.default_visibility_mastodon)
-                    )
-                },
-                singleLine = true,
-                interactionSource = mastodonVisibilityInteractionSource,
-                readOnly = true
-            )
-            DropdownMenu(
-                expanded = defaultMastodonVisibilitySelectionVisible,
-                onDismissRequest = {
-                    defaultMastodonVisibilitySelectionVisible = false
+        if (userSettings?.mastodonUrl != null) {
+            Box {
+                val mastodonVisibilityInteractionSource = remember { MutableInteractionSource() }
+                val mastodonFieldPressed by mastodonVisibilityInteractionSource.collectIsPressedAsState()
+                if (mastodonFieldPressed) {
+                    defaultMastodonVisibilitySelectionVisible = true
                 }
-            ) {
-                StatusVisibility.entries.filter { it.isMastodonVisibility }.forEach {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = stringResource(id = it.title)
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = it.icon),
-                                contentDescription = null
-                            )
-                        },
-                        onClick = {
-                            defaultMastodonVisibility = it
-                            defaultMastodonVisibilitySelectionVisible = false
-                        }
-                    )
+
+                OutlinedTextField(
+                    value = stringResource(defaultMastodonVisibility.title),
+                    onValueChange = { },
+                    modifier = formModifier.clickable(
+                        mastodonVisibilityInteractionSource,
+                        null
+                    ) { },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_mastodon),
+                            contentDescription = null
+                        )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(id = defaultMastodonVisibility.icon),
+                            contentDescription = null
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.default_visibility_mastodon)
+                        )
+                    },
+                    singleLine = true,
+                    interactionSource = mastodonVisibilityInteractionSource,
+                    readOnly = true
+                )
+                DropdownMenu(
+                    expanded = defaultMastodonVisibilitySelectionVisible,
+                    onDismissRequest = {
+                        defaultMastodonVisibilitySelectionVisible = false
+                    }
+                ) {
+                    StatusVisibility.entries.filter { it.isMastodonVisibility }.forEach {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = it.title)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = it.icon),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                defaultMastodonVisibility = it
+                                defaultMastodonVisibilitySelectionVisible = false
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -330,13 +389,38 @@ fun EditProfile(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun EditProfilePreview() {
-    MainTheme {
-        EditProfile(modifier = Modifier.padding(16.dp))
+        ButtonWithIconAndText(
+            stringId = R.string.save,
+            drawableId = R.drawable.ic_check_in,
+            onClick = {
+                isSaving = true
+                val hideDays = if (!showHideCheckInsAfter) null else hideCheckInsAfter.toIntOrNull()
+                coroutineScope.launch {
+                    val result = settingsViewModel.saveUserSettings(
+                        SaveUserSettings(
+                            username,
+                            displayName,
+                            privateProfile,
+                            defaultStatusVisibility.ordinal,
+                            hideDays,
+                            defaultMastodonVisibility.ordinal,
+                            allowedPersonsToCheckIn,
+                            allowLikes,
+                            collectPoints
+                        )
+                    )
+                    if (result != null) {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                context.getString(R.string.changes_saved)
+                            )
+                        }
+                    }
+                    isSaving = false
+                }
+            },
+            modifier = formModifier,
+            isLoading = isSaving
+        )
     }
 }

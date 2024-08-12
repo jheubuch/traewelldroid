@@ -283,7 +283,7 @@
     <string name="edit_profile">Edit profile</string>
     <string name="display_name">Display name</string>
     <string name="allow_likes">Allow likes</string>
-    <string name="allow_points">Display points</string>
+    <string name="allow_points">Collect points</string>
     <string name="auto_hide_check_ins_after">Hide check-ins after a time</string>
     <plurals name="days">
         <item quantity="one">day</item>
