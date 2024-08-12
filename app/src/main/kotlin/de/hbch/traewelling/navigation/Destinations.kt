@@ -161,6 +161,11 @@ object Settings : Destination {
     override val route = "settings"
 }
 
+object ProfileEdit : Destination {
+    override val label = R.string.edit_profile
+    override val route = "edit-profile"
+}
+
 val SCREENS = listOf(
     Dashboard,
     EnRoute,
@@ -173,7 +178,8 @@ val SCREENS = listOf(
     CheckIn,
     CheckInResult,
     StatusDetails,
-    Settings
+    Settings,
+    ProfileEdit
 )
 
 val BOTTOM_NAVIGATION = listOf(

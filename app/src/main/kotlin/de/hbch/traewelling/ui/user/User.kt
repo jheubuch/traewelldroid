@@ -2,6 +2,7 @@ package de.hbch.traewelling.ui.user
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +27,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
@@ -34,7 +37,8 @@ import de.hbch.traewelling.util.openLink
 fun UserCard(
     modifier: Modifier = Modifier,
     userViewModel: UserStatusViewModel,
-    loggedInUserViewModel: LoggedInUserViewModel
+    loggedInUserViewModel: LoggedInUserViewModel,
+    editProfile: () -> Unit = { }
 ) {
     val stateUser by userViewModel.user.observeAsState()
     val stateLoggedInUser by loggedInUserViewModel.user.observeAsState()
@@ -46,7 +50,8 @@ fun UserCard(
                 loggedInUser = loggedInUser,
                 modifier = modifier,
                 followAction = { userViewModel.handleFollowButton() },
-                muteAction = { userViewModel.handleMuteButton() }
+                muteAction = { userViewModel.handleMuteButton() },
+                editProfile = editProfile
             )
         }
     }
@@ -58,124 +63,153 @@ private fun UserCardContent(
     loggedInUser: User,
     modifier: Modifier = Modifier,
     followAction: () -> Unit = { },
-    muteAction: () -> Unit = { }
+    muteAction: () -> Unit = { },
+    editProfile: () -> Unit = { }
 ) {
     val context = LocalContext.current
+    val isOwnProfile = loggedInUser.id == user.id
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            ProfilePicture(
-                user = user,
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(150.dp)
-            )
+            // Edit profile button
+            if (isOwnProfile) {
+                IconButton(
+                    onClick = editProfile,
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_edit),
+                        contentDescription = null,
+                        tint = LocalColorScheme.current.primary
+                    )
+                }
+            }
+
             Column(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        style = AppTypography.titleLarge,
-                        text = user.name
-                    )
-                    if (user.privateProfile) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_lock),
-                            contentDescription = stringResource(id = R.string.private_profile),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    if (user.mastodonUrl != null) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_mastodon),
-                            contentDescription = null,
-                            modifier = Modifier.padding(start = 8.dp).clickable {
-                                context.openLink(user.mastodonUrl)
-                            }
-                        )
-                    }
-                }
-                Text(
-                    style = AppTypography.titleMedium,
-                    text = "@${user.username}"
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row (verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_navigation),
-                        contentDescription = null
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = stringResource(id = R.string.format_distance_kilometers, user.distance / 1000)
-                    )
-                }
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(end = 8.dp),
-                        text = stringResource(id = R.string.display_points, user.points)
-                    )
-                    Icon(
-                        painterResource(id = R.drawable.ic_score),
-                        contentDescription = null
-                    )
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row (verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_travel_time),
-                        contentDescription = null
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = getDurationString(user.duration)
-                    )
-                }
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(end = 8.dp),
-                        text = stringResource(id = R.string.display_average_speed, user.averageSpeed)
-                    )
-                    Icon(
-                        painterResource(id = R.drawable.ic_speed),
-                        contentDescription = null
-                    )
-                }
-            }
-            if (loggedInUser.id != user.id) {
-                Row(
+                ProfilePicture(
+                    user = user,
                     modifier = Modifier
-                        .padding(top = 8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
+                        .width(150.dp)
+                        .height(150.dp)
+                )
+                Column(
+                    modifier = Modifier.padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val buttonModifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                    FollowButton(user = user, onClick = followAction, modifier = buttonModifier)
-                    MuteButton(user = user, onClick = muteAction, modifier = buttonModifier)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            style = AppTypography.titleLarge,
+                            text = user.name
+                        )
+                        if (user.privateProfile) {
+                            Icon(
+                                painterResource(id = R.drawable.ic_lock),
+                                contentDescription = stringResource(id = R.string.private_profile),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                        if (user.mastodonUrl != null) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_mastodon),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .clickable {
+                                        context.openLink(user.mastodonUrl)
+                                    },
+                                tint = LocalColorScheme.current.primary
+                            )
+                        }
+                    }
+                    Text(
+                        style = AppTypography.titleMedium,
+                        text = "@${user.username}"
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_navigation),
+                            contentDescription = null
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = stringResource(
+                                id = R.string.format_distance_kilometers,
+                                user.distance / 1000
+                            )
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(end = 8.dp),
+                            text = stringResource(id = R.string.display_points, user.points)
+                        )
+                        Icon(
+                            painterResource(id = R.drawable.ic_score),
+                            contentDescription = null
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_travel_time),
+                            contentDescription = null
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = getDurationString(user.duration)
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(end = 8.dp),
+                            text = stringResource(
+                                id = R.string.display_average_speed,
+                                user.averageSpeed
+                            )
+                        )
+                        Icon(
+                            painterResource(id = R.drawable.ic_speed),
+                            contentDescription = null
+                        )
+                    }
+                }
+                if (!isOwnProfile) {
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val buttonModifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 4.dp)
+                        FollowButton(user = user, onClick = followAction, modifier = buttonModifier)
+                        MuteButton(user = user, onClick = muteAction, modifier = buttonModifier)
+                    }
                 }
             }
         }

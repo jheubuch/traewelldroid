@@ -1,6 +1,7 @@
 package de.hbch.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
+import de.hbch.traewelling.R
 import de.hbch.traewelling.providers.checkin.CheckInRequest
 import java.time.ZonedDateTime
 
@@ -25,3 +26,21 @@ data class TrwlCheckInResponse(
     @SerializedName("alsoOnThisConnection") val coTravellers: List<Status>,
     @SerializedName("points") val points: StatusPoints
 )
+
+enum class AllowedPersonsToCheckIn {
+    FORBIDDEN {
+        override val icon = R.drawable.ic_cancel
+        override val title = R.string.nobody
+    },
+    FRIENDS {
+        override val icon = R.drawable.ic_group
+        override val title = R.string.friends
+    },
+    TRUSTED_USERS {
+        override val icon = R.drawable.ic_authorized
+        override val title = R.string.trusted
+    };
+
+    abstract val icon: Int
+    abstract val title: Int
+}

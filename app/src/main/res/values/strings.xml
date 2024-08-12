@@ -280,4 +280,19 @@
     <string name="unsupported_notification_hint">Please use the Träwelling website to view this notification.</string>
     <string name="time_left">%1$s left</string>
     <string name="platform">pl. %1$s</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="display_name">Display name</string>
+    <string name="allow_likes">Allow likes</string>
+    <string name="allow_points">Display points</string>
+    <string name="auto_hide_check_ins_after">Hide check-ins after a time</string>
+    <plurals name="days">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+    <string name="default_visibility_check_ins">Default visibility for check-ins</string>
+    <string name="default_visibility_mastodon">Default visibility for Mastodon posts</string>
+    <string name="allow_check_ins_from_others">Users allowed to check you in</string>
+    <string name="nobody">Nobody</string>
+    <string name="friends">Friends (followed each other)</string>
+    <string name="trusted">Trusted users</string>
 </resources>

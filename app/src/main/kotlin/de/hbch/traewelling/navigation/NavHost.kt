@@ -39,6 +39,7 @@ import de.hbch.traewelling.ui.settings.Settings
 import de.hbch.traewelling.ui.statistics.DailyStatistics
 import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
+import de.hbch.traewelling.ui.user.EditProfile
 import de.hbch.traewelling.ui.user.Profile
 import de.hbch.traewelling.util.HOME
 import de.hbch.traewelling.util.popBackStackAndNavigate
@@ -263,10 +264,18 @@ fun TraewelldroidNavHost(
                     navController.navigate("daily-statistics/$formatted")
                 },
                 userSelectedAction = navToUserProfile,
-                joinConnection = navToJoinConnection
+                joinConnection = navToJoinConnection,
+                editProfile = {
+                    navController.navigate(ProfileEdit.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
 
             onResetFloatingActionButton()
+        }
+        composable(ProfileEdit.route) {
+            EditProfile()
         }
         composable(
             DailyStatistics.route,

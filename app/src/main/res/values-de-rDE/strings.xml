@@ -253,4 +253,19 @@
     <string name="unsupported_notification_hint">Bitte nutze die Träwelling-Webseite, um diese Benachrichtigung zu sehen.</string>
     <string name="time_left">noch %1$s</string>
     <string name="platform">Gl. %1$s</string>
+    <string name="edit_profile">Profil bearbeiten</string>
+    <string name="display_name">Anzeigename</string>
+    <string name="allow_likes">Gefällt-mir-Angaben von anderen erlauben</string>
+    <string name="allow_points">Punkte sammeln</string>
+    <string name="auto_hide_check_ins_after">Check-Ins automatisch verstecken</string>
+    <plurals name="days">
+        <item quantity="one">Tag</item>
+        <item quantity="other">Tage</item>
+    </plurals>
+    <string name="default_visibility_check_ins">Standardsichtbarkeit für Check-Ins</string>
+    <string name="default_visibility_mastodon">Standardsichtbarkeit für Mastodon-Posts</string>
+    <string name="allow_check_ins_from_others">User:innen, die dich einchecken können</string>
+    <string name="nobody">Niemand</string>
+    <string name="friends">Freunde (gegenseitig folgend)</string>
+    <string name="trusted">Vertraute User:innen</string>
 </resources>

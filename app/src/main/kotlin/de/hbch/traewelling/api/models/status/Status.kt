@@ -157,10 +157,12 @@ enum class StatusVisibility() {
     ONLY_AUTHENTICATED {
         override val icon = R.drawable.ic_authorized
         override val title = R.string.visibility_only_authenticated
+        override val isMastodonVisibility = false
     };
 
     abstract val icon: Int
     abstract val title: Int
+    open val isMastodonVisibility: Boolean = true
 }
 
 enum class StatusBusiness(val business: Int) {
