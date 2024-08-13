@@ -71,6 +71,7 @@ fun EditProfile(
     var allowedPersonsToCheckIn by rememberSaveable { mutableStateOf(AllowedPersonsToCheckIn.FORBIDDEN) }
     var allowedPersonsToCheckInSelectionVisible by remember { mutableStateOf(false) }
     var isSaving by remember { mutableStateOf(false) }
+    var formErrorString by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(userSettings) {
         if (userSettings != null) {
@@ -115,7 +116,8 @@ fun EditProfile(
                 Text(
                     text = stringResource(id = R.string.input_username)
                 )
-            }
+            },
+            isError = formErrorString?.contains("username") == true
         )
         OutlinedTextField(
             value = displayName,
@@ -138,7 +140,8 @@ fun EditProfile(
                 Text(
                     text = stringResource(id = R.string.display_name)
                 )
-            }
+            },
+            isError = formErrorString?.contains("displayName") == true
         )
         SwitchWithIconAndText(
             modifier = formModifier,
@@ -201,7 +204,8 @@ fun EditProfile(
                         text = stringResource(id = R.string.auto_hide_check_ins_after)
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isError = formErrorString?.contains("privacyHideDays") == true
             )
         }
         Box {
@@ -393,7 +397,8 @@ fun EditProfile(
                 isSaving = true
                 val hideDays = if (!showHideCheckInsAfter) null else hideCheckInsAfter.toIntOrNull()
                 coroutineScope.launch {
-                    val result = settingsViewModel.saveUserSettings(
+                    formErrorString = null
+                    val response = settingsViewModel.saveUserSettings(
                         SaveUserSettings(
                             username,
                             displayName,
@@ -406,11 +411,17 @@ fun EditProfile(
                             collectPoints
                         )
                     )
-                    if (result != null) {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                context.getString(R.string.changes_saved)
-                            )
+                    if (response != null) {
+                        if (response.isSuccessful) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    context.getString(R.string.changes_saved)
+                                )
+                            }
+                        } else {
+                            if (response.code() == 422) {
+                                formErrorString = response.errorBody()?.string()
+                            }
                         }
                     }
                     isSaving = false

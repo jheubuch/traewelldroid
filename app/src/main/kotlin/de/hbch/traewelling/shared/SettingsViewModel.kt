@@ -6,11 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.user.SaveUserSettings
 import de.hbch.traewelling.api.models.user.UserSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class SettingsViewModel : ViewModel() {
 
@@ -77,20 +79,15 @@ class SettingsViewModel : ViewModel() {
         _userSettings.postValue(settings)
     }
 
-    suspend fun saveUserSettings(settings: SaveUserSettings): UserSettings? {
-        val newSettings = try {
-            val response = TraewellingApi.userService.saveUserSettings(settings)
-            if (response.isSuccessful) {
-                response.body()?.data
-            } else {
-                null
-            }
+    suspend fun saveUserSettings(settings: SaveUserSettings): Response<Data<UserSettings>>? {
+         return try {
+             val response = TraewellingApi.userService.saveUserSettings(settings)
+             if (response.isSuccessful) {
+                 _userSettings.postValue(response.body()?.data)
+             }
+             response
         } catch (ex: Exception) {
             null
         }
-        if (newSettings != null) {
-            _userSettings.postValue(newSettings)
-        }
-        return newSettings
     }
 }

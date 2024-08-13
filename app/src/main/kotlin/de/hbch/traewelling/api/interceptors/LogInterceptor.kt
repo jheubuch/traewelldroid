@@ -20,14 +20,16 @@ class LogInterceptor : Interceptor {
             val requestBody = buffer.readUtf8()
             buffer.close()
 
+            val responseCopy = response.newBuilder().build()
+
             val additionalInfo = mapOf(
                 Pair("path", path),
-                Pair("code", response.code.toString()),
-                Pair("responseBody", response.body?.string() ?: "no body"),
+                Pair("code", responseCopy.code.toString()),
+                // Pair("responseBody", responseCopy.body?.string() ?: "no body"),
                 Pair("requestBody", requestBody)
             )
 
-            Logger.captureMessage("[${response.code}] $path", additionalInfo)
+            Logger.captureMessage("[${responseCopy.code}] $path", additionalInfo)
         }
         return response
     }
