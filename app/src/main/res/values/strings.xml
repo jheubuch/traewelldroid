@@ -295,4 +295,11 @@
     <string name="nobody">Nobody</string>
     <string name="friends">Friends (followed each other)</string>
     <string name="trusted">Trusted users</string>
+    <string name="manage_followers">Manage followers</string>
+    <string name="followers">Followers</string>
+    <string name="followings">Following</string>
+    <string name="follow_requests">Follow requests</string>
+    <string name="remove">Remove</string>
+    <string name="remove_follower_success">Follower successfully removed</string>
+    <string name="remove_follower_error">Follower could not be removed. Please try again later.</string>
 </resources>

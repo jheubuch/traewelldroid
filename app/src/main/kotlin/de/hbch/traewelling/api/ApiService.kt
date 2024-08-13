@@ -23,6 +23,7 @@ import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.user.SaveUserSettings
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.api.models.user.UserId
 import de.hbch.traewelling.api.models.user.UserSettings
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import okhttp3.OkHttpClient
@@ -274,6 +275,16 @@ interface UserService {
     suspend fun saveUserSettings(
         @Body settings: SaveUserSettings
     ): Response<Data<UserSettings>>
+
+    @GET("settings/followers")
+    suspend fun getFollowers(
+        @Query("page") page: Int
+    ): Response<Data<List<User>>>
+
+    @DELETE("user/removeFollower")
+    suspend fun removeFollower(
+        @Body user: UserId
+    ): Response<Unit>
 }
 
 interface WebhookRelayService {

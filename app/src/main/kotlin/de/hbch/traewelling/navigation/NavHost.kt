@@ -29,6 +29,7 @@ import de.hbch.traewelling.ui.activeCheckins.EnRoute
 import de.hbch.traewelling.ui.checkIn.CheckIn
 import de.hbch.traewelling.ui.checkInResult.CheckInResultView
 import de.hbch.traewelling.ui.dashboard.Dashboard
+import de.hbch.traewelling.ui.followers.ManageFollowers
 import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.main.MainActivity
 import de.hbch.traewelling.ui.notifications.Notifications
@@ -269,6 +270,11 @@ fun TraewelldroidNavHost(
                     navController.navigate(ProfileEdit.route) {
                         launchSingleTop = true
                     }
+                },
+                manageFollowerAction = {
+                    navController.navigate(ManageFollowers.route) {
+                        launchSingleTop = true
+                    }
                 }
             )
 
@@ -276,6 +282,11 @@ fun TraewelldroidNavHost(
         }
         composable(ProfileEdit.route) {
             EditProfile(
+                snackbarHostState = snackbarHostState
+            )
+        }
+        composable(ManageFollowers.route) {
+            ManageFollowers(
                 snackbarHostState = snackbarHostState
             )
         }

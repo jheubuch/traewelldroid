@@ -41,7 +41,8 @@ fun Profile(
     statusEditAction: (Status) -> Unit = { },
     dailyStatisticsSelectedAction: (LocalDate) -> Unit = { },
     userSelectedAction: (String) -> Unit = { },
-    editProfile: () -> Unit = { }
+    editProfile: () -> Unit = { },
+    manageFollowerAction: () -> Unit = { }
 ) {
     val user = username ?: loggedInUserViewModel.loggedInUser.value?.username
     var currentPage by remember { mutableStateOf(1) }
@@ -90,7 +91,8 @@ fun Profile(
                 UserCard(
                     userViewModel = userStatusViewModel,
                     loggedInUserViewModel = loggedInUserViewModel,
-                    editProfile = editProfile
+                    editProfile = editProfile,
+                    manageFollowerAction = manageFollowerAction
                 )
             }
             checkInList(

@@ -166,6 +166,11 @@ object ProfileEdit : Destination {
     override val route = "edit-profile"
 }
 
+object ManageFollowers: Destination {
+    override val label = R.string.manage_followers
+    override val route = "manage-followers"
+}
+
 val SCREENS = listOf(
     Dashboard,
     EnRoute,
@@ -179,7 +184,8 @@ val SCREENS = listOf(
     CheckInResult,
     StatusDetails,
     Settings,
-    ProfileEdit
+    ProfileEdit,
+    ManageFollowers
 )
 
 val BOTTOM_NAVIGATION = listOf(

@@ -268,4 +268,11 @@
     <string name="nobody">Niemand</string>
     <string name="friends">Freunde (gegenseitig folgend)</string>
     <string name="trusted">Vertraute User:innen</string>
+    <string name="manage_followers">Follower verwalten</string>
+    <string name="followers">Follower</string>
+    <string name="followings">Folgend</string>
+    <string name="follow_requests">Folgeanfragen</string>
+    <string name="remove_follower">Follower entfernen</string>
+    <string name="remove_follower_success">Follower erfolgreich entfernt</string>
+    <string name="remove_follower_error">Follower konnte nicht entfernt werden. Bitte später erneut versuchen.</string>
 </resources>

@@ -31,3 +31,7 @@ data class LightUser(
     @SerializedName("profilePicture") val avatarUrl: String,
     @SerializedName("mastodonUrl") val mastodonUrl: String?
 )
+
+data class UserId(
+    val userId: Int
+)
