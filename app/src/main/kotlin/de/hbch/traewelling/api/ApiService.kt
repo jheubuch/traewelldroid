@@ -21,7 +21,9 @@ import de.hbch.traewelling.api.models.status.*
 import de.hbch.traewelling.api.models.status.Tag
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
+import de.hbch.traewelling.api.models.user.CreateTrustedUser
 import de.hbch.traewelling.api.models.user.SaveUserSettings
+import de.hbch.traewelling.api.models.user.TrustedUser
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.api.models.user.UserSettings
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
@@ -274,6 +276,22 @@ interface UserService {
     suspend fun saveUserSettings(
         @Body settings: SaveUserSettings
     ): Response<Data<UserSettings>>
+
+    @GET("user/self/trusted")
+    suspend fun getTrustedUsers(): Response<Data<List<TrustedUser>>>
+
+    @GET("user/self/trusted-by")
+    suspend fun getTrustingUsers(): Response<Data<List<TrustedUser>>>
+
+    @POST("user/self/trusted")
+    suspend fun trustUser(
+        @Body user: CreateTrustedUser
+    ): Response<Unit>
+
+    @DELETE("user/self/trusted/{userId}")
+    suspend fun removeTrustedUser(
+        @Path("userId") userId: Int
+    ): Response<Unit>
 }
 
 interface WebhookRelayService {

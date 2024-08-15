@@ -277,7 +277,7 @@ fun Context.openLink(url: String) {
 fun <T> T.useDebounce(
         delayMillis: Long = 300L,
         coroutineScope: CoroutineScope = rememberCoroutineScope(),
-        onChange: (T) -> Unit
+        onChange: suspend (T) -> Unit
     ): T{
         val state by rememberUpdatedState(this)
 

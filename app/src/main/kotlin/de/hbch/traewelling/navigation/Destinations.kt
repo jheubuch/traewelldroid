@@ -166,6 +166,11 @@ object ProfileEdit : Destination {
     override val route = "edit-profile"
 }
 
+object TrustedUsers : Destination {
+    override val label = R.string.trusted
+    override val route = "trusted-users"
+}
+
 val SCREENS = listOf(
     Dashboard,
     EnRoute,
@@ -179,7 +184,8 @@ val SCREENS = listOf(
     CheckInResult,
     StatusDetails,
     Settings,
-    ProfileEdit
+    ProfileEdit,
+    TrustedUsers
 )
 
 val BOTTOM_NAVIGATION = listOf(

@@ -163,10 +163,12 @@ fun DateTimeSelection(
             maxLines = 1,
             interactionSource = interactionSource
         )
-        Text(
-            text = stringResource(id = R.string.planned, getLocalDateTimeString(plannedDate!!)),
-            style = AppTypography.bodySmall
-        )
+        if (plannedDate != null) {
+            Text(
+                text = stringResource(id = R.string.planned, getLocalDateTimeString(plannedDate)),
+                style = AppTypography.bodySmall
+            )
+        }
     }
 }
 

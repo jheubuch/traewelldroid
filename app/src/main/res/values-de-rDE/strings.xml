@@ -267,5 +267,11 @@
     <string name="allow_check_ins_from_others">User:innen, die dich einchecken können</string>
     <string name="nobody">Niemand</string>
     <string name="friends">Freunde (gegenseitig folgend)</string>
-    <string name="trusted">Vertraute User:innen</string>
+    <string name="trusted">Vertraute Nutzer</string>
+    <string name="remove">Entfernen</string>
+    <string name="expires_at">läuft ab: %1$s</string>
+    <string name="never">nie</string>
+    <string name="trusted_expires_never">Bis auf weiteres vertrauen</string>
+    <string name="select_expiration">Ablaufdatum wählen</string>
+    <string name="add_trusted_user">Vertrauten Nutzer hinzufügen</string>
 </resources>

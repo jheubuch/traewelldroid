@@ -295,4 +295,10 @@
     <string name="nobody">Nobody</string>
     <string name="friends">Friends (followed each other)</string>
     <string name="trusted">Trusted users</string>
+    <string name="remove">Remove</string>
+    <string name="expires_at">expires at: %1$s</string>
+    <string name="never">never</string>
+    <string name="trusted_expires_never">Trust until removed</string>
+    <string name="select_expiration">Select expiration</string>
+    <string name="add_trusted_user">Add trusted user</string>
 </resources>
