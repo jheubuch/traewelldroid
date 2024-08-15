@@ -372,6 +372,62 @@ enum class NotificationType {
             return gson.fromJson<Any>(gson.toJson(data), targetType) as? UserMentionedData
         }
     },
+    YouHaveBeenCheckedIn {
+        override val icon = R.drawable.ic_check_in
+        override val channel = NotificationChannelType.YouHaveBeenCheckedIn
+        override fun getHeadline(context: Context, notification: Notification): String  {
+            val data = getData(notification)
+            var headline = ""
+            if (data != null) {
+                headline = context.getString(R.string.checked_in_by, "@${data.user.username}")
+            }
+            return headline
+        }
+        override fun getBody(context: Context, notification: Notification): String  {
+            val data = getData(notification)
+            var body = ""
+            if (data != null) {
+                body = context.getString(
+                    R.string.travelling_with_from_to,
+                    data.checkIn.lineName,
+                    data.checkIn.origin,
+                    data.checkIn.destination
+                )
+            }
+            return body
+        }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("status")
+                        .appendPath(data.status.id.toString())
+                        .build()
+                )
+            }
+            return intent
+        }
+        override fun getOnClick(notification: Notification): (NavHostController) -> Unit {
+            val data = getData(notification)
+            var onClick: (NavHostController) -> Unit = { }
+            if (data != null) {
+                onClick = {
+                    it.navigate("status-details/${data.status.id}")
+                }
+            }
+            return onClick
+        }
+
+        private fun getData(notification: Notification): YouHaveBeenCheckedInData? {
+            val gson = Gson()
+            val data = notification.data
+            val targetType = object: TypeToken<YouHaveBeenCheckedInData>() {}.type
+            return gson.fromJson<Any>(gson.toJson(data), targetType) as? YouHaveBeenCheckedInData
+        }
+    },
     Unknown {
         override val icon = R.drawable.ic_unknown
         override val channel = NotificationChannelType.Unknown

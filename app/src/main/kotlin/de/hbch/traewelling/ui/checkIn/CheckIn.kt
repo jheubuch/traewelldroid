@@ -15,12 +15,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -51,6 +54,7 @@ import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.mastodon.CustomEmoji
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.user.TrustedUser
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
@@ -62,12 +66,14 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.DateTimeSelection
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.FromToTextRow
+import de.hbch.traewelling.ui.user.TrustedUsersViewModel
 import de.hbch.traewelling.util.checkAnyUsernames
 import de.hbch.traewelling.util.checkCustomEmojis
 import de.hbch.traewelling.util.getLocalDateString
@@ -114,6 +120,7 @@ fun CheckIn(
     var businessSelectionVisible by remember { mutableStateOf(false) }
     var visibilitySelectionVisible by remember { mutableStateOf(false) }
     var eventSelectionVisible by remember { mutableStateOf(false) }
+    var coTravellerSelectionVisible by remember { mutableStateOf(false) }
 
     var statusText by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(text = initText)) }
     val userSearchQuery by remember { derivedStateOf {
@@ -165,6 +172,7 @@ fun CheckIn(
     val selectedBusiness by checkInViewModel.statusBusiness.observeAsState()
     val activeEvents by eventViewModel.activeEvents.observeAsState()
     val selectedEvent by checkInViewModel.event.observeAsState()
+    val selectedCoTravellers by checkInViewModel.coTravellers.observeAsState()
     val dialogModifier = Modifier.fillMaxWidth(0.99f)
 
     if (businessSelectionVisible) {
@@ -211,6 +219,23 @@ fun CheckIn(
                 eventSelectedAction = {
                     checkInViewModel.event.postValue(it)
                     eventSelectionVisible = false
+                }
+            )
+        }
+    }
+
+    if (coTravellerSelectionVisible) {
+        Dialog(
+            modifier = dialogModifier,
+            onDismissRequest = {
+                coTravellerSelectionVisible = false
+                checkInViewModel.coTravellers.postValue(listOf())
+            }
+        ) {
+            SelectCoTravellers(
+                onUsersSelected = {
+                    checkInViewModel.coTravellers.postValue(it)
+                    coTravellerSelectionVisible = false
                 }
             )
         }
@@ -408,6 +433,65 @@ fun CheckIn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.End
                     ) {
+                        // Co-travellers
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            OutlinedButtonWithIconAndText(
+                                stringId = R.string.select_co_travellers,
+                                drawableId = R.drawable.ic_also_check_in,
+                                onClick = {
+                                    coTravellerSelectionVisible = true
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if (selectedCoTravellers?.isNotEmpty() == true) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .horizontalScroll(rememberScrollState()),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    AssistChip(
+                                        onClick = {
+                                            checkInViewModel.coTravellers.postValue(listOf())
+                                        },
+                                        label = {
+                                            Text(
+                                                text = stringResource(id = R.string.remove)
+                                            )
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.ic_remove),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    )
+                                    selectedCoTravellers?.forEach {
+                                        AssistChip(
+                                            onClick = {
+                                                coTravellerSelectionVisible = true
+                                            },
+                                            label = {
+                                                Text(
+                                                    text = "@${it.user.username}"
+                                                )
+                                            },
+                                            leadingIcon = {
+                                                ProfilePicture(
+                                                    name = it.user.name,
+                                                    url = it.user.avatarUrl,
+                                                    modifier = Modifier.size(24.dp)
+                                                )
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
                         // Option buttons
                         Row(
                             modifier = Modifier
@@ -733,6 +817,94 @@ private fun ShareOptions(
                 drawableId = R.drawable.ic_chain,
                 stringId = R.string.chain_toot
             )
+        }
+    }
+}
+
+@Composable
+fun SelectCoTravellers(
+    onUsersSelected: (List<TrustedUser>) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val viewModel: TrustedUsersViewModel = viewModel()
+    val trustingPersons = remember { mutableStateListOf<TrustedUser>() }
+    val selectedForCheckIn = remember { mutableStateListOf<TrustedUser>() }
+    var isLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(trustingPersons.toList()) {
+        if (trustingPersons.isEmpty()) {
+            isLoading = true
+            val trusting = viewModel.getTrustingUsers()
+            if (trusting != null) {
+                trustingPersons.addAll(trusting)
+            }
+            isLoading = false
+        }
+    }
+
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.select_co_travellers),
+            style = AppTypography.titleLarge
+        )
+        Text(
+            text = stringResource(id = R.string.only_check_in_persons),
+            style = AppTypography.labelMedium
+        )
+        if (isLoading) {
+            DataLoading()
+        } else {
+            if (trustingPersons.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.no_person_allowed_check_in),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                trustingPersons.forEach { user ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Checkbox(
+                            checked = selectedForCheckIn.contains(user),
+                            onCheckedChange = {
+                                if (it) {
+                                    selectedForCheckIn.add(user)
+                                } else {
+                                    selectedForCheckIn.remove(user)
+                                }
+                            }
+                        )
+                        ProfilePicture(
+                            name = user.user.name,
+                            url = user.user.avatarUrl,
+                            modifier = Modifier.size(36.dp)
+                        )
+                        Text(
+                            text = "@${user.user.username}"
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    ButtonWithIconAndText(
+                        stringId = R.string.ok,
+                        drawableId = R.drawable.ic_check_in,
+                        onClick = {
+                            onUsersSelected(selectedForCheckIn)
+                        }
+                    )
+                }
+            }
         }
     }
 }

@@ -32,6 +32,11 @@ enum class NotificationChannelType {
         override val title = R.string.channel_mentions
         override val description = R.string.channel_description_mentions
     },
+    YouHaveBeenCheckedIn {
+        override val importance = NotificationManager.IMPORTANCE_HIGH
+        override val title = R.string.channel_you_have_been_checked_in
+        override val description = R.string.channel_description_you_have_been_checked_in
+    },
     Unknown {
         override val title = R.string.unknown
         override val description = R.string.channel_description_unknown

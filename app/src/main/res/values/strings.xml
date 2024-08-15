@@ -228,6 +228,8 @@
     <string name="channel_mentions">Mentions</string>
     <string name="channel_description_mentions">Users mentioning you in their check-ins</string>
     <string name="channel_description_unknown">Unsupported notification</string>
+    <string name="channel_you_have_been_checked_in">Getting checked-in</string>
+    <string name="channel_description_you_have_been_checked_in">Users checking you into a connection</string>
     <string name="select_up_distributor">Select UnifiedPush distributor</string>
     <string name="no_up_distributor_found">No UnifiedPush distributor was found. Please install one of your choice and restart the app.</string>
     <string name="selected_up_distributor">Selected UnifiedPush distributor: %1$s</string>
@@ -301,4 +303,8 @@
     <string name="trusted_expires_never">Trust until removed</string>
     <string name="select_expiration">Select expiration</string>
     <string name="add_trusted_user">Add trusted user</string>
+    <string name="select_co_travellers">Select co-travellers</string>
+    <string name="only_check_in_persons">Please only check-in co-travellers really travelling with you.</string>
+    <string name="no_person_allowed_check_in">No one allowed you to check them in.</string>
+    <string name="checked_in_by">You have been checked-in by %1$s</string>
 </resources>

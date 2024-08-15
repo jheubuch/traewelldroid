@@ -202,6 +202,8 @@
     <string name="channel_mentions">Erwähnungen</string>
     <string name="channel_description_mentions">Nutzer:innen, die dich in deren Check-Ins erwähnen</string>
     <string name="channel_description_unknown">Nicht unterstützte Benachrichtigung</string>
+    <string name="channel_you_have_been_checked_in">Eingecheckt werden</string>
+    <string name="channel_description_you_have_been_checked_in">Nutzer:innen, die dich in Verbindungen einchecken</string>
     <string name="select_up_distributor">Unified Push-Distributor wählen</string>
     <string name="no_up_distributor_found">Es wurde kein Unified Push Distributor gefunden. Bitte installiere einen deiner Wahl und starte die App neu.</string>
     <string name="selected_up_distributor">Gewählter UnifiedPush Distributor: %1$s</string>
@@ -274,4 +276,8 @@
     <string name="trusted_expires_never">Bis auf weiteres vertrauen</string>
     <string name="select_expiration">Ablaufdatum wählen</string>
     <string name="add_trusted_user">Vertrauten Nutzer hinzufügen</string>
+    <string name="select_co_travellers">Mitreisende auswählen</string>
+    <string name="only_check_in_persons">Bitte checke nur Mitreisende ein, die auch tatsächlich mit dir fahren.</string>
+    <string name="no_person_allowed_check_in">Niemand hat dir erlaubt, für sie einzuchecken.</string>
+    <string name="checked_in_by">Du wurdest von %1$s eingecheckt</string>
 </resources>

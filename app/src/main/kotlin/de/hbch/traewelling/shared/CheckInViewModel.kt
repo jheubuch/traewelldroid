@@ -13,6 +13,7 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.status.TrwlCheckInUpdateRequest
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.api.models.user.TrustedUser
 import de.hbch.traewelling.providers.checkin.CheckInResponse
 import de.hbch.traewelling.providers.checkin.CheckInResult
 import de.hbch.traewelling.providers.checkin.traewelling.TrwlCheckInProvider
@@ -50,6 +51,7 @@ class CheckInViewModel : ViewModel() {
     var travelynxCheckInResponse: CheckInResponse<Unit>? = null
     var forceCheckIn: Boolean = false
     var editStatusId: Int = 0
+    var coTravellers = MutableLiveData(listOf<TrustedUser>())
 
     init {
         trwlProvider = TrwlCheckInProvider()
@@ -81,6 +83,7 @@ class CheckInViewModel : ViewModel() {
         forceCheckIn = false
         editStatusId = 0
         category = ProductType.ALL
+        coTravellers.postValue(listOf())
     }
 
     suspend fun forceCheckIn(
@@ -110,6 +113,7 @@ class CheckInViewModel : ViewModel() {
                 destinationStationId,
                 departureTime ?: ZonedDateTime.now(),
                 arrivalTime ?: ZonedDateTime.now(),
+                coTravellers.value?.map { it.user.id } ?: listOf(),
                 forceCheckIn
             )
             val result = trwlProvider.checkIn(trwlCheckInRequest)

@@ -34,4 +34,13 @@ class TrustedUsersViewModel: ViewModel() {
             false
         }
     }
+
+    suspend fun getTrustingUsers(): List<TrustedUser>? {
+        return try {
+            val response = TraewellingApi.userService.getTrustingUsers()
+            response.body()?.data
+        } catch (_: Exception) {
+            null
+        }
+    }
 }
