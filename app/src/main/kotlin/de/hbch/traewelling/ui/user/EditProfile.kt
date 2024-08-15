@@ -396,7 +396,8 @@ fun EditProfile(
             OutlinedButtonWithIconAndText(
                 stringId = R.string.trusted,
                 modifier = formModifier,
-                onClick = manageTrustedUsers
+                onClick = manageTrustedUsers,
+                drawableId = R.drawable.ic_authorized
             )
         }
         ButtonWithIconAndText(

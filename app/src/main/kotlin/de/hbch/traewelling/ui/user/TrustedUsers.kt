@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -55,10 +56,12 @@ fun TrustedUsers(
     val coroutineScope = rememberCoroutineScope()
     val viewModel: TrustedUsersViewModel = viewModel()
     val trustedUsers = remember { mutableStateListOf<TrustedUser>() }
+    var loadData by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(false) }
     var addDialogVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(trustedUsers.toList()) {
+    LaunchedEffect(loadData) {
+        loadData = false
         if (trustedUsers.isEmpty()) {
             isLoading = true
             val response = viewModel.getTrustedUsers()
@@ -80,6 +83,7 @@ fun TrustedUsers(
                 onAddedUser = {
                     addDialogVisible = false
                     trustedUsers.clear()
+                    loadData = true
                 }
             )
         }
@@ -166,12 +170,16 @@ fun AddTrustedUser(
     val searchViewModel: SearchViewModel = viewModel()
     val trustedUsersViewModel: TrustedUsersViewModel = viewModel()
     val foundUsers = remember { mutableStateListOf<User>() }
+    var isSearching by remember { mutableStateOf(false) }
     var userSearch by remember { mutableStateOf(TextFieldValue()) }
     userSearch.useDebounce(500L, coroutineScope) {
+        isSearching = true
         foundUsers.clear()
         val users = searchViewModel.searchUsers(it.text)
-        if (users != null)
+        if (users != null) {
             foundUsers.addAll(users)
+        }
+        isSearching = false
     }
     var user by remember { mutableStateOf<User?>(null) }
     var trustedUnlimitedTime by remember { mutableStateOf(true) }
@@ -206,6 +214,14 @@ fun AddTrustedUser(
                 Text(
                     text = stringResource(id = R.string.search_users)
                 )
+            },
+            trailingIcon = {
+                if (isSearching) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 4.dp
+                    )
+                }
             },
             modifier = Modifier.fillMaxWidth()
         )
