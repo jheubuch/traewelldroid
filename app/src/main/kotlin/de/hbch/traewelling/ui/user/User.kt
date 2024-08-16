@@ -16,6 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,9 +26,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.canopas.lib.showcase.IntroShowcase
+import com.canopas.lib.showcase.component.ShowcaseStyle
+import com.canopas.lib.showcase.component.rememberIntroShowcaseState
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
@@ -70,7 +78,15 @@ private fun UserCardContent(
     editProfile: () -> Unit = { }
 ) {
     val context = LocalContext.current
+    val secureStorage = remember { SecureStorage(context) }
+
+    var introduceProfileEdit by remember { mutableStateOf(
+        !(secureStorage.getObject(SharedValues.SS_EDIT_PROFILE_SHOWCASE, Boolean::class.java) ?: false)
+    ) }
+
     val isOwnProfile = loggedInUser.id == user.id
+    val showCaseState = rememberIntroShowcaseState()
+
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -79,15 +95,46 @@ private fun UserCardContent(
         ) {
             // Edit profile button
             if (isOwnProfile) {
-                IconButton(
-                    onClick = editProfile,
-                    modifier = Modifier.align(Alignment.TopEnd)
+                IntroShowcase(
+                    showIntroShowCase = introduceProfileEdit,
+                    onShowCaseCompleted = {
+                        secureStorage.storeObject(SharedValues.SS_EDIT_PROFILE_SHOWCASE, true)
+                        introduceProfileEdit = false
+                    },
+                    dismissOnClickOutside = true,
+                    state = showCaseState
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_edit),
-                        contentDescription = null,
-                        tint = LocalColorScheme.current.primary
-                    )
+                    IconButton(
+                        onClick = editProfile,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .introShowCaseTarget(
+                                index = 0,
+                                style = ShowcaseStyle.Default.copy(
+                                    backgroundColor = LocalColorScheme.current.primary,
+                                    backgroundAlpha = 0.95f,
+                                    targetCircleColor = LocalColorScheme.current.onPrimary
+                                )
+                            ) {
+                                Column {
+                                    Text(
+                                        text = stringResource(id = R.string.edit_profile),
+                                        style = AppTypography.titleLarge,
+                                        color = LocalColorScheme.current.onPrimary
+                                    )
+                                    Text(
+                                        text = stringResource(id = R.string.edit_profile_description),
+                                        color = LocalColorScheme.current.onPrimary
+                                    )
+                                }
+                            }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_edit),
+                            contentDescription = null,
+                            tint = LocalColorScheme.current.primary
+                        )
+                    }
                 }
             }
 

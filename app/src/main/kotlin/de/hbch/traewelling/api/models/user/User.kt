@@ -3,6 +3,7 @@ package de.hbch.traewelling.api.models.user
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import java.time.ZonedDateTime
 
 data class User(
     @SerializedName("id") val id: Int,
@@ -34,4 +35,14 @@ data class LightUser(
 
 data class UserId(
     val userId: Int
+)
+
+data class TrustedUser(
+    val user: LightUser,
+    val expiresAt: ZonedDateTime?
+)
+
+data class CreateTrustedUser(
+    val userId: Int,
+    val expiresAt: ZonedDateTime?
 )

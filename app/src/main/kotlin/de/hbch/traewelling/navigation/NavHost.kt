@@ -42,6 +42,7 @@ import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.EditProfile
 import de.hbch.traewelling.ui.user.Profile
+import de.hbch.traewelling.ui.user.TrustedUsers
 import de.hbch.traewelling.util.HOME
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.shareStatus
@@ -282,13 +283,21 @@ fun TraewelldroidNavHost(
         }
         composable(ProfileEdit.route) {
             EditProfile(
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                manageTrustedUsers = {
+                    navController.navigate(TrustedUsers.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
         composable(ManageFollowers.route) {
             ManageFollowers(
                 snackbarHostState = snackbarHostState
             )
+        }
+        composable(TrustedUsers.route) {
+            TrustedUsers()
         }
         composable(
             DailyStatistics.route,

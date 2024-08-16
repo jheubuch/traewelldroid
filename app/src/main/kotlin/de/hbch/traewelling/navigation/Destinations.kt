@@ -171,6 +171,11 @@ object ManageFollowers: Destination {
     override val route = "manage-followers"
 }
 
+object TrustedUsers : Destination {
+    override val label = R.string.trusted
+    override val route = "trusted-users"
+}
+
 val SCREENS = listOf(
     Dashboard,
     EnRoute,
@@ -185,7 +190,9 @@ val SCREENS = listOf(
     StatusDetails,
     Settings,
     ProfileEdit,
-    ManageFollowers
+    ManageFollowers,
+    ProfileEdit,
+    TrustedUsers
 )
 
 val BOTTOM_NAVIGATION = listOf(

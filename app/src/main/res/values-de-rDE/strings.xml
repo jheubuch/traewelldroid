@@ -202,6 +202,8 @@
     <string name="channel_mentions">Erwähnungen</string>
     <string name="channel_description_mentions">Nutzer:innen, die dich in deren Check-Ins erwähnen</string>
     <string name="channel_description_unknown">Nicht unterstützte Benachrichtigung</string>
+    <string name="channel_you_have_been_checked_in">Eingecheckt werden</string>
+    <string name="channel_description_you_have_been_checked_in">Nutzer:innen, die dich in Verbindungen einchecken</string>
     <string name="select_up_distributor">Unified Push-Distributor wählen</string>
     <string name="no_up_distributor_found">Es wurde kein Unified Push Distributor gefunden. Bitte installiere einen deiner Wahl und starte die App neu.</string>
     <string name="selected_up_distributor">Gewählter UnifiedPush Distributor: %1$s</string>
@@ -254,6 +256,7 @@
     <string name="time_left">noch %1$s</string>
     <string name="platform">Gl. %1$s</string>
     <string name="edit_profile">Profil bearbeiten</string>
+    <string name="edit_profile_description">Ändere deine Träwelling-Profileinstellungen nun auch aus Träwelldroid heraus!</string>
     <string name="display_name">Anzeigename</string>
     <string name="allow_likes">Gefällt-mir-Angaben von anderen erlauben</string>
     <string name="allow_points">Punkte sammeln</string>
@@ -267,7 +270,19 @@
     <string name="allow_check_ins_from_others">User:innen, die dich einchecken können</string>
     <string name="nobody">Niemand</string>
     <string name="friends">Freunde (gegenseitig folgend)</string>
-    <string name="trusted">Vertraute User:innen</string>
+    <string name="trusted">Vertraute Nutzer</string>
+    <string name="remove">Entfernen</string>
+    <string name="expires_at">läuft ab: %1$s</string>
+    <string name="never">nie</string>
+    <string name="trusted_expires_never">Bis auf weiteres vertrauen</string>
+    <string name="select_expiration">Ablaufdatum wählen</string>
+    <string name="add_trusted_user">Vertrauten Nutzer hinzufügen</string>
+    <string name="these_can_check_you_in">Diese Nutzer können dich einchecken:</string>
+    <string name="select_co_travellers">Mitreisende auswählen</string>
+    <string name="select_co_travellers_description">Hier kannst du andere in deine Verbindung mit einchecken. Du kannst dies nutzen, wenn du z.B. in einer Gruppe unterwegs bist.</string>
+    <string name="only_check_in_persons">Bitte checke nur Mitreisende ein, die auch tatsächlich mit dir fahren.</string>
+    <string name="no_person_allowed_check_in">Niemand hat dir erlaubt, für sie einzuchecken.</string>
+    <string name="checked_in_by">Du wurdest von %1$s eingecheckt</string>
     <string name="manage_followers">Follower verwalten</string>
     <string name="followers">Follower</string>
     <string name="followings">Folgend</string>

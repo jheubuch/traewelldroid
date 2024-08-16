@@ -228,6 +228,8 @@
     <string name="channel_mentions">Mentions</string>
     <string name="channel_description_mentions">Users mentioning you in their check-ins</string>
     <string name="channel_description_unknown">Unsupported notification</string>
+    <string name="channel_you_have_been_checked_in">Getting checked-in</string>
+    <string name="channel_description_you_have_been_checked_in">Users checking you into a connection</string>
     <string name="select_up_distributor">Select UnifiedPush distributor</string>
     <string name="no_up_distributor_found">No UnifiedPush distributor was found. Please install one of your choice and restart the app.</string>
     <string name="selected_up_distributor">Selected UnifiedPush distributor: %1$s</string>
@@ -281,6 +283,7 @@
     <string name="time_left">%1$s left</string>
     <string name="platform">pl. %1$s</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="edit_profile_description">Change your Träwelling profile preferences now from within Träwelldroid!</string>
     <string name="display_name">Display name</string>
     <string name="allow_likes">Allow likes</string>
     <string name="allow_points">Collect points</string>
@@ -299,7 +302,19 @@
     <string name="followers">Followers</string>
     <string name="followings">Following</string>
     <string name="follow_requests">Follow requests</string>
+    <string name="remove_follower">Remove follower</string>
     <string name="remove">Remove</string>
     <string name="remove_follower_success">Follower successfully removed</string>
     <string name="remove_follower_error">Follower could not be removed. Please try again later.</string>
+    <string name="expires_at">expires: %1$s</string>
+    <string name="never">never</string>
+    <string name="trusted_expires_never">Trust until removed</string>
+    <string name="select_expiration">Select expiration</string>
+    <string name="add_trusted_user">Add trusted user</string>
+    <string name="these_can_check_you_in">These users can check you in:</string>
+    <string name="select_co_travellers">Select co-travellers</string>
+    <string name="select_co_travellers_description">Here you can check-in other users into your connection. You can use this when travelling e.g. in a group.</string>
+    <string name="only_check_in_persons">Please only check-in co-travellers really travelling with you.</string>
+    <string name="no_person_allowed_check_in">No one allowed you to check them in.</string>
+    <string name="checked_in_by">You have been checked-in by %1$s</string>
 </resources>

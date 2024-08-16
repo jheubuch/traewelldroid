@@ -18,6 +18,7 @@ data class TrwlCheckInRequest(
     @SerializedName("destination") val destinationStationId: Int,
     @SerializedName("departure") val departureTime: ZonedDateTime,
     @SerializedName("arrival") val arrivalTime: ZonedDateTime,
+    @SerializedName("with") val coTravellers: List<Int>,
     val force: Boolean = false
 ): CheckInRequest()
 

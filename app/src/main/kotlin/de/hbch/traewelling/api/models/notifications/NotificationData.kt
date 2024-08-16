@@ -31,7 +31,7 @@ data class NotificationUser(
 data class NotificationTrip<T>(
     val origin: T,
     val destination: T,
-    @SerializedName("lineName", alternate = [ "linename" ]) val lineName: String
+    @SerializedName("lineName", alternate = [ "linename", "line" ]) val lineName: String
 )
 data class NotificationStatus(
     val id: Int
@@ -70,4 +70,10 @@ data class MastodonNotSentData(
 data class UserMentionedData(
     val status: NotificationStatus,
     val creator: NotificationUser
+)
+
+data class YouHaveBeenCheckedInData(
+    val status: NotificationStatus,
+    @SerializedName("checkin") val checkIn: NotificationTrip<String>,
+    val user: NotificationUser
 )

@@ -41,13 +41,15 @@ import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.SaveUserSettings
 import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfile(
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    manageTrustedUsers: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -389,6 +391,14 @@ fun EditProfile(
                     )
                 }
             }
+        }
+        AnimatedVisibility(allowedPersonsToCheckIn == AllowedPersonsToCheckIn.TRUSTED_USERS) {
+            OutlinedButtonWithIconAndText(
+                stringId = R.string.trusted,
+                modifier = formModifier,
+                onClick = manageTrustedUsers,
+                drawableId = R.drawable.ic_authorized
+            )
         }
         ButtonWithIconAndText(
             stringId = R.string.save,
