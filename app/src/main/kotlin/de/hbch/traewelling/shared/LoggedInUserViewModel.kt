@@ -179,10 +179,14 @@ class LoggedInUserViewModel : ViewModel() {
     }
 
     suspend fun updateCurrentStatus() {
-        val response = TraewellingApi.checkInService.getOwnActiveStatus()
-        if (response.code() != 404) {
-            currentStatus.postValue(response.body()?.data)
-        } else {
+        try {
+            val response = TraewellingApi.checkInService.getOwnActiveStatus()
+            if (response.code() != 404) {
+                currentStatus.postValue(response.body()?.data)
+            } else {
+                currentStatus.postValue(null)
+            }
+        } catch (_: Exception) {
             currentStatus.postValue(null)
         }
     }
