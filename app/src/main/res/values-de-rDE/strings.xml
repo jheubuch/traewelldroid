@@ -256,6 +256,7 @@
     <string name="time_left">noch %1$s</string>
     <string name="platform">Gl. %1$s</string>
     <string name="edit_profile">Profil bearbeiten</string>
+    <string name="edit_profile_description">Ändere deine Träwelling-Profileinstellungen nun auch aus Träwelldroid heraus!</string>
     <string name="display_name">Anzeigename</string>
     <string name="allow_likes">Gefällt-mir-Angaben von anderen erlauben</string>
     <string name="allow_points">Punkte sammeln</string>
@@ -276,7 +277,9 @@
     <string name="trusted_expires_never">Bis auf weiteres vertrauen</string>
     <string name="select_expiration">Ablaufdatum wählen</string>
     <string name="add_trusted_user">Vertrauten Nutzer hinzufügen</string>
+    <string name="these_can_check_you_in">Diese Nutzer können dich einchecken:</string>
     <string name="select_co_travellers">Mitreisende auswählen</string>
+    <string name="select_co_travellers_description">Hier kannst du andere in deine Verbindung mit einchecken. Du kannst dies nutzen, wenn du z.B. in einer Gruppe unterwegs bist.</string>
     <string name="only_check_in_persons">Bitte checke nur Mitreisende ein, die auch tatsächlich mit dir fahren.</string>
     <string name="no_person_allowed_check_in">Niemand hat dir erlaubt, für sie einzuchecken.</string>
     <string name="checked_in_by">Du wurdest von %1$s eingecheckt</string>

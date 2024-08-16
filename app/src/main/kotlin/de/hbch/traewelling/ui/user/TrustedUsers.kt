@@ -105,6 +105,11 @@ fun TrustedUsers(
                 }
             )
             if (trustedUsers.isNotEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.these_can_check_you_in),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = AppTypography.labelMedium
+                )
                 trustedUsers.forEach { user ->
                     var isRemoving by remember { mutableStateOf(false) }
                     Row(
