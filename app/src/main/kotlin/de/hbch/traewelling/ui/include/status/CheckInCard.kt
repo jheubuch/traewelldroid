@@ -84,6 +84,37 @@ import java.time.ZonedDateTime
 import java.util.Locale
 
 @Composable
+fun MultiColorProgressIndicator() {
+
+    val colors = listOf(
+        Color(0xFF55CDFC), // Light Blue
+        Color(0xFFF7A8B8), // Pink
+        Color(0xFFFFFFFF), // White
+        Color(0xFFF7A8B8), // Pink
+        Color(0xFF55CDFC)  // Light Blue
+    )
+    
+    val infiniteTransition = rememberInfiniteTransition()
+    val colorIndex by infiniteTransition.animateValue(
+        initialValue = 0,
+        targetValue = colors.size - 1,
+        typeConverter = Int.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    LinearProgressIndicator(
+        progress = 1f, // This will show a full bar, adjust as needed
+        color = colors[colorIndex],
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp),
+    )
+}
+
+@Composable
 fun CheckInCard(
     modifier: Modifier = Modifier,
     checkInCardViewModel: CheckInCardViewModel,
@@ -241,7 +272,9 @@ fun CheckInCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp),
-                )
+                ) {
+                    MultiColorProgressIndicator()
+                }
                 CheckInCardFooter(
                     modifier = Modifier.fillMaxWidth(),
                     status = status,
