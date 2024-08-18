@@ -38,20 +38,20 @@ android {
         testInstrumentationRunner
     }
 
-    signingConfigs {
-        release {
-            try {
-                def keystorePropertiesFile = rootProject.file("keystore.properties")
-                def keystoreProperties = new Properties()
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    // signingConfigs {
+    //     release {
+    //         try {
+    //             def keystorePropertiesFile = rootProject.file("keystore.properties")
+    //             def keystoreProperties = new Properties()
+    //             keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-                storeFile file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-            } catch (ignored) { }
-        }
-    }
+    //             storeFile file(keystoreProperties['storeFile'])
+    //             storePassword keystoreProperties['storePassword']
+    //             keyAlias keystoreProperties['keyAlias']
+    //             keyPassword keystoreProperties['keyPassword']
+    //         } catch (ignored) { }
+    //     }
+    // }
 
     buildTypes {
         release {
