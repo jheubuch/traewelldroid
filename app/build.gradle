@@ -121,7 +121,7 @@ aboutLibraries {
 
 dependencies {
     // Jetpack Compose
-    def composeVersion = "1.6.8"
+    def composeVersion = "1.7.0-rc01"
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"

@@ -19,7 +19,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="34">
+        tools:targetApi="35">
+
+        <provider
+            android:name=".util.TraewelldroidFileProvider"
+            android:authorities="de.traewelldroid.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name=".ui.info.InfoActivity"

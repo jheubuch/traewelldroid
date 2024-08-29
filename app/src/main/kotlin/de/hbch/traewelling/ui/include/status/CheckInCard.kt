@@ -72,12 +72,12 @@ import de.hbch.traewelling.ui.composables.CustomClickableText
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.ProfilePicture
+import de.hbch.traewelling.ui.composables.SharePicDialog
 import de.hbch.traewelling.ui.report.Report
 import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
-import de.hbch.traewelling.util.shareStatus
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -289,7 +289,7 @@ fun calculateProgress(
 }
 
 @Composable
-private fun StationRow(
+fun StationRow(
     modifier: Modifier = Modifier,
     station: HafasTrainTripStation,
     timePlanned: ZonedDateTime,
@@ -348,7 +348,7 @@ private fun StationRow(
 }
 
 @Composable
-private fun CheckInCardContent(
+fun CheckInCardContent(
     modifier: Modifier = Modifier,
     productType: ProductType,
     line: String,
@@ -467,6 +467,7 @@ private fun CheckInCardFooter(
     var likedState by remember { mutableStateOf(status.liked ?: false) }
     var likeCountState by remember { mutableIntStateOf(status.likes ?: 0) }
     var reportFormVisible by remember { mutableStateOf(false) }
+    var shareVisible by remember { mutableStateOf(false) }
 
     if (reportFormVisible) {
         Dialog(
@@ -478,6 +479,16 @@ private fun CheckInCardFooter(
                 statusId = status.id,
                 modifier = Modifier.padding(16.dp)
             )
+        }
+    }
+
+    if (shareVisible) {
+        Dialog(
+            onDismissRequest = {
+                shareVisible = false
+            }
+        ) {
+            SharePicDialog(status = status)
         }
     }
 
@@ -619,7 +630,7 @@ private fun CheckInCardFooter(
                             },
                             onClick = {
                                 menuExpanded = false
-                                context.shareStatus(status)
+                                shareVisible = true
                             }
                         )
                         DropdownMenuItem(

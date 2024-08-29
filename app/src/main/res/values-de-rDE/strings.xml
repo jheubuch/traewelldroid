@@ -283,4 +283,6 @@
     <string name="only_check_in_persons">Bitte checke nur Mitreisende ein, die auch tatsächlich mit dir fahren.</string>
     <string name="no_person_allowed_check_in">Niemand hat dir erlaubt, für sie einzuchecken.</string>
     <string name="checked_in_by">Du wurdest von %1$s eingecheckt</string>
+    <string name="share_as_image">Als Bild teilen</string>
+    <string name="share_tags_on_image">Tags auf Bild zeigen</string>
 </resources>
