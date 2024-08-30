@@ -44,7 +44,7 @@ import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
@@ -318,7 +318,7 @@ private fun Fact(
         }
         Text(
             text = text,
-            style = AppTypography.titleLarge
+            style = LocalFont.current.titleLarge
         )
         if (iconEnd) {
             Icon(

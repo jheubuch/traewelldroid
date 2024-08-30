@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 
 @Composable
@@ -48,7 +48,7 @@ fun SwitchWithIconAndText(
             )
             Text(
                 text = stringResource(id = stringId),
-                style = AppTypography.labelLarge
+                style = LocalFont.current.labelLarge
             )
         }
         Switch(

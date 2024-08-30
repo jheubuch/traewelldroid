@@ -19,8 +19,8 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -32,6 +32,7 @@ fun ColumnChart(
     val data = input.first
     val formatter = input.second
     val maxValue = data.maxByOrNull { it.second }?.second ?: 0
+    val typography = LocalFont.current
 
     Row(
         modifier = modifier,
@@ -63,7 +64,7 @@ fun ColumnChart(
                                 val measuredText =
                                     textMeasurer.measure(
                                         AnnotatedString(labelText),
-                                        style = AppTypography.labelLarge,
+                                        style = typography.labelLarge,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )

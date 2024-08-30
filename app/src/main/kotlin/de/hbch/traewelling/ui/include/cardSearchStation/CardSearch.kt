@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.Twindexx
 import de.hbch.traewelling.ui.search.Search
 import de.hbch.traewelling.util.getGreeting
@@ -40,7 +40,7 @@ fun CardSearch(
         ) {
             Text(
                 text = getGreeting(),
-                style = AppTypography.headlineLarge,
+                style = LocalFont.current.headlineLarge,
                 modifier = Modifier.padding(8.dp),
                 fontFamily = Twindexx,
                 color = LocalColorScheme.current.primary

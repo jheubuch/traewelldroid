@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.util.getLocalDateTimeString
 import java.time.Instant
@@ -166,7 +166,7 @@ fun DateTimeSelection(
         if (plannedDate != null) {
             Text(
                 text = stringResource(id = R.string.planned, getLocalDateTimeString(plannedDate)),
-                style = AppTypography.bodySmall
+                style = LocalFont.current.bodySmall
             )
         }
     }

@@ -285,4 +285,5 @@
     <string name="checked_in_by">Du wurdest von %1$s eingecheckt</string>
     <string name="share_as_image">Als Bild teilen</string>
     <string name="share_tags_on_image">Tags auf Bild zeigen</string>
+    <string name="use_system_font">Systemschriftart verwenden</string>
 </resources>

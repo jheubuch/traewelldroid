@@ -34,7 +34,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.report.Report
 import de.hbch.traewelling.api.models.report.ReportReason
 import de.hbch.traewelling.api.models.report.ReportSubjectType
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import kotlinx.coroutines.launch
@@ -71,7 +71,7 @@ fun Report(
                 )
                 Text(
                     text = stringResource(id = R.string.create_report),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
 

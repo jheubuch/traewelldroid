@@ -26,8 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.models.lineIcons.LineIconShape
 import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.shared.SettingsViewModel
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LineIconStyle
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.util.getSwitzerlandLineName
 
 @Composable
@@ -37,7 +37,7 @@ fun LineIcon(
     modifier: Modifier = Modifier,
     operatorCode: String? = null,
     lineId: String? = null,
-    defaultTextStyle: TextStyle = AppTypography.bodyMedium,
+    defaultTextStyle: TextStyle = LocalFont.current.bodyMedium,
     displayJourneyNumber: Boolean = true
 ) {
     val context = LocalContext.current
@@ -124,7 +124,7 @@ fun LineIcon(
             && journeyNumber != null && journeyNumber != 0) {
             Text(
                 text = "($journeyNumber)",
-                style = AppTypography.bodySmall
+                style = LocalFont.current.bodySmall
             )
         }
     }
@@ -136,7 +136,7 @@ fun LineIconView(
     modifier: Modifier = Modifier,
     operatorCode: String? = null,
     lineId: String? = null,
-    defaultTextStyle: TextStyle = AppTypography.bodyMedium
+    defaultTextStyle: TextStyle = LocalFont.current.bodyMedium
 ) {
     val opCode = operatorCode?.replace("nahreisezug", "") ?: ""
 

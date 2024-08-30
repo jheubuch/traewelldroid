@@ -10,23 +10,23 @@ val TwindexxFont = Font(R.font.ae_matrix16_twindexx_standard)
 val Raleway = FontFamily(RalewayFont)
 val Twindexx = FontFamily(TwindexxFont)
 
-private val defaultTypography = Typography()
+val DefaultTypography = Typography()
 val AppTypography = Typography(
-    displayLarge = defaultTypography.displayLarge.copy(fontFamily = Raleway),
-    displayMedium = defaultTypography.displayMedium.copy(fontFamily = Raleway),
-    displaySmall = defaultTypography.displaySmall.copy(fontFamily = Raleway),
-    headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = Raleway),
-    headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = Raleway),
-    headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = Raleway),
-    titleLarge = defaultTypography.titleLarge.copy(fontFamily = Raleway),
-    titleMedium = defaultTypography.titleMedium.copy(fontFamily = Raleway),
-    titleSmall = defaultTypography.titleSmall.copy(fontFamily = Raleway),
-    bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = Raleway),
-    bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = Raleway),
-    bodySmall = defaultTypography.bodySmall.copy(fontFamily = Raleway),
-    labelLarge = defaultTypography.labelLarge.copy(fontFamily = Raleway),
-    labelMedium = defaultTypography.labelMedium.copy(fontFamily = Raleway),
-    labelSmall = defaultTypography.labelSmall.copy(fontFamily = Raleway)
+    displayLarge = DefaultTypography.displayLarge.copy(fontFamily = Raleway),
+    displayMedium = DefaultTypography.displayMedium.copy(fontFamily = Raleway),
+    displaySmall = DefaultTypography.displaySmall.copy(fontFamily = Raleway),
+    headlineLarge = DefaultTypography.headlineLarge.copy(fontFamily = Raleway),
+    headlineMedium = DefaultTypography.headlineMedium.copy(fontFamily = Raleway),
+    headlineSmall = DefaultTypography.headlineSmall.copy(fontFamily = Raleway),
+    titleLarge = DefaultTypography.titleLarge.copy(fontFamily = Raleway),
+    titleMedium = DefaultTypography.titleMedium.copy(fontFamily = Raleway),
+    titleSmall = DefaultTypography.titleSmall.copy(fontFamily = Raleway),
+    bodyLarge = DefaultTypography.bodyLarge.copy(fontFamily = Raleway),
+    bodyMedium = DefaultTypography.bodyMedium.copy(fontFamily = Raleway),
+    bodySmall = DefaultTypography.bodySmall.copy(fontFamily = Raleway),
+    labelLarge = DefaultTypography.labelLarge.copy(fontFamily = Raleway),
+    labelMedium = DefaultTypography.labelMedium.copy(fontFamily = Raleway),
+    labelSmall = DefaultTypography.labelSmall.copy(fontFamily = Raleway)
 )
 
-val LineIconStyle = defaultTypography.bodyMedium
+val LineIconStyle = DefaultTypography.bodyMedium

@@ -38,8 +38,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.include.status.StationRow
 import de.hbch.traewelling.ui.include.status.getFormattedDistance
 import de.hbch.traewelling.ui.tag.StatusTag
@@ -65,7 +65,7 @@ fun SharePicDialog(
     ) {
         Text(
             text = stringResource(id = R.string.title_share),
-            style = AppTypography.titleLarge
+            style = LocalFont.current.titleLarge
         )
         SwitchWithIconAndText(
             checked = shareImage,
@@ -246,12 +246,12 @@ fun SharePic(
                     Text(
                         modifier = alignmentModifier.padding(start = 12.dp),
                         text = getFormattedDistance(status.journey.distance),
-                        style = AppTypography.bodySmall
+                        style = LocalFont.current.bodySmall
                     )
                     Text(
                         modifier = alignmentModifier.padding(start = 8.dp),
                         text = getDurationString(duration = status.journey.duration),
-                        style = AppTypography.bodySmall
+                        style = LocalFont.current.bodySmall
                     )
                 }
                 if (message.first.isNotEmpty()) {
@@ -313,7 +313,7 @@ fun SharePic(
                 Text(
                     text = stringResource(id = R.string.app_name),
                     color = primaryColor,
-                    style = AppTypography.bodySmall
+                    style = LocalFont.current.bodySmall
                 )
             }
         }

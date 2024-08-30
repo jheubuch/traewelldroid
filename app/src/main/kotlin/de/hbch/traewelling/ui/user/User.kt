@@ -34,8 +34,8 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
@@ -116,7 +116,7 @@ private fun UserCardContent(
                                 Column {
                                     Text(
                                         text = stringResource(id = R.string.edit_profile),
-                                        style = AppTypography.titleLarge,
+                                        style = LocalFont.current.titleLarge,
                                         color = LocalColorScheme.current.onPrimary
                                     )
                                     Text(
@@ -155,7 +155,7 @@ private fun UserCardContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            style = AppTypography.titleLarge,
+                            style = LocalFont.current.titleLarge,
                             text = user.name
                         )
                         if (user.privateProfile) {
@@ -179,7 +179,7 @@ private fun UserCardContent(
                         }
                     }
                     Text(
-                        style = AppTypography.titleMedium,
+                        style = LocalFont.current.titleMedium,
                         text = "@${user.username}"
                     )
                 }

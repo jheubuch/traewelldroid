@@ -64,9 +64,9 @@ import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SettingsViewModel
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.HeartRed
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.CustomClickableText
 import de.hbch.traewelling.ui.composables.Dialog
@@ -311,7 +311,7 @@ fun StationRow(
                 modifier = Modifier
                     .clickable { stationSelected(station.id, null) },
                 text = station.name,
-                style = AppTypography.titleLarge,
+                style = LocalFont.current.titleLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 color = primaryColor
@@ -332,7 +332,7 @@ fun StationRow(
                     date = displayedDate
                 ),
                 color = primaryColor,
-                style = AppTypography.titleLarge
+                style = LocalFont.current.titleLarge
             )
             if (hasDelay) {
                 Text(
@@ -340,7 +340,7 @@ fun StationRow(
                         date = timePlanned
                     ),
                     textDecoration = TextDecoration.LineThrough,
-                    style = AppTypography.labelLarge
+                    style = LocalFont.current.labelLarge
                 )
             }
         }
@@ -435,12 +435,12 @@ fun StatusDetailsRow(
         Text(
             modifier = alignmentModifier.padding(start = 12.dp),
             text = getFormattedDistance(kilometers),
-            style = AppTypography.bodySmall
+            style = LocalFont.current.bodySmall
         )
         Text(
             modifier = alignmentModifier.padding(start = 8.dp),
             text = getDurationString(duration = duration),
-            style = AppTypography.bodySmall
+            style = LocalFont.current.bodySmall
         )
         Icon(
             modifier = alignmentModifier.padding(start = 8.dp),
@@ -590,7 +590,7 @@ private fun CheckInCardFooter(
                         dateString
                     ),
                     textAlign = TextAlign.End,
-                    style = AppTypography.labelLarge
+                    style = LocalFont.current.labelLarge
                 )
                 Icon(
                     modifier = alignmentModifier.padding(horizontal = 8.dp),
@@ -718,7 +718,7 @@ private fun CheckInCardFooter(
             )
             Text(
                 text = status.event!!.name,
-                style = AppTypography.labelMedium
+                style = LocalFont.current.labelMedium
             )
         }
     }

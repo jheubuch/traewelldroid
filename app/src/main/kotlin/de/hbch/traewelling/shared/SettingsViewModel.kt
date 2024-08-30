@@ -28,6 +28,9 @@ class SettingsViewModel : ViewModel() {
     private val _userSettings = MutableLiveData<UserSettings?>(null)
     val userSettings: LiveData<UserSettings?> get() = _userSettings
 
+    private val _useSystemFont = MutableLiveData(false)
+    val useSystemFont: LiveData<Boolean> get() = _useSystemFont
+
     fun loadSettings(context: Context) {
         val secureStorage = SecureStorage(context)
 
@@ -39,6 +42,9 @@ class SettingsViewModel : ViewModel() {
         )
         _displayDivergentStop.postValue(
             secureStorage.getObject(SharedValues.SS_DISPLAY_DIVERGENT_STOP, Boolean::class.java) ?: true
+        )
+        _useSystemFont.postValue(
+            secureStorage.getObject(SharedValues.SS_USE_SYSTEM_FONT, Boolean::class.java) ?: false
         )
 
         val coroutineScope = CoroutineScope(Dispatchers.IO)
@@ -63,6 +69,12 @@ class SettingsViewModel : ViewModel() {
         val secureStorage = SecureStorage(context)
         secureStorage.storeObject(SharedValues.SS_DISPLAY_DIVERGENT_STOP, state)
         _displayDivergentStop.postValue(state)
+    }
+
+    fun updateUseSystemFont(context: Context, state: Boolean) {
+        val secureStorage = SecureStorage(context)
+        secureStorage.storeObject(SharedValues.SS_USE_SYSTEM_FONT, state)
+        _useSystemFont.postValue(state)
     }
 
     suspend fun getUserSettings() {

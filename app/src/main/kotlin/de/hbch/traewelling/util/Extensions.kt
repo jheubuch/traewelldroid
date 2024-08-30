@@ -46,7 +46,7 @@ import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -123,7 +123,7 @@ fun LazyListScope.checkInList(
                         .weight(1f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
                 if (showDailyStatisticsLink) {
                     Icon(

@@ -63,8 +63,8 @@ import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.MastodonEmojis
 import de.hbch.traewelling.shared.SharedValues
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
@@ -298,7 +298,7 @@ fun CheckIn(
                                     Column {
                                         Text(
                                             text = stringResource(id = R.string.mastodon_emoji),
-                                            style = AppTypography.titleLarge,
+                                            style = LocalFont.current.titleLarge,
                                             color = LocalColorScheme.current.onPrimary
                                         )
                                         Text(
@@ -332,7 +332,7 @@ fun CheckIn(
                         Text(
                             modifier = Modifier.padding(4.dp),
                             text = "${statusText.text.count()}/280",
-                            style = AppTypography.labelSmall
+                            style = LocalFont.current.labelSmall
                         )
                         AnimatedVisibility(displayUserResults) {
                             Row(
@@ -482,7 +482,7 @@ fun CheckIn(
                                             Column {
                                                 Text(
                                                     text = stringResource(id = R.string.select_co_travellers),
-                                                    style = AppTypography.titleLarge,
+                                                    style = LocalFont.current.titleLarge,
                                                     color = LocalColorScheme.current.onPrimary
                                                 )
                                                 Text(
@@ -492,7 +492,7 @@ fun CheckIn(
                                                 Text(
                                                     text = stringResource(id = R.string.only_check_in_persons),
                                                     color = LocalColorScheme.current.onPrimary,
-                                                    style = AppTypography.labelMedium
+                                                    style = LocalFont.current.labelMedium
                                                 )
                                             }
                                         }
@@ -682,7 +682,7 @@ private fun SelectStatusVisibilityDialog(
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = stringResource(id = R.string.title_select_visibility),
-            style = AppTypography.titleLarge,
+            style = LocalFont.current.titleLarge,
             color = LocalColorScheme.current.primary
         )
         StatusVisibility.entries.forEach { visibility ->
@@ -702,7 +702,7 @@ private fun SelectStatusVisibilityDialog(
                 )
                 Text(
                     text = stringResource(id = visibility.title),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
         }
@@ -723,7 +723,7 @@ private fun SelectStatusBusinessDialog(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
             text = stringResource(id = R.string.title_select_business),
-            style = AppTypography.titleLarge,
+            style = LocalFont.current.titleLarge,
             color = LocalColorScheme.current.primary
         )
         StatusBusiness.entries.forEach { business ->
@@ -743,7 +743,7 @@ private fun SelectStatusBusinessDialog(
                 )
                 Text(
                     text = stringResource(id = business.title),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
         }
@@ -768,7 +768,7 @@ private fun SelectEventDialog(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
             text = stringResource(id = R.string.title_select_event),
-            style = AppTypography.titleLarge,
+            style = LocalFont.current.titleLarge,
             color = LocalColorScheme.current.primary
         )
         Text(
@@ -776,7 +776,7 @@ private fun SelectEventDialog(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
             text = stringResource(id = R.string.hint_event_missing),
-            style = AppTypography.labelLarge
+            style = LocalFont.current.labelLarge
         )
         events.forEach { event ->
             Row(
@@ -807,7 +807,7 @@ private fun SelectEventDialog(
                 ) {
                     Text(
                         text = event?.name ?: stringResource(id = R.string.reset_selection),
-                        style = AppTypography.titleLarge,
+                        style = LocalFont.current.titleLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -821,7 +821,7 @@ private fun SelectEventDialog(
                                 getLocalDateString(event.end)
                             )
                         },
-                        style = AppTypography.titleSmall
+                        style = LocalFont.current.titleSmall
                     )
                 }
                 Icon(
@@ -913,11 +913,11 @@ fun SelectCoTravellers(
     ) {
         Text(
             text = stringResource(id = R.string.select_co_travellers),
-            style = AppTypography.titleLarge
+            style = LocalFont.current.titleLarge
         )
         Text(
             text = stringResource(id = R.string.only_check_in_persons),
-            style = AppTypography.labelMedium
+            style = LocalFont.current.labelMedium
         )
         if (isLoading) {
             DataLoading()

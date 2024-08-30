@@ -37,7 +37,7 @@ import de.hbch.traewelling.providers.checkin.CheckInResult
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.Dialog
@@ -47,7 +47,6 @@ import de.hbch.traewelling.ui.composables.SharePicDialog
 import de.hbch.traewelling.ui.include.status.StatusDetailsRow
 import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.util.ReviewRequest
-import de.hbch.traewelling.util.shareStatus
 
 @Composable
 fun CheckInResultView(
@@ -88,7 +87,7 @@ fun CheckInResultView(
                 Text(
                     text = "Träwelling",
                     modifier = Modifier.padding(start = 12.dp),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
             Text(
@@ -131,7 +130,7 @@ fun CheckInResultView(
                 Text(
                     text = "travelynx",
                     modifier = Modifier.padding(start = 12.dp),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
             if (travelynxResponse.result == CheckInResult.ERROR) {

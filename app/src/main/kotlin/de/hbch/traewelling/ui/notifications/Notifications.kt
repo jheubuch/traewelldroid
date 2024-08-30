@@ -39,7 +39,7 @@ import androidx.navigation.NavHostController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.composables.NotificationsAvailableHint
 import de.hbch.traewelling.util.OnBottomReached
 import de.hbch.traewelling.util.getLocalDateTimeString
@@ -263,7 +263,7 @@ private fun NotificationBody(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = body,
-                style = AppTypography.labelMedium
+                style = LocalFont.current.labelMedium
             )
         }
         // Footer
@@ -271,7 +271,7 @@ private fun NotificationBody(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
             text = getLocalDateTimeString(date = notification.safeCreatedAt),
-            style = AppTypography.labelMedium
+            style = LocalFont.current.labelMedium
         )
     }
 }
