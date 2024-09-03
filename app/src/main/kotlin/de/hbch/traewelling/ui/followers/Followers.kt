@@ -2,6 +2,7 @@ package de.hbch.traewelling.ui.followers
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,7 +45,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.theme.AppTypography
-import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.util.OnBottomReached
 import kotlinx.coroutines.launch
@@ -52,6 +55,7 @@ fun ManageFollowers(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
+    val manageFollowersViewModel: ManageFollowersViewModel = viewModel()
     var selectedTab by remember { mutableIntStateOf(0) }
 
     Column(
@@ -84,98 +88,265 @@ fun ManageFollowers(
             0 -> {
                 Followers(
                     snackbarHostState = snackbarHostState,
+                    nextPageAction = { manageFollowersViewModel.getFollowers(it) },
+                    removeAction = { manageFollowersViewModel.removeFollower(it) },
+                    removeSuccessString = R.string.remove_follower_success,
+                    removeErrorString = R.string.remove_follower_error
                 )
             }
             1 -> {
-
+                Followers(
+                    snackbarHostState = snackbarHostState,
+                    nextPageAction = { manageFollowersViewModel.getFollowings(it) },
+                    removeAction = { manageFollowersViewModel.unfollowUser(it) },
+                    removeSuccessString = R.string.remove_follower_success,
+                    removeErrorString = R.string.remove_follower_error
+                )
             }
             2 -> {
-
+                FollowRequests(
+                    snackbarHostState = snackbarHostState
+                )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Followers(
     snackbarHostState: SnackbarHostState,
+    nextPageAction: suspend (Int) -> List<User>,
+    removeAction: suspend (Int) -> Boolean,
+    @StringRes removeSuccessString: Int,
+    @StringRes removeErrorString: Int,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val manageFollowersViewModel: ManageFollowersViewModel = viewModel()
     val coroutineScope = rememberCoroutineScope()
     var currentPage by rememberSaveable { mutableIntStateOf(0) }
-    val followers = remember { mutableStateListOf<User>() }
+    val users = remember { mutableStateListOf<User>() }
     val columnState = rememberLazyListState()
     columnState.OnBottomReached {
         currentPage++
     }
+    var isLoading by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isLoading,
+        onRefresh = {
+            currentPage = 0
+        }
+    )
 
     LaunchedEffect(currentPage) {
+        isLoading = true
         val page = currentPage
         if (page == 0) {
-            followers.clear()
+            users.clear()
         }
-        val users = manageFollowersViewModel.getFollowers(currentPage)
-        followers.addAll(users)
+        val nextPage = nextPageAction(page)
+        users.addAll(nextPage)
+        isLoading = false
     }
 
-    if (followers.isNotEmpty()) {
-        LazyColumn(
-            state = columnState,
-            modifier = modifier
-                .fillMaxWidth()
-                //.verticalScroll(rememberScrollState())
-        ) {
-            items(followers, key = { it.id }) { user ->
-                var isRemoving by remember { mutableStateOf(false) }
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        ProfilePicture(
-                            user = user,
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Column {
-                            Text(
-                                text = user.name,
-                                style = AppTypography.labelLarge,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.fillMaxWidth(0.25f)
-                            )
-                            Text(
-                                text = "(@${user.username})",
-                                style = AppTypography.labelSmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-                    OutlinedButtonWithIconAndText(
-                        stringId = R.string.remove,
-                        drawableId = R.drawable.ic_person_remove,
-                        onClick = {
-                            isRemoving = true
-                            coroutineScope.launch {
-                                val success = manageFollowersViewModel.removeFollower(user.id)
-                                @StringRes var stringId: Int = R.string.remove_follower_error
-                                if (success) {
-                                    followers.remove(user)
-                                    stringId = R.string.remove_follower_success
-                                }
-                                isRemoving = false
-                                snackbarHostState.showSnackbar(context.getString(stringId), duration = SnackbarDuration.Short)
+    Box(
+        modifier = Modifier.fillMaxWidth().pullRefresh(pullRefreshState)
+    ) {
+        if (users.isNotEmpty()) {
+            LazyColumn(
+                state = columnState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            ) {
+                items(users, key = { it.id }) { user ->
+                    var isRemoving by remember { mutableStateOf(false) }
+                    UserRow(
+                        user = user,
+                        additionalActions = {
+                            IconButton(
+                                onClick = {
+                                    isRemoving = true
+                                    coroutineScope.launch {
+                                        val success = removeAction(user.id)
+                                        @StringRes var stringId: Int = removeErrorString
+                                        if (success) {
+                                            users.remove(user)
+                                            stringId = removeSuccessString
+                                        }
+                                        isRemoving = false
+                                        snackbarHostState.showSnackbar(
+                                            context.getString(stringId),
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                },
+                                enabled = !isRemoving
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_person_remove),
+                                    contentDescription = stringResource(R.string.remove)
+                                )
                             }
-                        },
-                        isLoading = isRemoving
+                        }
                     )
                 }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = isLoading,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun FollowRequests(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val viewModel: ManageFollowersViewModel = viewModel()
+
+    var currentPage by rememberSaveable { mutableIntStateOf(0) }
+    val users = remember { mutableStateListOf<User>() }
+    val columnState = rememberLazyListState()
+    columnState.OnBottomReached {
+        currentPage++
+    }
+    var isLoading by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isLoading,
+        onRefresh = {
+            currentPage = 0
+        }
+    )
+
+    LaunchedEffect(currentPage) {
+        isLoading = true
+        val page = currentPage
+        if (page == 0) {
+            users.clear()
+        }
+        val nextPage = viewModel.getFollowRequests(page)
+        users.addAll(nextPage)
+        isLoading = false
+    }
+
+    Box(
+        modifier = Modifier.fillMaxWidth().pullRefresh(pullRefreshState)
+    ) {
+        if (users.isNotEmpty()) {
+            LazyColumn(
+                state = columnState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            ) {
+                items(users, key = { it.id }) { user ->
+                    var isRemoving by remember { mutableStateOf(false) }
+                    UserRow(
+                        user = user,
+                        additionalActions = {
+                            IconButton(
+                                onClick = {
+                                    isRemoving = true
+                                    coroutineScope.launch {
+                                        val success = viewModel.acceptFollowRequest(user.id)
+                                        @StringRes var stringId: Int = R.string.error_occurred
+                                        if (success) {
+                                            users.remove(user)
+                                            stringId = R.string.follow_request_accepted
+                                        }
+                                        isRemoving = false
+                                        snackbarHostState.showSnackbar(
+                                            context.getString(stringId),
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                },
+                                enabled = !isRemoving
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_check),
+                                    contentDescription = stringResource(R.string.remove)
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    isRemoving = true
+                                    coroutineScope.launch {
+                                        val success = viewModel.declineFollowRequest(user.id)
+                                        @StringRes var stringId: Int = R.string.error_occurred
+                                        if (success) {
+                                            users.remove(user)
+                                            stringId = R.string.follow_request_declined
+                                        }
+                                        isRemoving = false
+                                        snackbarHostState.showSnackbar(
+                                            context.getString(stringId),
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                },
+                                enabled = !isRemoving
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_cancel),
+                                    contentDescription = stringResource(R.string.remove)
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
+        PullRefreshIndicator(
+            refreshing = isLoading,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+    }
+}
+
+@Composable
+private fun UserRow(
+    user: User,
+    modifier: Modifier = Modifier,
+    additionalActions: @Composable () -> Unit
+) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(end = 8.dp).weight(1f)
+        ) {
+            ProfilePicture(
+                user = user,
+                modifier = Modifier.size(48.dp)
+            )
+            Column {
+                Text(
+                    text = user.name,
+                    style = AppTypography.labelLarge,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "(@${user.username})",
+                    style = AppTypography.labelSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+        additionalActions()
     }
 }

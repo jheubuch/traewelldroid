@@ -25,7 +25,6 @@ import de.hbch.traewelling.api.models.user.CreateTrustedUser
 import de.hbch.traewelling.api.models.user.SaveUserSettings
 import de.hbch.traewelling.api.models.user.TrustedUser
 import de.hbch.traewelling.api.models.user.User
-import de.hbch.traewelling.api.models.user.UserId
 import de.hbch.traewelling.api.models.user.UserSettings
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import okhttp3.OkHttpClient
@@ -278,14 +277,39 @@ interface UserService {
         @Body settings: SaveUserSettings
     ): Response<Data<UserSettings>>
 
-    @GET("settings/followers")
+    @GET("user/self/followers")
     suspend fun getFollowers(
         @Query("page") page: Int
     ): Response<Data<List<User>>>
 
-    @DELETE("user/removeFollower")
+    @DELETE("user/self/followers/{userId}")
     suspend fun removeFollower(
-        @Body user: UserId
+        @Path("userId") userId: Int
+    ): Response<Unit>
+
+    @GET("user/self/followings")
+    suspend fun getFollowings(
+        @Query("page") page: Int
+    ): Response<Data<List<User>>>
+
+    @GET("user/self/follow-requests")
+    suspend fun getFollowRequests(
+        @Query("page") page: Int
+    ): Response<Data<List<User>>>
+
+    @PUT("user/self/follow-requests/{userId}")
+    suspend fun acceptFollowRequest(
+        @Path("userId") userId: Int
+    ): Response<Unit>
+
+    @DELETE("user/self/follow-requests/{userId}")
+    suspend fun declineFollowRequest(
+        @Path("userId") userId: Int
+    ): Response<Unit>
+
+    @DELETE("user/{userId}/follow")
+    suspend fun removeFollowing(
+        @Path("userId") userId: Int
     ): Response<Unit>
 
     @GET("user/self/trusted")

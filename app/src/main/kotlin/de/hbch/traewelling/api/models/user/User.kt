@@ -33,10 +33,6 @@ data class LightUser(
     @SerializedName("mastodonUrl") val mastodonUrl: String?
 )
 
-data class UserId(
-    val userId: Int
-)
-
 data class TrustedUser(
     val user: LightUser,
     val expiresAt: ZonedDateTime?

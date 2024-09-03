@@ -302,6 +302,10 @@
     <string name="followers">Followers</string>
     <string name="followings">Following</string>
     <string name="follow_requests">Follow requests</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="follow_request_accepted">Follow request successfully accepted</string>
+    <string name="follow_request_declined">Follow request successfully declined</string>
     <string name="remove_follower">Remove follower</string>
     <string name="remove">Remove</string>
     <string name="remove_follower_success">Follower successfully removed</string>
@@ -320,4 +324,5 @@
     <string name="share_as_image">Share as image</string>
     <string name="share_tags_on_image">Show tags on image</string>
     <string name="use_system_font">Use system font (restart required)</string>
+    <string name="error_occurred">An error occurred. Please try again.</string>
 </resources>
