@@ -35,7 +35,7 @@
     <string name="business_commute">Pendelen</string>
     <string name="set_homeland">Huisstation instellen</string>
     <string name="set_homeland_success">Uw thuisstation is nu ingesteld op %1$s.</string>
-    <string name="delete">Verwijderen</string>
+    <string name="delete">Wissen</string>
     <string name="line_destination">%1$s naar %2$s</string>
     <string name="error_missing_location_permission">Om deze functie te gebruiken, moet u de locatietoestemming inschakelen in uw apparaatinstellingen.</string>
     <string name="title_select_time">Selecteer de vertrektijd</string>
@@ -75,4 +75,12 @@
     <string name="departures_at">Vertrek in %1$s</string>
     <string name="visibility_unlisted">Niet-gelist</string>
     <string name="display_travel_time_days_hours_minutes">%1$dd %2$du %3$dmin</string>
+    <string name="never">nooit</string>
+    <plurals name="days">
+        <item quantity="one">dag</item>
+        <item quantity="other">dagen</item>
+    </plurals>
+    <string name="nobody">Niemand</string>
+    <string name="friends">Vrienden (volgden elkaar)</string>
+    <string name="remove">Verwijderen</string>
 </resources>

@@ -48,7 +48,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.util.getStationNameWithRL100
 import de.hbch.traewelling.util.useDebounce
@@ -195,7 +195,7 @@ fun Search(
             if (queryStations && queryUsers) {
                 Text(
                     text = stringResource(id = R.string.stops),
-                    style = AppTypography.titleLarge,
+                    style = LocalFont.current.titleLarge,
                     modifier = Modifier.padding(4.dp)
                 )
             }
@@ -244,7 +244,7 @@ fun Search(
                 HorizontalDivider()
                 Text(
                     stringResource(id = R.string.users),
-                    style = AppTypography.titleLarge,
+                    style = LocalFont.current.titleLarge,
                     modifier = Modifier.padding(4.dp)
                 )
                 userResults.forEach {

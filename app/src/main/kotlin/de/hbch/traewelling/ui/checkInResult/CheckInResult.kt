@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,15 +37,16 @@ import de.hbch.traewelling.providers.checkin.CheckInResult
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
+import de.hbch.traewelling.ui.composables.SharePicDialog
 import de.hbch.traewelling.ui.include.status.StatusDetailsRow
 import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.util.ReviewRequest
-import de.hbch.traewelling.util.shareStatus
 
 @Composable
 fun CheckInResultView(
@@ -85,7 +87,7 @@ fun CheckInResultView(
                 Text(
                     text = "Träwelling",
                     modifier = Modifier.padding(start = 12.dp),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
             Text(
@@ -128,7 +130,7 @@ fun CheckInResultView(
                 Text(
                     text = "travelynx",
                     modifier = Modifier.padding(start = 12.dp),
-                    style = AppTypography.titleLarge
+                    style = LocalFont.current.titleLarge
                 )
             }
             if (travelynxResponse.result == CheckInResult.ERROR) {
@@ -142,6 +144,7 @@ fun CheckInResultView(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SuccessfulCheckInResult(
     checkInViewModel: CheckInViewModel,
@@ -153,6 +156,17 @@ private fun SuccessfulCheckInResult(
 
     val reviewRequest = remember { ReviewRequest() }
     var reviewRequested by remember { mutableStateOf(false) }
+    var shareVisible by remember { mutableStateOf(false) }
+
+    if (shareVisible) {
+        Dialog(
+            onDismissRequest = { shareVisible = false }
+        ) {
+            SharePicDialog(
+                status = checkInResponse!!.data!!.status,
+            )
+        }
+    }
 
     LaunchedEffect(reviewRequested) {
         if (!reviewRequested) {
@@ -209,7 +223,7 @@ private fun SuccessfulCheckInResult(
                 stringId = R.string.title_share,
                 drawableId = R.drawable.ic_share,
                 onClick = {
-                    context.shareStatus(checkInResponse.data.status)
+                    shareVisible = true
                 }
             )
             if (checkInResponse.data.coTravellers.isNotEmpty()) {

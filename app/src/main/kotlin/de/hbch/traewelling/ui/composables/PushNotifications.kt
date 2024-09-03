@@ -42,7 +42,7 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import de.hbch.traewelling.R
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import org.unifiedpush.android.connector.UnifiedPush.getDistributor
 import org.unifiedpush.android.connector.UnifiedPush.getDistributors
@@ -162,13 +162,13 @@ fun NotificationsAvailableHint(
                     text = stringResource(id = R.string.push_hint_title),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    style = AppTypography.headlineSmall
+                    style = LocalFont.current.headlineSmall
                 )
                 Text(
                     text = stringResource(id = R.string.push_hint_text),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    style = AppTypography.labelMedium
+                    style = LocalFont.current.labelMedium
                 )
                 ButtonWithIconAndText(
                     stringId = R.string.logout,
@@ -249,7 +249,7 @@ private fun UnifiedPushDistributorSelection(
     ) {
         Text(
             text = stringResource(id = R.string.select_up_distributor),
-            style = AppTypography.titleLarge
+            style = LocalFont.current.titleLarge
         )
         Column(
             modifier = Modifier.selectableGroup()
@@ -276,7 +276,7 @@ private fun UnifiedPushDistributorSelection(
                     )
                     Text(
                         text = distributorName.toString(),
-                        style = AppTypography.labelLarge,
+                        style = LocalFont.current.labelLarge,
                         fontWeight = FontWeight.ExtraBold
                     )
                 }

@@ -3,7 +3,7 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "androidx.navigation.safeargs.kotlin"
-    id "io.sentry.android.gradle" version "3.12.0"
+    id "io.sentry.android.gradle" version "4.11.0"
     id "com.mikepenz.aboutlibraries.plugin"
     id "com.google.gms.google-services"
 }
@@ -22,14 +22,14 @@ aboutLibraries {
 
 android {
     def packageName = "de.hbch.traewelling"
-    def name = "2.13.0"
-    def code = 161
-    compileSdk 34
+    def name = "2.14.1"
+    def code = 165
+    compileSdk 35
 
     defaultConfig {
         applicationId packageName
         minSdk 26
-        targetSdk 34
+        targetSdk 35
         versionCode code
         versionName name
 
@@ -66,7 +66,8 @@ android {
             buildConfigField "String", "UNLEASH_KEY", "\"default:production.286fca3aac1497f85ed886b3339c65cdfea9d5f52450524325398461\""
             buildConfigField "String", "WEBHOOK_URL", "\"https://webhook.traewelldroid.de\""
             buildConfigField "String", "UP_FCM_PROXY", "\"https://push.traewelldroid.de/FCM\""
-            manifestPlaceholders["SENTRY_DSN"] = "https://9664595fcad94b6c90fe2021ab1ec3f0@sentry.traewelldroid.de/3"
+            manifestPlaceholders["SENTRY_DSN"] = "https://6d3e121491134a8ea8ed3f560b03b5ec@bugs.traewelldroid.de/1"
+            manifestPlaceholders["SENTRY_ENV"] = "production"
 
             signingConfig signingConfigs.release
         }
@@ -79,7 +80,8 @@ android {
             buildConfigField "String", "UNLEASH_KEY", "\"default:development.52c54a43ebad9b9a668a69410b57cc19e44e19ab1ee40b4dd3f49b38\""
             buildConfigField "String", "WEBHOOK_URL", "\"https://webhooktest.traewelldroid.de\""
             buildConfigField "String", "UP_FCM_PROXY", "\"https://push.traewelldroid.de/FCM\""
-            manifestPlaceholders["SENTRY_DSN"] = "https://8421286d211d475cb0343fd1aff3fc06@sentry.traewelldroid.de/2"
+            manifestPlaceholders["SENTRY_DSN"] = "https://6d3e121491134a8ea8ed3f560b03b5ec@bugs.traewelldroid.de/1"
+            manifestPlaceholders["SENTRY_ENV"] = "development"
         }
     }
     buildFeatures {
@@ -119,7 +121,7 @@ aboutLibraries {
 
 dependencies {
     // Jetpack Compose
-    def composeVersion = "1.5.0"
+    def composeVersion = "1.7.0-rc01"
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
@@ -127,9 +129,9 @@ dependencies {
     implementation "androidx.compose.material:material:$composeVersion"
     implementation "androidx.compose.runtime:runtime-livedata:1.6.8"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
-    implementation "com.google.accompanist:accompanist-themeadapter-material3:0.28.0"
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.30.1"
-    implementation "com.google.accompanist:accompanist-permissions:0.30.1"
+    implementation 'com.google.accompanist:accompanist-themeadapter-material3:0.34.0'
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.34.0'
+    implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
     implementation "androidx.compose.material3:material3:1.2.1"
     implementation "androidx.activity:activity-compose:1.9.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
@@ -148,32 +150,32 @@ dependencies {
     implementation "org.greenrobot:eventbus:3.3.1"
 
     // OSM integration
-    implementation "org.osmdroid:osmdroid-android:6.1.16"
+    implementation 'org.osmdroid:osmdroid-android:6.1.20'
 
     // Secure Storage
-    implementation "com.google.code.gson:gson:2.10.1"
-    implementation files('../libs/androidsecurestorage-0.1.3.aar')
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation "com.github.jcloquell:android-secure-storage:0.1.3"
 
     // Navigation Component
     implementation "androidx.navigation:navigation-compose:2.7.7"
 
     // Retrofit
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
 
     // Coil for image loading
-    implementation "io.coil-kt:coil-compose:2.4.0"
+    implementation 'io.coil-kt:coil-compose:2.7.0'
 
     // Emoji pack support
-    implementation "de.c1710:filemojicompat-autoinit:3.2.5"
+    implementation 'de.c1710:filemojicompat-autoinit:3.2.7'
 
     // OSS licenses
-    implementation "com.mikepenz:aboutlibraries-compose:11.1.3"
+    implementation 'com.mikepenz:aboutlibraries-compose:11.2.2'
 
     // Feature flags
-    implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"
+    implementation 'io.getunleash:unleash-android-proxy-sdk:1.0.0'
 
     // Sentry
-    playImplementation "io.sentry:sentry-android:6.28.0"
+    playImplementation 'io.sentry:sentry-android:7.14.0'
 
     // Unified Push
     implementation 'com.github.UnifiedPush:android-connector:2.1.1'
@@ -184,7 +186,7 @@ dependencies {
     }
 
     // CSV reader
-    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.2'
+    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.10.0'
 
     // Reviews
     playImplementation 'com.google.android.play:review:2.0.1'

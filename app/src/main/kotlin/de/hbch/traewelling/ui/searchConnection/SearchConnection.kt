@@ -56,7 +56,7 @@ import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SettingsViewModel
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
@@ -127,7 +127,7 @@ fun SearchConnection(
                         .padding(8.dp)
                         .fillMaxWidth(),
                     text = stringResource(id = R.string.departures_at, stationName),
-                    style = AppTypography.headlineSmall
+                    style = LocalFont.current.headlineSmall
                 )
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth()
@@ -451,7 +451,7 @@ fun ConnectionListItem(
                             date = departurePlanned
                         ),
                         textDecoration = TextDecoration.LineThrough,
-                        style = AppTypography.labelMedium
+                        style = LocalFont.current.labelMedium
                     )
                 }
             }
@@ -483,7 +483,7 @@ fun ConnectionListItem(
                     if (departureStation != null) {
                         Text(
                             text = stringResource(id = R.string.from_station, departureStation),
-                            style = AppTypography.labelSmall,
+                            style = LocalFont.current.labelSmall,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -520,7 +520,7 @@ fun Platform(
                     real ?: planned ?: ""
                 ),
                 color = Color.White,
-                style = AppTypography.labelSmall
+                style = LocalFont.current.labelSmall
             )
         }
     }

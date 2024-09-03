@@ -38,8 +38,8 @@ import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.util.getDelayColor
@@ -148,7 +148,7 @@ fun FromToTextRow(
             lineId = lineId,
             operatorCode = operatorCode,
             modifier = Modifier.padding(start = 4.dp),
-            defaultTextStyle = AppTypography.titleLarge,
+            defaultTextStyle = LocalFont.current.titleLarge,
             journeyNumber = null
         )
         Icon(
@@ -159,7 +159,7 @@ fun FromToTextRow(
         Text(
             modifier = Modifier.padding(start = 8.dp),
             text = destination,
-            style = AppTypography.titleLarge,
+            style = LocalFont.current.titleLarge,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2
         )
@@ -248,7 +248,7 @@ private fun TravelStopListItem(
             text = stationNameText,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            style = AppTypography.titleMedium
+            style = LocalFont.current.titleMedium
         )
 
         // Time/Cancelled
@@ -264,7 +264,7 @@ private fun TravelStopListItem(
                 Text(
                     text = stringResource(id = R.string.cancelled),
                     color = Color.Red,
-                    style = AppTypography.titleMedium
+                    style = LocalFont.current.titleMedium
                 )
             } else {
                 Text(
@@ -275,7 +275,7 @@ private fun TravelStopListItem(
                         real = station.arrivalReal,
                         planned = station.arrivalPlanned
                     ),
-                    style = AppTypography.titleMedium
+                    style = LocalFont.current.titleMedium
                 )
             }
             if (station.isCancelled || (station.arrivalReal ?: station.arrivalPlanned) > station.arrivalPlanned) {
@@ -284,7 +284,7 @@ private fun TravelStopListItem(
                         date = station.arrivalPlanned
                     ),
                     textDecoration = TextDecoration.LineThrough,
-                    style = AppTypography.labelMedium
+                    style = LocalFont.current.labelMedium
                 )
             }
         }

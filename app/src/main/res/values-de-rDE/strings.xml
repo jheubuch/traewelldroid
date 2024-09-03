@@ -290,4 +290,7 @@
     <string name="remove_follower">Follower entfernen</string>
     <string name="remove_follower_success">Follower erfolgreich entfernt</string>
     <string name="remove_follower_error">Follower konnte nicht entfernt werden. Bitte später erneut versuchen.</string>
+    <string name="share_as_image">Als Bild teilen</string>
+    <string name="share_tags_on_image">Tags auf Bild zeigen</string>
+    <string name="use_system_font">Systemschriftart verwenden (Neustart erforderlich)</string>
 </resources>

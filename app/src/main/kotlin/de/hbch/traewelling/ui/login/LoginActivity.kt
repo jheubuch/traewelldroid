@@ -1,15 +1,9 @@
 package de.hbch.traewelling.ui.login
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.PackageManager.ResolveInfoFlags
 import android.net.Uri
-import android.os.Build
-import android.os.Build.VERSION
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Base64
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,13 +23,10 @@ import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.main.MainActivity
-import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.BrowserDenyList
-import net.openid.appauth.browser.VersionedBrowserMatcher
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -70,25 +61,13 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun initAuthInitial() {
-        val appAuthConfiguration = AppAuthConfiguration.Builder()
-            .setBrowserMatcher(
-                BrowserDenyList(
-                    VersionedBrowserMatcher.FIREFOX_BROWSER,
-                    VersionedBrowserMatcher.FIREFOX_CUSTOM_TAB
-                )
-            )
-            .build()
-
-        authorizationService = AuthorizationService(
-            application,
-            appAuthConfiguration
-        )
+        authorizationService = AuthorizationService(application)
 
         authorizationLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()){
                 result ->
             run {
-                if (result.resultCode == Activity.RESULT_OK) {
+                if (result.resultCode == RESULT_OK) {
                     handleAuthorizationResponse(result.data!!)
                 }
             }
@@ -135,38 +114,15 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun initiateOAuthPKCELogin() {
-        if (appCanHandleLinks()) {
-            initAuthRequest()
-            try {
-                authorizationLauncher.launch(authIntent)
-            } catch (exception: ActivityNotFoundException) {
-                val alertDialog = AlertDialog.Builder(this).create()
-                alertDialog.setTitle(getString(R.string.no_browser_title))
-                alertDialog.setMessage(getString(R.string.no_browser_description))
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok)) { _, _ ->
-                    alertDialog.dismiss()
-                }
-                alertDialog.show()
-            }
-        } else {
+        initAuthRequest()
+        try {
+            authorizationLauncher.launch(authIntent)
+        } catch (exception: ActivityNotFoundException) {
             val alertDialog = AlertDialog.Builder(this).create()
-            alertDialog.setTitle(getString(R.string.request_url_verification))
-            alertDialog.setMessage(getString(R.string.request_url_login_verification))
-            alertDialog.setButton(
-                AlertDialog.BUTTON_POSITIVE,
-                getString(R.string.yes)
-            ) { _, _ ->
-                val settingsDestination =
-                    if (VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                        Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS
-                    else
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                startActivity(
-                    Intent(
-                        settingsDestination,
-                        Uri.parse("package:${packageName}")
-                    )
-                )
+            alertDialog.setTitle(getString(R.string.no_browser_title))
+            alertDialog.setMessage(getString(R.string.no_browser_description))
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok)) { _, _ ->
+                alertDialog.dismiss()
             }
             alertDialog.show()
         }
@@ -229,19 +185,5 @@ class LoginActivity : ComponentActivity() {
 
     private fun showInfoActivity() {
         startActivity(Intent(this, InfoActivity::class.java))
-    }
-
-    private fun appCanHandleLinks(): Boolean {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(BuildConfig.OAUTH_REDIRECT_URL)
-        val resolveInfo =
-            if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                packageManager.queryIntentActivities(intent, ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
-            else
-                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-
-        return resolveInfo.all {
-            it.activityInfo.packageName == BuildConfig.APPLICATION_ID
-        }
     }
 }

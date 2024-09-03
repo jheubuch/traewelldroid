@@ -51,8 +51,8 @@
     <string name="product_type_subway">T-bane</string>
     <string name="product_type_tram">Trikk</string>
     <string name="product_type_ferry">Ferje</string>
-    <string name="product_type_national_express">Fjerntog</string>
-    <string name="product_type_national">Regiontog</string>
+    <string name="product_type_national_express">Ekspresstog</string>
+    <string name="product_type_national">Fjerntog</string>
     <string name="product_type_taxi">Taxi</string>
     <string name="product_type_regional_express">Regional Ekspresstog</string>
     <string name="check_in_successful">Du er sjekket inn!</string>
@@ -155,7 +155,7 @@
     <string name="co_travellers">Også på forbindelsen:</string>
     <string name="status_details">Statusdetaljer</string>
     <string name="title_statistics">Statistikk</string>
-    <string name="no_event_check_in">Ingen innsjekkinger til en hendelse</string>
+    <string name="no_event_check_in">Sjekk ikke inn til en hendelse</string>
     <string name="product_type_regional">Regiontog</string>
     <string name="product_type_express">Fjerntog</string>
     <string name="default_hashtag_text">Du kan bestemme en standardhashtag som tilsettes automatisk til dine innsjekkinger.</string>
@@ -202,4 +202,27 @@
     <string name="push_hint_title">Motta meldinger! 🎉</string>
     <string name="downloading_line_colors">Laster ned linjefarger</string>
     <string name="line_icons">Linjeikoner</string>
+    <string name="no_browser_title">Støttede nettlesere</string>
+    <string name="checked_in_with">Sjekket inn med %1$s</string>
+    <string name="unsupported_notification_hint">Vennligst bruk Träwelling-nettsiden for å se på denne meldingen.</string>
+    <string name="select_co_travellers_description">Her kan du sjekke inn andre på den samme forbindelsen. Du kan bruke det f.eks. når du reiser i en gruppe.</string>
+    <string name="channel_description_you_have_been_checked_in">Brukere som sjekker deg inn på forbindelser</string>
+    <string name="time_left">%1$s igjen</string>
+    <string name="platform">spor %1$s</string>
+    <string name="allow_check_ins_from_others">Brukere som kan sjekke deg inn</string>
+    <string name="nobody">Ingen</string>
+    <string name="friends">Venner (Følger hverandre)</string>
+    <string name="trusted">Klarerte brukere</string>
+    <string name="channel_you_have_been_checked_in">Blir sjekket inn</string>
+    <string name="remove">Fjerne</string>
+    <string name="expires_at">Går ut på: %1$s</string>
+    <string name="never">aldri</string>
+    <string name="trusted_expires_never">godkjent inntill den fjernes</string>
+    <string name="select_expiration">Velg fjerningsdato</string>
+    <string name="add_trusted_user">Legg til en klarert bruker</string>
+    <string name="these_can_check_you_in">Disse brukerne kan sjekke deg inn:</string>
+    <string name="select_co_travellers">Velg medreisende</string>
+    <string name="only_check_in_persons">Vennligst sjekk inn bare medreisende som reiser faktisk sammen med deg.</string>
+    <string name="no_person_allowed_check_in">Ingen har tillatt deg å sjekke dem inn.</string>
+    <string name="checked_in_by">Du har blit sjekket inn av %1$s</string>
 </resources>

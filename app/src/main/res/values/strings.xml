@@ -317,4 +317,7 @@
     <string name="only_check_in_persons">Please only check-in co-travellers really travelling with you.</string>
     <string name="no_person_allowed_check_in">No one allowed you to check them in.</string>
     <string name="checked_in_by">You have been checked-in by %1$s</string>
+    <string name="share_as_image">Share as image</string>
+    <string name="share_tags_on_image">Show tags on image</string>
+    <string name="use_system_font">Use system font (restart required)</string>
 </resources>

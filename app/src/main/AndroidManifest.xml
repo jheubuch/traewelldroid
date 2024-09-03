@@ -19,7 +19,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="34">
+        tools:targetApi="35">
+
+        <provider
+            android:name=".util.TraewelldroidFileProvider"
+            android:authorities="de.traewelldroid.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name=".ui.info.InfoActivity"
@@ -28,6 +38,9 @@
         <meta-data
             android:name="io.sentry.dsn"
             android:value="${SENTRY_DSN}" />
+        <meta-data
+            android:name="io.sentry.environment"
+            android:value="${SENTRY_ENV}" />
 
         <activity android:name=".ui.main.MainActivity" android:exported="true" android:windowSoftInputMode="stateVisible|adjustResize">
             <!-- traewelling.de  -->
@@ -78,6 +91,7 @@
 
                 <data android:scheme="https" />
                 <data android:scheme="http" />
+                <data android:scheme="traewelldroid" />
                 <data android:host="app.traewelldroid.de" />
                 <data android:pathPrefix="/oauth2redirect"/>
             </intent-filter>

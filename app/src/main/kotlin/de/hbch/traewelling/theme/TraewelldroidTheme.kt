@@ -3,6 +3,7 @@ package de.hbch.traewelling.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -10,11 +11,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.jcloquell.androidsecurestorage.SecureStorage
+import de.hbch.traewelling.shared.SharedValues
 
 private val DarkColorScheme = darkColorScheme(
     primary = TraewelldroidDark,
@@ -48,6 +52,9 @@ fun MainTheme(
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     val darkTheme = isSystemInDarkTheme()
+    val secureStorage = remember { SecureStorage(context) }
+    val chosenFont: Typography =
+        if (secureStorage.getObject(SharedValues.SS_USE_SYSTEM_FONT, Boolean::class.java) == true) DefaultTypography else AppTypography
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         // Set polyline color to default primary light color
@@ -74,13 +81,19 @@ fun MainTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography
+        typography = chosenFont
     ) {
         CompositionLocalProvider(
             LocalColorScheme provides colorScheme,
-            content = content
+            content = {
+                CompositionLocalProvider(
+                    LocalFont provides chosenFont,
+                    content = content
+                )
+            }
         )
     }
 }
 
 internal val LocalColorScheme = staticCompositionLocalOf { LightColorScheme }
+internal val LocalFont = staticCompositionLocalOf { AppTypography }

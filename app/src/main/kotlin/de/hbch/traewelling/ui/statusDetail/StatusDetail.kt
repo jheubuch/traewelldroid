@@ -50,7 +50,7 @@ import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SettingsViewModel
-import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
@@ -206,7 +206,7 @@ fun StatusDetail(
                         text = operator ?: "",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End,
-                        style = AppTypography.labelMedium
+                        style = LocalFont.current.labelMedium
                     )
                 }
                 Row(
@@ -226,7 +226,7 @@ fun StatusDetail(
                             id = R.string.checked_in_with,
                             status?.client?.name ?: "Träwelling"
                         ),
-                        style = AppTypography.labelMedium,
+                        style = LocalFont.current.labelMedium,
                         maxLines = 2
                     )
                 }
@@ -338,7 +338,7 @@ private fun StatusLikes(
             ) {
                 Text(
                     text = stringResource(id = R.string.likes, likes),
-                    style = AppTypography.bodyLarge
+                    style = LocalFont.current.bodyLarge
                 )
                 IconButton(onClick = expandAction) {
                     AnimatedContent(cardExpanded, label = "CardExpansionIcon") {

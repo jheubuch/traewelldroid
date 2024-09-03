@@ -55,8 +55,8 @@ import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SettingsViewModel
 import de.hbch.traewelling.shared.SharedValues
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
+import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
@@ -115,6 +115,7 @@ private fun DisplayProviderSettings(
     val displayTagsInCheckInCard by settingsViewModel.displayTagsInCard.observeAsState(true)
     val displayJourneyNumber by settingsViewModel.displayJourneyNumber.observeAsState(true)
     val displayDivergentStop by settingsViewModel.displayDivergentStop.observeAsState(true)
+    val useSystemFont by settingsViewModel.useSystemFont.observeAsState(false)
 
     SettingsCard(
         title = R.string.settings_display,
@@ -166,6 +167,20 @@ private fun DisplayProviderSettings(
                 },
                 drawableId = R.drawable.ic_navigation,
                 stringId = R.string.settings_display_divergent_stop,
+                modifier = Modifier.fillMaxWidth()
+            )
+            SwitchWithIconAndText(
+                checked = useSystemFont,
+                onCheckedChange = {
+                    settingsViewModel.updateUseSystemFont(context, it)
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.changes_saved)
+                        )
+                    }
+                },
+                drawableId = R.drawable.ic_font,
+                stringId = R.string.use_system_font,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -228,7 +243,7 @@ private fun TraewellingProviderSettings(
                 )
                 Text(
                     text = "Träwelling",
-                    style = AppTypography.titleLarge,
+                    style = LocalFont.current.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -316,7 +331,7 @@ private fun TravelynxProviderSettings(
             )
             Text(
                 text = "travelynx",
-                style = AppTypography.titleLarge,
+                style = LocalFont.current.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -364,7 +379,7 @@ private fun TravelynxProviderSettings(
         )
         Text(
             text = stringResource(id = R.string.travelynx_limited_functionality),
-            style = AppTypography.labelSmall,
+            style = LocalFont.current.labelSmall,
             textAlign = TextAlign.Justify,
             modifier = Modifier.fillMaxWidth()
         )
@@ -491,12 +506,12 @@ private fun MapViewSettings(
                         Column {
                             Text(
                                 text = stringResource(id = layer.title),
-                                style = AppTypography.labelLarge,
+                                style = LocalFont.current.labelLarge,
                                 fontWeight = FontWeight.ExtraBold
                             )
                             Text(
                                 text = stringResource(id = layer.description),
-                                style = AppTypography.labelSmall
+                                style = LocalFont.current.labelSmall
                             )
                         }
                     }
@@ -621,12 +636,12 @@ private fun SettingsCard(
                 ) {
                     Text(
                         text = stringResource(id = title),
-                        style = AppTypography.headlineSmall
+                        style = LocalFont.current.headlineSmall
                     )
                     Text(
                         modifier = Modifier.padding(top = 4.dp),
                         text = stringResource(id = description),
-                        style = AppTypography.labelSmall
+                        style = LocalFont.current.labelSmall
                     )
                 }
                 if (expandable) {
