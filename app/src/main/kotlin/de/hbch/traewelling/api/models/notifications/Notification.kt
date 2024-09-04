@@ -2,7 +2,6 @@ package de.hbch.traewelling.api.models.notifications
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -51,7 +50,7 @@ enum class NotificationType {
             var onClick: (NavHostController) -> Unit = { }
             if (data != null) {
                 onClick = {
-                    it.navigate("personal-profile/?username=${data.user.username}")
+                    it.navigate("manage-followers/?followRequests=true")
                 }
             }
             return onClick
@@ -62,11 +61,9 @@ enum class NotificationType {
             if (data != null) {
                 intent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.Builder()
-                        .scheme("https")
-                        .authority("traewelling.de")
-                        .appendPath("settings")
-                        .appendPath("follower")
+                    TraewelldroidUriBuilder()
+                        .appendPath("manage-followers")
+                        .appendQueryParameter("followRequests", "true")
                         .build()
                 )
             }

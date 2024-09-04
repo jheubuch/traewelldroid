@@ -59,6 +59,7 @@
                 <data android:pathPrefix="/@" />
                 <data android:pathPrefix="/stats/daily/" />
                 <data android:pathPrefix="/auth/login" />
+                <data android:pathPrefix="/manage-followers" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

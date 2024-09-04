@@ -291,9 +291,11 @@ fun TraewelldroidNavHost(
                 }
             )
         }
-        composable(ManageFollowers.route) {
+        composable(ManageFollowers.route, deepLinks = ManageFollowers.deepLinks) {
+            val showFollowRequests = it.arguments?.getString("followRequests")?.toBooleanStrictOrNull() ?: false
             ManageFollowers(
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                showFollowRequests = showFollowRequests
             )
         }
         composable(TrustedUsers.route) {

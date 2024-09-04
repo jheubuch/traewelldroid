@@ -53,10 +53,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ManageFollowers(
     snackbarHostState: SnackbarHostState,
+    showFollowRequests: Boolean,
     modifier: Modifier = Modifier
 ) {
     val manageFollowersViewModel: ManageFollowersViewModel = viewModel()
-    var selectedTab by remember { mutableIntStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(if (showFollowRequests) 2 else 0) }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -273,7 +274,7 @@ private fun FollowRequests(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_check),
-                                    contentDescription = stringResource(R.string.remove)
+                                    contentDescription = stringResource(R.string.accept)
                                 )
                             }
                             IconButton(
@@ -296,7 +297,7 @@ private fun FollowRequests(
                                 enabled = !isRemoving
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_cancel),
+                                    painter = painterResource(id = R.drawable.ic_remove),
                                     contentDescription = stringResource(R.string.remove)
                                 )
                             }
