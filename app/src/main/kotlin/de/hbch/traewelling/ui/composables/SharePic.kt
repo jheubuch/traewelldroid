@@ -60,7 +60,7 @@ fun SharePicDialog(
     var shareTags by remember { mutableStateOf(true) }
 
     Column(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
