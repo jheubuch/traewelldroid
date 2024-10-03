@@ -161,6 +161,7 @@ fun Search(
         modifier = modifier,
         inputField = {
             SearchBarDefaults.InputField(
+                modifier = Modifier.fillMaxWidth(),
                 query = query,
                 onQueryChange = { query = it },
                 onSearch = { expanded = false },
