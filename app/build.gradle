@@ -6,6 +6,8 @@ plugins {
     id "io.sentry.android.gradle" version "4.11.0"
     id "com.mikepenz.aboutlibraries.plugin"
     id "com.google.gms.google-services"
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.20'
+    id "org.jetbrains.kotlin.plugin.compose" version "2.0.0"
 }
 
 sentry {
@@ -90,9 +92,6 @@ android {
         compose = true
         buildConfig true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -121,27 +120,27 @@ aboutLibraries {
 
 dependencies {
     // Jetpack Compose
-    def composeVersion = "1.7.0-rc01"
+    def composeVersion = '1.7.3'
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.8"
+    implementation "androidx.compose.runtime:runtime-livedata:1.7.3"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
-    implementation 'com.google.accompanist:accompanist-themeadapter-material3:0.34.0'
-    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.34.0'
-    implementation 'com.google.accompanist:accompanist-permissions:0.34.0'
-    implementation "androidx.compose.material3:material3:1.2.1"
-    implementation "androidx.activity:activity-compose:1.9.1"
+    implementation 'com.google.accompanist:accompanist-themeadapter-material3:0.36.0'
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.36.0'
+    implementation 'com.google.accompanist:accompanist-permissions:0.36.0'
+    implementation "androidx.compose.material3:material3:1.3.0"
+    implementation "androidx.activity:activity-compose:1.9.2"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     implementation "androidx.core:core-ktx:1.13.1"
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "com.google.android.material:material:1.12.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.4"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.6"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.browser:browser:1.8.0"
     implementation "androidx.core:core-splashscreen:1.0.1"
@@ -157,7 +156,7 @@ dependencies {
     implementation "com.github.jcloquell:android-secure-storage:0.1.3"
 
     // Navigation Component
-    implementation "androidx.navigation:navigation-compose:2.7.7"
+    implementation "androidx.navigation:navigation-compose:2.8.2"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
@@ -169,7 +168,7 @@ dependencies {
     implementation 'de.c1710:filemojicompat-autoinit:3.2.7'
 
     // OSS licenses
-    implementation 'com.mikepenz:aboutlibraries-compose:11.2.2'
+    implementation 'com.mikepenz:aboutlibraries-compose:11.2.3'
 
     // Feature flags
     implementation 'io.getunleash:unleash-android-proxy-sdk:1.0.0'
@@ -194,6 +193,8 @@ dependencies {
 
     // Showcase
     implementation 'com.canopas.intro-showcase-view:introshowcaseview:2.0.1'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3'
 }
 
 

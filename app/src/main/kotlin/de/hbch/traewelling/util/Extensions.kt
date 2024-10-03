@@ -43,6 +43,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.lineIcons.LineIcon
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.logging.Logger
+import de.hbch.traewelling.navigation.Destination
 import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
@@ -68,11 +69,11 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 
 fun NavHostController.popBackStackAndNavigate(
-    route: String,
+    destination: Destination,
     launchSingleTop: Boolean = true,
     popUpToInclusive: Boolean = true
 ) {
-    navigate(route) {
+    navigate(destination) {
         popUpTo(graph.id) {
             inclusive = popUpToInclusive
         }
