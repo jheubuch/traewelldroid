@@ -3,12 +3,16 @@ package de.hbch.traewelling.ui.user
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.logging.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +40,15 @@ class UserStatusViewModel : ViewModel() {
                                 resetStatusesForUser(respUser.data.username)
                             }
                             return
+                        } else if (response.code() == 403) {
+                            viewModelScope.launch {
+                                withContext(Dispatchers.Main.immediate) {
+                                    val respUsers = TraewellingApi.userService.searchUsers(username).data
+                                    if (respUsers.isNotEmpty() && respUsers[0].username == username) {
+                                        user.postValue(respUsers[0])
+                                    }
+                                }
+                            }
                         }
                     }
 
