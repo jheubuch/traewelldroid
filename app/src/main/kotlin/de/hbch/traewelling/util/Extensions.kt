@@ -90,7 +90,7 @@ fun LazyListScope.checkInList(
     statusSelectedAction: (Int) -> Unit = { },
     statusEditAction: (Status) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
-    userSelectedAction: (String) -> Unit = { },
+    userSelectedAction: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     showDailyStatisticsLink: Boolean = false,
     dailyStatisticsSelectedAction: (LocalDate) -> Unit = { },
     showDate: Boolean = true

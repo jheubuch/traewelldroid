@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,17 +37,19 @@ fun Profile(
     username: String?,
     loggedInUserViewModel: LoggedInUserViewModel,
     joinConnection: (Status) -> Unit,
+    isPrivateProfile: Boolean = false,
+    isFollowing: Boolean = false,
     stationSelectedAction: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     statusEditAction: (Status) -> Unit = { },
     dailyStatisticsSelectedAction: (LocalDate) -> Unit = { },
-    userSelectedAction: (String) -> Unit = { },
+    userSelectedAction: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     editProfile: () -> Unit = { },
     manageFollowerAction: () -> Unit = { }
 ) {
     val user = username ?: loggedInUserViewModel.loggedInUser.value?.username
-    var currentPage by remember { mutableStateOf(1) }
+    var currentPage by rememberSaveable { mutableIntStateOf(1) }
     val userStatusViewModel: UserStatusViewModel = viewModel()
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
 
@@ -57,7 +61,7 @@ fun Profile(
         refreshing = refreshing,
         onRefresh = {
             currentPage = 1
-            userStatusViewModel.loadUser(user)
+            userStatusViewModel.loadUser(user, (isPrivateProfile && !isFollowing))
         }
     )
     val listState = rememberLazyListState()
@@ -71,7 +75,7 @@ fun Profile(
 
     LaunchedEffect(Unit) {
         if (!initialized) {
-            userStatusViewModel.loadUser(user)
+            userStatusViewModel.loadUser(user, isPrivateProfile)
             initialized = true
         }
     }

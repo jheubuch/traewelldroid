@@ -75,7 +75,7 @@ fun StatusDetail(
     statusDeleted: (Status) -> Unit = { },
     statusEdit: (Status) -> Unit = { },
     loggedInUserViewModel: LoggedInUserViewModel? = null,
-    userSelected: (String) -> Unit = { }
+    userSelected: (String, Boolean, Boolean) -> Unit = { _, _, _ -> }
 ) {
     val statusDetailViewModel: StatusDetailViewModel = viewModel()
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
@@ -296,7 +296,7 @@ private fun StatusLikes(
     likes: Int,
     statusDetailViewModel: StatusDetailViewModel,
     modifier: Modifier = Modifier,
-    userSelected: (String) -> Unit = { }
+    userSelected: (String, Boolean, Boolean) -> Unit = { _, _, _ -> }
 ) {
     var cardExpanded by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
@@ -381,13 +381,13 @@ private fun StatusLikes(
 private fun Liker(
     user: User,
     modifier: Modifier = Modifier,
-    userSelected: (String) -> Unit = { }
+    userSelected: (String, Boolean, Boolean) -> Unit = { _, _, _ -> }
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .clickable { userSelected(user.username) }
+            .clickable { userSelected(user.username, user.privateProfile, user.following) }
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Row(

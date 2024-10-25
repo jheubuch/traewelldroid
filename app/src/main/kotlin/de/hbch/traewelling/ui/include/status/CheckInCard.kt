@@ -92,7 +92,7 @@ fun CheckInCard(
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     displayLongDate: Boolean = false,
     stationSelected: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
-    userSelected: (String) -> Unit = { },
+    userSelected: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     statusSelected: (Int) -> Unit = { },
     handleEditClicked: (Status) -> Unit = { },
     onDeleted: (Status) -> Unit = { }
@@ -359,7 +359,7 @@ fun CheckInCardContent(
     message: Pair<AnnotatedString?, Map<String, InlineTextContent>>,
     operatorCode: String? = null,
     lineId: String? = null,
-    userSelected: (String) -> Unit = { },
+    userSelected: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     textClicked: () -> Unit = { }
 ) {
     Column(
@@ -390,7 +390,7 @@ fun CheckInCardContent(
                     onClick = {
                         val annotations = message.first!!.getStringAnnotations(it - 1, it + 1)
                         if (annotations.isNotEmpty()) {
-                            userSelected(annotations.first().item)
+                            userSelected(annotations.first().item, false, false)
                         } else {
                             textClicked()
                         }
@@ -460,7 +460,7 @@ private fun CheckInCardFooter(
     isOwnStatus: Boolean = false,
     displayLongDate: Boolean = false,
     defaultVisibility: StatusVisibility = StatusVisibility.PUBLIC,
-    userSelected: (String) -> Unit = { },
+    userSelected: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     handleEditClicked: () -> Unit = { },
     handleDeleteClicked: () -> Unit = { }
 ) {
@@ -582,7 +582,7 @@ private fun CheckInCardFooter(
                 )
                 Text(
                     modifier = alignmentModifier
-                        .clickable { userSelected(status.user.username) }
+                        .clickable { userSelected(status.user.username, false, false) }
                         .padding(2.dp),
                     text = stringResource(
                         id = R.string.check_in_user_time,
@@ -599,7 +599,6 @@ private fun CheckInCardFooter(
                 )
             }
             var menuExpanded by remember { mutableStateOf(false) }
-            val context = LocalContext.current
             Box {
                 Icon(
                     modifier = Modifier

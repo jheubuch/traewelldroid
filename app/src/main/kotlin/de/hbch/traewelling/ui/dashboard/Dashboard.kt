@@ -35,7 +35,7 @@ fun Dashboard(
     loggedInUserViewModel: LoggedInUserViewModel,
     joinConnection: (Status) -> Unit,
     searchConnectionsAction: (Int, ZonedDateTime?) -> Unit = { _, _ -> },
-    userSelectedAction: (String) -> Unit = { },
+    userSelectedAction: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     statusEditAction: (Status) -> Unit = { }
@@ -87,7 +87,7 @@ fun Dashboard(
                     homelandStationData = loggedInUserViewModel.home,
                     recentStationsData = loggedInUserViewModel.lastVisitedStations,
                     onUserSelected = {
-                        userSelectedAction(it.username)
+                        userSelectedAction(it.username, it.privateProfile, it.following)
                     }
                 )
             }

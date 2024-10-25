@@ -26,7 +26,7 @@ import de.hbch.traewelling.util.checkInList
 fun EnRoute(
     loggedInUserViewModel: LoggedInUserViewModel,
     joinConnection: (Status) -> Unit,
-    userSelectedAction: (String) -> Unit = { },
+    userSelectedAction: (String, Boolean, Boolean) -> Unit = { _, _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     statusEditAction: (Status) -> Unit = { }

@@ -55,7 +55,9 @@ fun List<String>.toNavDeepLinks(): List<NavDeepLink> {
 
 @Serializable
 data class PersonalProfile(
-    val username: String? = null
+    val username: String? = null,
+    val isPrivateProfile: Boolean = false,
+    val isFollowing: Boolean = false
 ) : MainDestination {
     override val icon = R.drawable.ic_account
     override val label = R.string.title_user

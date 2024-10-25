@@ -86,9 +86,9 @@ fun TraewelldroidNavHost(
             StatusDetails(statusId)
         )
     }
-    val navToUserProfile: (String) -> Unit = { username ->
+    val navToUserProfile: (String, Boolean, Boolean) -> Unit = { username, isPrivateProfile, isFollowing ->
         navController.navigate(
-            PersonalProfile(username)
+            PersonalProfile(username, isPrivateProfile, isFollowing)
         )
     }
 
@@ -243,6 +243,8 @@ fun TraewelldroidNavHost(
 
             Profile(
                 username = profile.username,
+                isPrivateProfile = profile.isPrivateProfile,
+                isFollowing = profile.isFollowing,
                 loggedInUserViewModel = loggedInUserViewModel,
                 stationSelectedAction = navToSearchConnections,
                 statusSelectedAction = navToStatusDetails,
