@@ -126,13 +126,13 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:1.7.3"
+    implementation "androidx.compose.runtime:runtime-livedata:1.7.4"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation 'com.google.accompanist:accompanist-themeadapter-material3:0.36.0'
     implementation 'com.google.accompanist:accompanist-systemuicontroller:0.36.0'
     implementation 'com.google.accompanist:accompanist-permissions:0.36.0'
     implementation "androidx.compose.material3:material3:1.3.0"
-    implementation "androidx.activity:activity-compose:1.9.2"
+    implementation "androidx.activity:activity-compose:1.9.3"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     implementation "androidx.core:core-ktx:1.13.1"
@@ -156,7 +156,7 @@ dependencies {
     implementation "com.github.jcloquell:android-secure-storage:0.1.3"
 
     // Navigation Component
-    implementation "androidx.navigation:navigation-compose:2.8.2"
+    implementation "androidx.navigation:navigation-compose:2.8.3"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
@@ -188,8 +188,8 @@ dependencies {
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.10.0'
 
     // Reviews
-    playImplementation 'com.google.android.play:review:2.0.1'
-    playImplementation 'com.google.android.play:review-ktx:2.0.1'
+    playImplementation 'com.google.android.play:review:2.0.2'
+    playImplementation 'com.google.android.play:review-ktx:2.0.2'
 
     // Showcase
     implementation 'com.canopas.intro-showcase-view:introshowcaseview:2.0.1'
