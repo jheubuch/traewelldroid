@@ -75,7 +75,7 @@ fun Profile(
 
     LaunchedEffect(Unit) {
         if (!initialized) {
-            userStatusViewModel.loadUser(user, isPrivateProfile)
+            userStatusViewModel.loadUser(user, (isPrivateProfile && !isFollowing))
             initialized = true
         }
     }
