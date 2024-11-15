@@ -298,4 +298,5 @@
     <string name="share_tags_on_image">Tags auf Bild zeigen</string>
     <string name="use_system_font">Systemschriftart verwenden (Neustart erforderlich)</string>
     <string name="error_occurred">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</string>
+    <string name="follows_you">Folgt dir</string>
 </resources>

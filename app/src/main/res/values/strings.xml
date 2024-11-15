@@ -325,4 +325,5 @@
     <string name="share_tags_on_image">Show tags on image</string>
     <string name="use_system_font">Use system font (restart required)</string>
     <string name="error_occurred">An error occurred. Please try again.</string>
+    <string name="follows_you">Follows you</string>
 </resources>

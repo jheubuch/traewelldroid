@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -18,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.canopas.lib.showcase.IntroShowcase
 import com.canopas.lib.showcase.component.ShowcaseStyle
 import com.canopas.lib.showcase.component.rememberIntroShowcaseState
@@ -38,8 +42,11 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.ProfilePicture
+import de.hbch.traewelling.ui.followers.ManageFollowersViewModel
 import de.hbch.traewelling.util.openLink
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserCard(
@@ -67,6 +74,7 @@ fun UserCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserCardContent(
     user: User,
@@ -79,13 +87,57 @@ private fun UserCardContent(
 ) {
     val context = LocalContext.current
     val secureStorage = remember { SecureStorage(context) }
+    val coroutineScope = rememberCoroutineScope()
+    val manageFollowersViewModel: ManageFollowersViewModel = viewModel()
 
     var introduceProfileEdit by remember { mutableStateOf(
         !(secureStorage.getObject(SharedValues.SS_EDIT_PROFILE_SHOWCASE, Boolean::class.java) ?: false)
     ) }
 
+    var unfollowDialogVisible by remember { mutableStateOf(false) }
+    var followedBy by remember { mutableStateOf(user.followedBy) }
+
     val isOwnProfile = loggedInUser.id == user.id
     val showCaseState = rememberIntroShowcaseState()
+
+    if (unfollowDialogVisible) {
+        var isRemoving by remember { mutableStateOf(false) }
+        Dialog(
+            onDismissRequest = { unfollowDialogVisible = false },
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.remove_follower),
+                    style = LocalFont.current.titleLarge
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    ButtonWithIconAndText(
+                        stringId = R.string.remove,
+                        drawableId = R.drawable.ic_person_remove,
+                        isLoading = isRemoving,
+                        onClick = {
+                            try {
+                                isRemoving = true
+                                coroutineScope.launch {
+                                    val response = manageFollowersViewModel.removeFollower(user.id)
+                                    if (response) {
+                                        isRemoving = false
+                                        followedBy = false
+                                        unfollowDialogVisible = false
+                                    }
+                                }
+                            } catch (_: Exception) { }
+                        }
+                    )
+                }
+            }
+        }
+    }
 
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
@@ -136,6 +188,18 @@ private fun UserCardContent(
                         )
                     }
                 }
+            }
+
+            if (!isOwnProfile && followedBy) {
+                AssistChip(
+                    onClick = { unfollowDialogVisible = true },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.follows_you)
+                        )
+                    },
+                    modifier = Modifier.padding(end = 8.dp).align(Alignment.TopEnd)
+                )
             }
 
             Column(
@@ -378,7 +442,8 @@ private fun UserCardPreview() {
         false,
         false,
         false,
-        null
+        null,
+        false
     )
     val user2 = User(
         1,
@@ -395,7 +460,8 @@ private fun UserCardPreview() {
         false,
         false,
         false,
-        null
+        null,
+        true
     )
 
     MainTheme {
