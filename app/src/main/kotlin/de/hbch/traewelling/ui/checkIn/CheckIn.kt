@@ -613,7 +613,7 @@ fun CheckIn(
                     if (isEditMode) {
                         val currentDateTime = ZonedDateTime.now()
                         val plannedDeparture = checkInViewModel.departureTime
-                        if (plannedDeparture != null && currentDateTime.isAfter(plannedDeparture)) {
+                        if (plannedDeparture != null && currentDateTime.isAfter(plannedDeparture.minusMinutes(30))) {
                             DateTimeSelection(
                                 initDate = checkInViewModel.manualDepartureTime,
                                 plannedDate = checkInViewModel.departureTime,
@@ -623,7 +623,7 @@ fun CheckIn(
                             )
                         }
                         val plannedArrival = checkInViewModel.arrivalTime
-                        if (plannedArrival != null && currentDateTime.isAfter(plannedArrival)) {
+                        if (plannedArrival != null && currentDateTime.isAfter(plannedArrival.minusMinutes(30))) {
                             DateTimeSelection(
                                 initDate = checkInViewModel.manualArrivalTime,
                                 plannedDate = checkInViewModel.arrivalTime,
