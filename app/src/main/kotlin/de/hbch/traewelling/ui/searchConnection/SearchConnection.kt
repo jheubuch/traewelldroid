@@ -62,7 +62,6 @@ import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
-import de.hbch.traewelling.ui.composables.ContentDialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
