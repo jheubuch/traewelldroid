@@ -14,12 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -220,69 +222,57 @@ fun SearchConnection(
     )
 
     if (datePickerVisible) {
-        ContentDialog(
-            modifier = Modifier.fillMaxWidth(0.85f),
-            onDismissRequest = { datePickerVisible = false }
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                DatePicker(state = datePickerState)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End
+        DatePickerDialog(
+            onDismissRequest = { datePickerVisible = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerVisible = false
+                        timePickerVisible = true
+                    },
+                    enabled = datePickerState.selectedDateMillis != null
                 ) {
-                    OutlinedButtonWithIconAndText(
-                        text = stringResource(id = R.string.ok),
-                        onClick = {
-                            datePickerVisible = false
-                            timePickerVisible = true
-                        }
+                    Text(
+                        text = stringResource(id = R.string.ok)
                     )
                 }
             }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 
     if (timePickerVisible) {
-        ContentDialog(
-            modifier = Modifier.fillMaxWidth(0.85f),
-            onDismissRequest = { timePickerVisible = false }
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TimePicker(state = timePickerState)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    OutlinedButtonWithIconAndText(
-                        text = stringResource(id = R.string.ok),
-                        onClick = {
-                            timePickerVisible = false
+        DatePickerDialog(
+            onDismissRequest = { timePickerVisible = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        timePickerVisible = false
 
-                            val selectedDate = datePickerState.selectedDateMillis
-                            if (selectedDate != null) {
-                                var dateTime = Instant
-                                    .ofEpochMilli(selectedDate)
-                                    .atZone(ZoneId.systemDefault())
+                        val selectedDate = datePickerState.selectedDateMillis
+                        if (selectedDate != null) {
+                            var dateTime = Instant
+                                .ofEpochMilli(selectedDate)
+                                .atZone(ZoneId.systemDefault())
 
-                                dateTime = dateTime.withHour(timePickerState.hour)
-                                dateTime = dateTime.withMinute(timePickerState.minute)
+                            dateTime = dateTime.withHour(timePickerState.hour)
+                            dateTime = dateTime.withMinute(timePickerState.minute)
 
-                                onTimeSelection(dateTime)
-                            }
+                            onTimeSelection(dateTime)
                         }
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.ok)
                     )
                 }
             }
+        ) {
+            TimePicker(
+                state = timePickerState,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 
