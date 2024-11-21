@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.FontFamily
 import de.hbch.traewelling.R
 
 val RalewayFont = Font(R.font.raleway)
-val TwindexxFont = Font(R.font.ae_matrix16_twindexx_standard)
+val TwindexxFont = Font(R.font.ae_matrix16_btmodern_standard)
 val Raleway = FontFamily(RalewayFont)
 val Twindexx = FontFamily(TwindexxFont)
 

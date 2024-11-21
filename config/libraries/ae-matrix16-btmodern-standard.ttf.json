@@ -1,5 +1,5 @@
 {
-  "uniqueId": "ae:matrix16.twindexx",
+  "uniqueId": "ae:matrix16.btmodern",
   "developers": [
     {
       "organisationUrl": "",
@@ -7,7 +7,7 @@
     }
   ],
   "artifactVersion": "001.0000",
-  "name": "AE_Matrix16_Twindexx",
+  "name": "AE_Matrix16_BTModern",
   "licenses": [
     "SIL Open Font License"
   ]
