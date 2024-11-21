@@ -497,14 +497,16 @@ fun CheckIn(
                                             }
                                         }
                                 }
-                                OutlinedButtonWithIconAndText(
-                                    stringId = R.string.select_co_travellers,
-                                    drawableId = R.drawable.ic_also_check_in,
-                                    onClick = {
-                                        coTravellerSelectionVisible = true
-                                    },
-                                    modifier = coTravellerButtonModifier
-                                )
+                                if (!isEditMode) {
+                                    OutlinedButtonWithIconAndText(
+                                        stringId = R.string.select_co_travellers,
+                                        drawableId = R.drawable.ic_also_check_in,
+                                        onClick = {
+                                            coTravellerSelectionVisible = true
+                                        },
+                                        modifier = coTravellerButtonModifier
+                                    )
+                                }
                                 if (selectedCoTravellers?.isNotEmpty() == true) {
                                     Row(
                                         modifier = Modifier
