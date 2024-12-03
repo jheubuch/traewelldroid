@@ -299,4 +299,8 @@
     <string name="use_system_font">Systemschriftart verwenden (Neustart erforderlich)</string>
     <string name="error_occurred">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</string>
     <string name="follows_you">Folgt dir</string>
+    <string name="year_is_over">%1$d ist vorbei</string>
+    <string name="discover_recap">Entdecke dein vergangenes Jahr %1$d mit deinem persönlichen Reiserückblick! 🚂</string>
+    <string name="take_me_back">Bring mich zurück!</string>
+    <string name="wrapped_is_being_prepared">Dein Jahresrückblick wird vorbereitet. Dies kann ein paar Sekunden dauern - bitte hab ein wenig Geduld. 😊</string>
 </resources>
