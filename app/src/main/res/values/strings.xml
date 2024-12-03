@@ -326,4 +326,7 @@
     <string name="use_system_font">Use system font (restart required)</string>
     <string name="error_occurred">An error occurred. Please try again.</string>
     <string name="follows_you">Follows you</string>
+    <string name="year_is_over">%1$d is over</string>
+    <string name="discover_recap">Discover your year in review with your personal %1$d journey recap! 🚂</string>
+    <string name="take_me_back">Take me back!</string>
 </resources>

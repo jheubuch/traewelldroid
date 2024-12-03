@@ -21,9 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
+import de.hbch.traewelling.ui.wrapped.WrappedTeaser
 import de.hbch.traewelling.util.OnBottomReached
 import de.hbch.traewelling.util.checkInList
 import kotlinx.coroutines.launch
@@ -54,6 +56,9 @@ fun Dashboard(
         }
     )
     val checkInListState = rememberLazyListState()
+
+    val featureFlags = remember { FeatureFlags.getInstance() }
+    val wrappedActive by featureFlags.wrappedActive.observeAsState(false)
 
     checkInListState.OnBottomReached {
         if (dashboardViewModel.checkIns.size > 0) {
@@ -91,6 +96,15 @@ fun Dashboard(
                     }
                 )
             }
+
+            if (wrappedActive) {
+                item {
+                    WrappedTeaser(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
             checkInList(
                 checkIns,
                 checkInCardViewModel,

@@ -8,7 +8,7 @@ import de.hbch.traewelling.R
 val RalewayFont = Font(R.font.raleway)
 val TwindexxFont = Font(R.font.ae_matrix16_btmodern_standard)
 val Raleway = FontFamily(RalewayFont)
-val Twindexx = FontFamily(TwindexxFont)
+val BTModern = FontFamily(TwindexxFont)
 
 val DefaultTypography = Typography()
 val AppTypography = Typography(

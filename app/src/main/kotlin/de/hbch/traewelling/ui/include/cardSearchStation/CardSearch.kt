@@ -15,7 +15,7 @@ import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.LocalFont
-import de.hbch.traewelling.theme.Twindexx
+import de.hbch.traewelling.theme.BTModern
 import de.hbch.traewelling.ui.search.Search
 import de.hbch.traewelling.util.getGreeting
 
@@ -42,7 +42,7 @@ fun CardSearch(
                 text = getGreeting(),
                 style = LocalFont.current.headlineLarge,
                 modifier = Modifier.padding(8.dp),
-                fontFamily = Twindexx,
+                fontFamily = BTModern,
                 color = LocalColorScheme.current.primary
             )
             Search(
