@@ -136,16 +136,17 @@ fun WrappedTotalJourneys(
 ) {
     val primaryColor = LocalColorScheme.current.primary
     val primarySpanStyle = SpanStyle(color = primaryColor)
+    val btModernStyle = SpanStyle(fontFamily = BTModern)
     val largeSpanStyle = SpanStyle(fontSize = AppTypography.headlineLarge.fontSize)
     WrappedScaffold(
         graphicsLayer = graphicsLayer,
         modifier = modifier,
         header = {
             val annotatedString = buildAnnotatedString {
-                withStyle(primarySpanStyle) {
+                withStyle(primarySpanStyle.merge(btModernStyle)) {
                     append(yearInReviewData.count.toString())
-                    append(' ')
                 }
+                append(' ')
                 append(stringResource(R.string.wrapped_times))
             }
             Text(
@@ -159,13 +160,13 @@ fun WrappedTotalJourneys(
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_times_checked_in))
             appendLine()
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle.merge(largeSpanStyle).merge(btModernStyle)) {
                 appendLine(getFormattedDistance(yearInReviewData.distance.total.toInt()))
             }
             appendLine()
             appendLine(stringResource(R.string.and))
             appendLine()
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle.merge(largeSpanStyle).merge(btModernStyle)) {
                 appendLine(getDurationString(yearInReviewData.duration.total.toInt()))
             }
             appendLine()
@@ -202,18 +203,19 @@ fun WrappedOperatorDistance(
         val primarySpanStyle = SpanStyle(color = primaryColor)
         val largeSpanStyle = SpanStyle(fontSize = AppTypography.headlineLarge.fontSize)
         val centerAlignedStyle = ParagraphStyle(textAlign = TextAlign.Center)
+        val btModernStyle = SpanStyle(fontFamily = BTModern)
 
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_farest_travels))
             appendLine()
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle.merge(largeSpanStyle).merge(btModernStyle)) {
                 withStyle(centerAlignedStyle) {
                     appendLine(yearInReviewData.operators.topByDistance.operator)
                 }
             }
             appendLine()
             append(stringResource(R.string.wrapped_in_a_total))
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle.merge(largeSpanStyle).merge(btModernStyle)) {
                 appendLine(" ${getFormattedDistance(yearInReviewData.operators.topByDistance.distance.toInt())}")
             }
         }
@@ -248,17 +250,18 @@ fun WrappedOperatorDuration(
         val primarySpanStyle = SpanStyle(color = primaryColor)
         val largeSpanStyle = SpanStyle(fontSize = AppTypography.headlineLarge.fontSize)
         val centerAlignedStyle = ParagraphStyle(textAlign = TextAlign.Center)
+        val btModernStyle = SpanStyle(fontFamily = BTModern)
 
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_longest_travels))
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle.merge(largeSpanStyle).merge(btModernStyle)) {
                 withStyle(centerAlignedStyle) {
                     append(yearInReviewData.operators.topByDuration.operator)
                 }
             }
             appendLine()
             append(stringResource(R.string.wrapped_in_a_total))
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle.merge(largeSpanStyle).merge(btModernStyle)) {
                 appendLine(" ${getDurationString(yearInReviewData.operators.topByDuration.duration.toInt())}")
             }
             appendLine()
@@ -293,16 +296,17 @@ fun WrappedLines(
     ) {
         val primaryColor = LocalColorScheme.current.primary
         val primarySpanStyle = SpanStyle(color = primaryColor)
+        val btModernStyle = SpanStyle(fontFamily = BTModern)
 
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_line_distance))
-            withStyle(primarySpanStyle) {
+            withStyle(primarySpanStyle.merge(btModernStyle)) {
                 append(yearInReviewData.lines.topByDistance.line)
             }
             append(' ')
             append(stringResource(R.string.operated_by))
             append(' ')
-            withStyle(primarySpanStyle) {
+            withStyle(primarySpanStyle.merge(btModernStyle)) {
                 append(yearInReviewData.lines.topByDistance.operator)
                 append(' ')
                 append("(${getFormattedDistance(yearInReviewData.lines.topByDistance.distance.toInt())})")
@@ -310,13 +314,13 @@ fun WrappedLines(
             appendLine()
             appendLine()
             appendLine(stringResource(R.string.wrapped_line_duration))
-            withStyle(primarySpanStyle) {
+            withStyle(primarySpanStyle.merge(btModernStyle)) {
                 append(yearInReviewData.lines.topByDuration.line)
             }
             append(' ')
             append(stringResource(R.string.operated_by))
             append(' ')
-            withStyle(primarySpanStyle) {
+            withStyle(primarySpanStyle.merge(btModernStyle)) {
                 append(yearInReviewData.lines.topByDuration.operator)
                 append(' ')
                 append("(${getDurationString(yearInReviewData.lines.topByDuration.duration.toInt())})")
@@ -530,8 +534,9 @@ fun WrappedTopDestinations(
             yearInReviewData.topDestinations.forEachIndexed { index, destination ->
                 Text(
                     text = "${index + 1}. ${destination.station.name} (${destination.count}x)",
-                    style = AppTypography.titleMedium,
-                    textAlign = TextAlign.Center
+                    style = AppTypography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    fontFamily = BTModern
                 )
             }
             Spacer(Modifier)
@@ -571,8 +576,9 @@ fun WrappedLonelyDestinations(
             yearInReviewData.lonelyStations.forEachIndexed { index, destination ->
                 Text(
                     text = "${index + 1}. ${destination.station.name} (${destination.count}x)",
-                    style = AppTypography.titleMedium,
-                    textAlign = TextAlign.Center
+                    style = AppTypography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    fontFamily = BTModern
                 )
             }
             Spacer(Modifier)
