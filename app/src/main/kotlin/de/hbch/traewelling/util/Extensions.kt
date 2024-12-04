@@ -67,6 +67,7 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import java.util.UUID
 
 fun NavHostController.popBackStackAndNavigate(
     destination: Destination,
@@ -230,6 +231,42 @@ fun Context.shareStatus(
         getString(R.string.title_share)
     )
     startActivity(shareIntent)
+}
+
+fun Context.shareImage(
+    shareText: String,
+    imageBitmap: ImageBitmap
+) {
+    try {
+        val imagePath = File(cacheDir, "sharePics")
+        if (!imagePath.exists())
+            imagePath.mkdirs()
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+        }
+
+        val imageFile = File.createTempFile(UUID.randomUUID().toString(), ".png", imagePath)
+        val outputStream = imageFile.outputStream()
+        imageBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 95, outputStream)
+        outputStream.close()
+        val contentUri = getUriForFile(this, "de.traewelldroid.fileprovider", imageFile)
+        sendIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        sendIntent.type = "image/png"
+        if (shareText.isNotEmpty()) {
+            sendIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+
+        val shareIntent = Intent.createChooser(
+            sendIntent,
+            getString(R.string.title_share)
+        )
+        startActivity(shareIntent)
+    } catch (e: Exception) {
+        Logger.captureException(e)
+    }
 }
 
 suspend fun Context.readOrDownloadLineIcons(

@@ -28,7 +28,7 @@ data class User(
 
 data class LightUser(
     @SerializedName("id") val id: Int,
-    @SerializedName("displayName") val name: String,
+    @SerializedName("displayName", alternate = ["name"]) val name: String,
     @SerializedName("username") val username: String,
     @SerializedName("profilePicture") val avatarUrl: String,
     @SerializedName("mastodonUrl") val mastodonUrl: String?

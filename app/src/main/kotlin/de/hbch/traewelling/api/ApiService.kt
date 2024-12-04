@@ -27,6 +27,7 @@ import de.hbch.traewelling.api.models.user.TrustedUser
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.api.models.user.UserSettings
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
+import de.hbch.traewelling.api.models.wrapped.YearInReviewData
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Response
@@ -348,6 +349,11 @@ interface ReportService {
     ): Response<Unit>
 }
 
+interface WrappedService {
+    @GET("year-in-review")
+    suspend fun getYearInReview(): Response<YearInReviewData>
+}
+
 object TraewellingApi {
     var jwt: String = ""
 
@@ -371,6 +377,9 @@ object TraewellingApi {
     }
     val reportService: ReportService by lazy {
         trwlRetrofit.create(ReportService::class.java)
+    }
+    val wrappedService: WrappedService by lazy {
+        trwlRetrofit.create(WrappedService::class.java)
     }
 }
 
