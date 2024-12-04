@@ -359,4 +359,10 @@
     <string name="wrapped_your_unpunctual_trip">Your most unpunctual trip on arrival was at %1$s</string>
     <string name="wrapped_most_liked">Heartbreaker! 💘</string>
     <string name="wrapped_your_most_liked_trip">You received the most likes (%1$d) at %2$s</string>
+    <string name="wrapped_top_destinations">Creature of habit 🦥</string>
+    <string name="wrapped_your_top_destinations">You visited those places a lot…</string>
+    <string name="wrapped_lonely_destinations">Explorer! 🧑🏼‍🔬</string>
+    <string name="wrapped_your_lonely_destinations">These places were only visited by you!</string>
+    <string name="wrapped_thank_you">Thank you 💙</string>
+    <string name="wrapped_thank_you_description">… for using Träwelldroid! Enjoy your future travels and let\'s get started together in a nice year of %1$d! 🚀</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
@@ -115,13 +116,14 @@ fun WrappedGreeting(
                 style = AppTypography.headlineLarge
             )
         },
-        status = null
+        status = null,
+        showTraewelldroid = false
     ) {
         Text(
             modifier = it,
             text = stringResource(R.string.wrapped_intro, 2024),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -173,7 +175,7 @@ fun WrappedTotalJourneys(
             modifier = it,
             text = annotatedString,
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -210,17 +212,16 @@ fun WrappedOperatorDistance(
                 }
             }
             appendLine()
-            appendLine(stringResource(R.string.wrapped_in_a_total))
-            appendLine()
+            append(stringResource(R.string.wrapped_in_a_total))
             withStyle(primarySpanStyle.merge(largeSpanStyle)) {
-                appendLine(getFormattedDistance(yearInReviewData.operators.topByDistance.distance.toInt()))
+                appendLine(" ${getFormattedDistance(yearInReviewData.operators.topByDistance.distance.toInt())}")
             }
         }
         Text(
             modifier = it,
             text = annotatedString,
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -256,10 +257,9 @@ fun WrappedOperatorDuration(
                 }
             }
             appendLine()
-            appendLine(stringResource(R.string.wrapped_in_a_total))
-            appendLine()
+            append(stringResource(R.string.wrapped_in_a_total))
             withStyle(primarySpanStyle.merge(largeSpanStyle)) {
-                appendLine(getDurationString(yearInReviewData.operators.topByDuration.duration.toInt()))
+                appendLine(" ${getDurationString(yearInReviewData.operators.topByDuration.duration.toInt())}")
             }
             appendLine()
             appendLine(stringResource(R.string.wrapped_like_trains))
@@ -268,7 +268,7 @@ fun WrappedOperatorDuration(
             modifier = it,
             text = annotatedString,
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -293,11 +293,10 @@ fun WrappedLines(
     ) {
         val primaryColor = LocalColorScheme.current.primary
         val primarySpanStyle = SpanStyle(color = primaryColor)
-        val largeSpanStyle = SpanStyle(fontSize = AppTypography.headlineLarge.fontSize)
 
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_line_distance))
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle) {
                 append(yearInReviewData.lines.topByDistance.line)
             }
             append(' ')
@@ -311,7 +310,7 @@ fun WrappedLines(
             appendLine()
             appendLine()
             appendLine(stringResource(R.string.wrapped_line_duration))
-            withStyle(primarySpanStyle.merge(largeSpanStyle)) {
+            withStyle(primarySpanStyle) {
                 append(yearInReviewData.lines.topByDuration.line)
             }
             append(' ')
@@ -328,7 +327,7 @@ fun WrappedLines(
             modifier = it,
             text = annotatedString,
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -356,7 +355,7 @@ fun WrappedLongestDistanceTrip(
             modifier = it,
             text = stringResource(R.string.wrapped_your_furthest_trip, getLocalDateString(status.journey.origin.departurePlanned)),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -384,7 +383,7 @@ fun WrappedLongestDurationTrip(
             modifier = it,
             text = stringResource(R.string.wrapped_your_longest_trip, getLocalDateString(status.journey.origin.departurePlanned)),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -412,7 +411,7 @@ fun WrappedFastestTrip(
             modifier = it,
             text = stringResource(R.string.wrapped_your_fastest_trip, getLocalDateString(status.journey.origin.departurePlanned)),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -440,7 +439,7 @@ fun WrappedSlowestTrip(
             modifier = it,
             text = stringResource(R.string.wrapped_your_slowest_trip, getLocalDateString(status.journey.origin.departurePlanned)),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -468,7 +467,7 @@ fun WrappedMostUnpunctualTrip(
             modifier = it,
             text = stringResource(R.string.wrapped_your_unpunctual_trip, getLocalDateString(status.journey.origin.departurePlanned)),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -496,7 +495,116 @@ fun WrappedMostLikedTrip(
             modifier = it,
             text = stringResource(id = R.string.wrapped_your_most_liked_trip, status.likes ?: 0, getLocalDateString(status.journey.origin.departurePlanned)),
             style = AppTypography.titleLarge,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun WrappedTopDestinations(
+    graphicsLayer: GraphicsLayer,
+    yearInReviewData: YearInReviewData,
+    modifier: Modifier = Modifier
+) {
+    WrappedScaffold(
+        graphicsLayer = graphicsLayer,
+        modifier = modifier,
+        status = null,
+        header = {
+            Text(
+                modifier = it,
+                text = stringResource(R.string.wrapped_top_destinations),
+                style = AppTypography.headlineLarge
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.wrapped_your_top_destinations),
+                style = AppTypography.titleLarge
+            )
+            yearInReviewData.topDestinations.forEachIndexed { index, destination ->
+                Text(
+                    text = "${index + 1}. ${destination.station.name} (${destination.count}x)",
+                    style = AppTypography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(Modifier)
+            Spacer(Modifier)
+            Spacer(Modifier)
+        }
+    }
+}
+
+@Composable
+fun WrappedLonelyDestinations(
+    graphicsLayer: GraphicsLayer,
+    yearInReviewData: YearInReviewData,
+    modifier: Modifier = Modifier
+) {
+    WrappedScaffold(
+        graphicsLayer = graphicsLayer,
+        modifier = modifier,
+        status = null,
+        header = {
+            Text(
+                modifier = it,
+                text = stringResource(R.string.wrapped_lonely_destinations),
+                style = AppTypography.headlineLarge
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.wrapped_your_lonely_destinations),
+                style = AppTypography.titleLarge
+            )
+            yearInReviewData.lonelyStations.forEachIndexed { index, destination ->
+                Text(
+                    text = "${index + 1}. ${destination.station.name} (${destination.count}x)",
+                    style = AppTypography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(Modifier)
+            Spacer(Modifier)
+            Spacer(Modifier)
+        }
+    }
+}
+
+@Composable
+fun WrappedThankYou(
+    graphicsLayer: GraphicsLayer,
+    modifier: Modifier = Modifier
+) {
+    WrappedScaffold(
+        graphicsLayer = graphicsLayer,
+        modifier = modifier,
+        header = {
+            Text(
+                modifier = it,
+                text = stringResource(R.string.wrapped_thank_you),
+                style = AppTypography.headlineLarge
+            )
+        },
+        status = null,
+        showTraewelldroid = false
+    ) {
+        Text(
+            modifier = it,
+            text = stringResource(R.string.wrapped_thank_you_description, 2025),
+            style = AppTypography.titleLarge,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -506,6 +614,7 @@ private fun WrappedScaffold(
     graphicsLayer: GraphicsLayer,
     modifier: Modifier = Modifier,
     status: Status? = null,
+    showTraewelldroid: Boolean = true,
     header: @Composable (Modifier) -> Unit = { },
     content: @Composable (Modifier) -> Unit = { },
 ) {
@@ -545,7 +654,7 @@ private fun WrappedScaffold(
                     )
                 }
             }
-            if (status == null) {
+            if (status == null && showTraewelldroid) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),

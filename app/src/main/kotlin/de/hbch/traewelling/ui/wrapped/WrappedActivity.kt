@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,6 +43,7 @@ import de.hbch.traewelling.api.models.wrapped.YearInReviewData
 import de.hbch.traewelling.theme.MainTheme
 import kotlinx.coroutines.launch
 import de.hbch.traewelling.R
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.util.shareImage
 
 class WrappedActivity : ComponentActivity() {
@@ -52,6 +60,8 @@ class WrappedActivity : ComponentActivity() {
                 var initialized by remember { mutableStateOf(false) }
                 var currentStep by remember { mutableIntStateOf(0) }
                 var yearInReview by remember { mutableStateOf<YearInReviewData?>(null) }
+
+                var lastDragAmount by remember { mutableFloatStateOf(0f) }
 
                 LaunchedEffect(initialized) {
                     if (!initialized) {
@@ -91,6 +101,19 @@ class WrappedActivity : ComponentActivity() {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
+                                .pointerInput(Unit) {
+                                    detectHorizontalDragGestures(
+                                        onDragEnd = {
+                                            if (lastDragAmount < 0 && currentStep < 13) {
+                                                currentStep++
+                                            } else if (lastDragAmount > 0 && currentStep > 0) {
+                                                currentStep--
+                                            }
+                                        }
+                                    ) { _, dragAmount ->
+                                        lastDragAmount = dragAmount
+                                    }
+                                }
                                 .padding(innerPadding)
                         ) {
                             if (!initialized) {
@@ -155,6 +178,20 @@ class WrappedActivity : ComponentActivity() {
                                             yearInReviewData = yearInReview!!,
                                             modifier = wrappedModifier
                                         )
+                                        11 -> WrappedTopDestinations(
+                                            graphicsLayer = graphicsLayer,
+                                            yearInReviewData = yearInReview!!,
+                                            modifier = wrappedModifier
+                                        )
+                                        12 -> WrappedLonelyDestinations(
+                                            graphicsLayer = graphicsLayer,
+                                            yearInReviewData = yearInReview!!,
+                                            modifier = wrappedModifier
+                                        )
+                                        13 -> WrappedThankYou(
+                                            graphicsLayer = graphicsLayer,
+                                            modifier = wrappedModifier
+                                        )
                                     }
                                 }
                             }
@@ -162,7 +199,11 @@ class WrappedActivity : ComponentActivity() {
                     },
                     floatingActionButton = {
                         // Share button
-                        if (currentStep != 0) {
+                        AnimatedVisibility(
+                            visible = currentStep != 0 && currentStep != 13,
+                            enter = slideInHorizontally(initialOffsetX = { 800 }),
+                            exit = slideOutHorizontally(targetOffsetX = { 800 })
+                        ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
                                     coroutineScope.launch {
@@ -182,36 +223,43 @@ class WrappedActivity : ComponentActivity() {
                         }
                     },
                     bottomBar = {
-                        BottomAppBar {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        currentStep--
-                                    },
-                                    enabled = currentStep > 0
+                        AnimatedVisibility(
+                            visible = initialized && yearInReview != null,
+                            enter = slideInVertically(initialOffsetY = { 800 })
+                        ) {
+                            BottomAppBar {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_previous),
-                                        contentDescription = null
-                                    )
-                                }
-                                Text(
-                                    text = "${currentStep + 1} / X",
-                                    modifier = Modifier.padding(8.dp)
-                                )
-                                IconButton(
-                                    onClick = {
-                                        currentStep++
+                                    IconButton(
+                                        onClick = {
+                                            currentStep--
+                                        },
+                                        enabled = currentStep > 0
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_previous),
+                                            contentDescription = null
+                                        )
                                     }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_next),
-                                        contentDescription = null
+                                    Text(
+                                        text = "${currentStep + 1} / 14",
+                                        modifier = Modifier.padding(8.dp),
+                                        style = AppTypography.titleMedium
                                     )
+                                    IconButton(
+                                        onClick = {
+                                            currentStep++
+                                        },
+                                        enabled = currentStep < 13
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_next),
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
                             }
                         }
