@@ -209,7 +209,7 @@ fun WrappedOperatorDistance(
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_farest_travels))
             appendLine()
-            val distanceOperator = yearInReviewData.operators.topByDistance.operator ?: stringResource(R.string.unknown)
+            val distanceOperator = yearInReviewData.operators?.topByDistance?.operator ?: stringResource(R.string.unknown)
             withStyle(primarySpanStyle.merge(largeSpanStyle).merge(SpanStyle(fontFamily = getBTModern(distanceOperator)))) {
                 withStyle(centerAlignedStyle) {
                     appendLine(distanceOperator)
@@ -218,7 +218,7 @@ fun WrappedOperatorDistance(
             appendLine()
             append(stringResource(R.string.wrapped_in_a_total))
             withStyle(primarySpanStyle.merge(largeSpanStyle).merge(SpanStyle(fontFamily = BTModernStandard))) {
-                appendLine(" ${getFormattedDistance(yearInReviewData.operators.topByDistance.distance.toInt())}")
+                appendLine(" ${getFormattedDistance((yearInReviewData.operators?.topByDistance?.distance ?: 0).toInt())}")
             }
         }
         Text(
@@ -255,7 +255,7 @@ fun WrappedOperatorDuration(
 
         val annotatedString = buildAnnotatedString {
             appendLine(stringResource(R.string.wrapped_longest_travels))
-            val durationOperator = yearInReviewData.operators.topByDuration.operator
+            val durationOperator = yearInReviewData.operators?.topByDuration?.operator ?: stringResource(R.string.unknown)
             withStyle(primarySpanStyle.merge(largeSpanStyle).merge(SpanStyle(fontFamily = getBTModern(durationOperator)))) {
                 withStyle(centerAlignedStyle) {
                     append(durationOperator)
@@ -264,7 +264,7 @@ fun WrappedOperatorDuration(
             appendLine()
             append(stringResource(R.string.wrapped_in_a_total))
             withStyle(primarySpanStyle.merge(largeSpanStyle).merge(SpanStyle(fontFamily = BTModernStandard))) {
-                appendLine(" ${getDurationString(yearInReviewData.operators.topByDuration.duration.toInt())}")
+                appendLine(" ${getDurationString((yearInReviewData.operators?.topByDuration?.duration ?: 0).toInt())}")
             }
             appendLine()
             appendLine(stringResource(R.string.wrapped_like_trains))
@@ -300,28 +300,28 @@ fun WrappedLines(
         val primarySpanStyle = SpanStyle(color = primaryColor)
 
         val annotatedString = buildAnnotatedString {
-            val distanceLine = yearInReviewData.lines.topByDistance.line
+            val distanceLine = yearInReviewData.lines?.topByDistance?.line ?: stringResource(R.string.unknown)
             appendLine(stringResource(R.string.wrapped_line_distance))
-            withStyle(primarySpanStyle.merge(SpanStyle(fontFamily = getBTModern(distanceLine ?: "")))) {
+            withStyle(primarySpanStyle.merge(SpanStyle(fontFamily = getBTModern(distanceLine)))) {
                 append(distanceLine)
             }
             append(' ')
             append(stringResource(R.string.operated_by))
             append(' ')
-            val distanceOperator = "${yearInReviewData.lines.topByDistance.operator} (${getFormattedDistance(yearInReviewData.lines.topByDistance.distance.toInt())})"
+            val distanceOperator = "${yearInReviewData.lines?.topByDistance?.operator} (${getFormattedDistance((yearInReviewData.lines?.topByDistance?.distance ?: 0).toInt())})"
             withStyle(primarySpanStyle.merge(SpanStyle(fontFamily = getBTModern(distanceOperator)))) {
                 appendLine(distanceOperator)
             }
             appendLine()
             appendLine(stringResource(R.string.wrapped_line_duration))
-            val durationLine = yearInReviewData.lines.topByDuration.line
-            withStyle(primarySpanStyle.merge(SpanStyle(fontFamily = getBTModern(durationLine ?: "")))) {
+            val durationLine = yearInReviewData.lines?.topByDuration?.line ?: stringResource(R.string.unknown)
+            withStyle(primarySpanStyle.merge(SpanStyle(fontFamily = getBTModern(durationLine)))) {
                 append(durationLine)
             }
             append(' ')
             append(stringResource(R.string.operated_by))
             append(' ')
-            val durationOperatorText = "${yearInReviewData.lines.topByDuration.operator} (${getDurationString(yearInReviewData.lines.topByDuration.duration.toInt())})"
+            val durationOperatorText = "${yearInReviewData.lines?.topByDuration?.operator} (${getDurationString((yearInReviewData.lines?.topByDuration?.duration ?: 0).toInt())})"
             withStyle(primarySpanStyle.merge(SpanStyle(fontFamily = getBTModern(durationOperatorText)))) {
                 appendLine(durationOperatorText)
             }
