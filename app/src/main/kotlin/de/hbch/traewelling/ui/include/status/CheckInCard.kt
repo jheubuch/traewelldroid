@@ -389,7 +389,7 @@ fun CheckInCardContent(
                     text = message.first!!,
                     onClick = {
                         val annotations = message.first!!.getStringAnnotations(it - 1, it + 1)
-                        if (annotations.isNotEmpty()) {
+                        if (annotations.isNotEmpty() && annotations.any { annotation -> annotation.tag == "userMention" }) {
                             userSelected(annotations.first().item, false, false)
                         } else {
                             textClicked()
@@ -716,7 +716,7 @@ private fun CheckInCardFooter(
                 contentDescription = null
             )
             Text(
-                text = status.event.name,
+                text = status.event!!.name,
                 style = LocalFont.current.labelMedium
             )
         }

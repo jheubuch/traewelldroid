@@ -105,7 +105,7 @@ data class Status(
                     val emoji = match.groupValues.getOrElse(1) { "" }
                     val customEmoji = mastodonEmoji.firstOrNull { it.shortcode == emoji }
                     if (customEmoji != null) {
-                        builder.appendInlineContent(customEmoji.shortcode, customEmoji.shortcode)
+                        builder.appendInlineContent(customEmoji.shortcode, ":${customEmoji.shortcode}:")
                         inlineTextContent[customEmoji.shortcode] = InlineTextContent(
                             Placeholder(24.sp, 24.sp, PlaceholderVerticalAlign.TextCenter)
                         ) {
