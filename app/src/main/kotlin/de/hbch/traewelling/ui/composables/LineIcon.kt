@@ -24,8 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.models.lineIcons.LineIconShape
+import de.hbch.traewelling.shared.HexagonShape
 import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.shared.SettingsViewModel
+import de.hbch.traewelling.shared.TrapezoidShape
 import de.hbch.traewelling.theme.LineIconStyle
 import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.util.getSwitzerlandLineName
@@ -54,8 +56,10 @@ fun LineIcon(
     }
 
     val shape: Shape = when (lineIcon?.shape) {
+        LineIconShape.hexagon -> HexagonShape()
         LineIconShape.pill -> RoundedCornerShape(percent = 50)
         LineIconShape.rectangle_rounded_corner -> RoundedCornerShape(percent = 20)
+        LineIconShape.trapezoid -> TrapezoidShape()
         else -> RectangleShape
     }
     val borderColor: Color = lineIcon?.getBorderColor() ?: Color.Transparent
