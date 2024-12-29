@@ -19,9 +19,10 @@ data class LineIcon(
 }
 
 enum class LineIconShape {
-    rectangle,
-    pill,
-    trapezoid,
+    circle,
     hexagon,
-    rectangle_rounded_corner
+    pill,
+    rectangle,
+    rectangle_rounded_corner,
+    trapezoid,
 }

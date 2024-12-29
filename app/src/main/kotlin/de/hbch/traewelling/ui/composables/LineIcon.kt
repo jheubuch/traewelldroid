@@ -2,11 +2,8 @@ package de.hbch.traewelling.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +53,115 @@ fun LineIcon(
     }
 
     val shape: Shape = when (lineIcon?.shape) {
+        LineIconShape.circle -> CircleShape
+        LineIconShape.hexagon -> HexagonShape()
+        LineIconShape.pill -> RoundedCornerShape(percent = 50)
+        LineIconShape.rectangle_rounded_corner -> RoundedCornerShape(percent = 20)
+        LineIconShape.trapezoid -> TrapezoidShape()
+        else -> RectangleShape
+    }
+    val borderColor: Color = lineIcon?.getBorderColor() ?: Color.Transparent
+
+    val switzerlandString = getSwitzerlandLineName(
+        lineId = lineId ?: "",
+        productName = lineName.split(" ").getOrElse(0) { "" }
+    )
+
+    val displayedName =
+        lineIcon?.displayedName ?: switzerlandString?.first?.text ?: lineName
+
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (lineIcon != null) {
+            Box(
+                modifier = when (lineIcon.shape) {
+                    LineIconShape.circle -> Modifier
+                        .width(32.dp)
+                        .aspectRatio(1f)
+                        .background(
+                            color = lineIcon.getBackgroundColor(),
+                            shape = shape
+                        )
+                        .border(2.dp, borderColor, shape)
+                        .padding(2.dp)
+
+                    else -> Modifier
+                        .widthIn(48.dp, 144.dp)
+                        .background(
+                            color = lineIcon.getBackgroundColor(),
+                            shape = shape
+                        )
+                        .border(2.dp, borderColor, shape)
+                        .padding(2.dp)
+                }
+            ) {
+                Text(
+                    text = displayedName,
+                    modifier = Modifier.align(Alignment.Center),
+                    color = lineIcon.getTextColor(),
+                    style = LineIconStyle,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        } else if (switzerlandString?.first != null) {
+            Box(
+                modifier = Modifier
+                    .widthIn(48.dp, 144.dp)
+                    .background(
+                        color = Color.Red
+                    )
+                    .padding(2.dp)
+            ) {
+                Text(
+                    text = switzerlandString.first!!,
+                    color = Color.White,
+                    style = LineIconStyle,
+                    fontWeight = FontWeight.Bold,
+                    inlineContent = switzerlandString.second,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        } else {
+            Text(
+                text = displayedName,
+                modifier = modifier,
+                style = defaultTextStyle,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+        if (displayJourneyNumber
+            && displayJourneyNumberSetting
+            && !displayedName.contains(journeyNumber.toString())
+            && journeyNumber != null && journeyNumber != 0
+        ) {
+            Text(
+                text = "($journeyNumber)",
+                style = LocalFont.current.bodySmall
+            )
+        }
+    }
+}
+
+@Composable
+fun LineIconView(
+    lineName: String,
+    modifier: Modifier = Modifier,
+    operatorCode: String? = null,
+    lineId: String? = null,
+    defaultTextStyle: TextStyle = LocalFont.current.bodyMedium
+) {
+    val opCode = operatorCode?.replace("nahreisezug", "") ?: ""
+
+    val lineIcon = LineIcons.getInstance().icons.firstOrNull {
+        it.lineId == lineId
+                && it.operatorCode == opCode
+    }
+
+    val shape: Shape = when (lineIcon?.shape) {
+        LineIconShape.circle -> CircleShape
         LineIconShape.hexagon -> HexagonShape()
         LineIconShape.pill -> RoundedCornerShape(percent = 50)
         LineIconShape.rectangle_rounded_corner -> RoundedCornerShape(percent = 20)
@@ -96,99 +202,7 @@ fun LineIcon(
                     fontWeight = FontWeight.Bold
                 )
             }
-        }  else if (switzerlandString?.first != null) {
-            Box(
-                modifier = Modifier
-                    .widthIn(48.dp, 144.dp)
-                    .background(
-                        color = Color.Red
-                    )
-                    .padding(2.dp)
-            ) {
-                Text(
-                    text = switzerlandString.first!!,
-                    color = Color.White,
-                    style = LineIconStyle,
-                    fontWeight = FontWeight.Bold,
-                    inlineContent = switzerlandString.second,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        } else {
-            Text(
-                text = displayedName,
-                modifier = modifier,
-                style = defaultTextStyle,
-                fontWeight = FontWeight.ExtraBold
-            )
-        }
-        if (displayJourneyNumber
-            && displayJourneyNumberSetting
-            && !displayedName.contains(journeyNumber.toString())
-            && journeyNumber != null && journeyNumber != 0) {
-            Text(
-                text = "($journeyNumber)",
-                style = LocalFont.current.bodySmall
-            )
-        }
-    }
-}
-
-@Composable
-fun LineIconView(
-    lineName: String,
-    modifier: Modifier = Modifier,
-    operatorCode: String? = null,
-    lineId: String? = null,
-    defaultTextStyle: TextStyle = LocalFont.current.bodyMedium
-) {
-    val opCode = operatorCode?.replace("nahreisezug", "") ?: ""
-
-    val lineIcon = LineIcons.getInstance().icons.firstOrNull {
-        it.lineId == lineId
-                && it.operatorCode == opCode
-    }
-
-    val shape: Shape = when (lineIcon?.shape) {
-        LineIconShape.pill -> RoundedCornerShape(percent = 50)
-        LineIconShape.rectangle_rounded_corner -> RoundedCornerShape(percent = 20)
-        else -> RectangleShape
-    }
-    val borderColor: Color = lineIcon?.getBorderColor() ?: Color.Transparent
-
-    val switzerlandString = getSwitzerlandLineName(
-        lineId = lineId ?: "",
-        productName = lineName.split(" ").getOrElse(0) { "" }
-    )
-
-    val displayedName =
-        lineIcon?.displayedName ?: switzerlandString?.first?.text ?: lineName
-
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (lineIcon != null) {
-            Box(
-                modifier = Modifier
-                    .widthIn(48.dp, 144.dp)
-                    .background(
-                        color = lineIcon.getBackgroundColor(),
-                        shape = shape
-                    )
-                    .border(2.dp, borderColor, shape)
-                    .padding(2.dp)
-            ) {
-                Text(
-                    text = displayedName,
-                    modifier = Modifier.align(Alignment.Center),
-                    color = lineIcon.getTextColor(),
-                    style = LineIconStyle,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }  else if (switzerlandString?.first != null) {
+        } else if (switzerlandString?.first != null) {
             Box(
                 modifier = Modifier
                     .widthIn(48.dp, 144.dp)
