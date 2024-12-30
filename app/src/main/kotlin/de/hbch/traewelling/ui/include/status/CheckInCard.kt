@@ -422,7 +422,7 @@ fun StatusDetailsRow(
         val alignmentModifier = Modifier.align(Alignment.CenterVertically)
         Image(
             modifier = alignmentModifier,
-            painter = painterResource(id = productType.getIcon()),
+            painter = painterResource(id = productType.getIcon(operatorCode, lineId)),
             contentDescription = null
         )
         LineIcon(

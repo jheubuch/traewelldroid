@@ -432,7 +432,7 @@ fun ConnectionListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = productType.getIcon()),
+                    painter = painterResource(id = productType.getIcon(hafasLine?.operator?.id,hafasLine?.id)),
                     contentDescription = stringResource(id = productType.getString())
                 )
                 LineIcon(
