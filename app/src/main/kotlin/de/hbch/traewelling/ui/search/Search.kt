@@ -31,6 +31,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.theme.LocalFont
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.util.getStationNameWithRL100
@@ -98,6 +100,8 @@ fun Search(
 
     val userResults = remember { mutableStateListOf<User>() }
     val stationResults = remember { mutableStateListOf<Station>() }
+    val featureFlags = remember { FeatureFlags.getInstance() }
+    val nearbyActive by featureFlags.nearbyActive.observeAsState(false)
 
     val stationSelected: (Station) -> Unit = {
         active = false
@@ -177,11 +181,13 @@ fun Search(
                                 modifier = Modifier.size(24.dp)
                             )
                         } else {
-                            IconButton(onClick = { isLocating = true }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_locate),
-                                    contentDescription = stringResource(id = R.string.locate)
-                                )
+                            if (nearbyActive) {
+                                IconButton(onClick = { isLocating = true }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_locate),
+                                        contentDescription = stringResource(id = R.string.locate)
+                                    )
+                                }
                             }
                         }
                     }

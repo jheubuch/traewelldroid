@@ -20,6 +20,9 @@ class FeatureFlags private constructor() {
     private var _trwlDown = MutableLiveData(false)
     val trwlDown: LiveData<Boolean> get() = _trwlDown
 
+    private var _nearbyActive = MutableLiveData(false)
+    val nearbyActive: LiveData<Boolean> get() = _nearbyActive
+
     fun init(client: UnleashClient) {
         unleashClient = client
         unleashClient?.startPolling()
@@ -29,6 +32,7 @@ class FeatureFlags private constructor() {
         unleashClient?.let {
             _wrappedActive.postValue(it.isEnabled("WrappedActive", false))
             _trwlDown.postValue(it.isEnabled("TrwlDown", false))
+            _nearbyActive.postValue(it.isEnabled("NearbyActive", false))
         }
     }
 }
